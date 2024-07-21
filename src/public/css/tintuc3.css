@@ -1,0 +1,71 @@
+@charset "UTF-8";
+/* Styles cho phần nội dung chính */
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px; }
+
+article {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 8px; }
+
+h1 {
+  font-size: 2.5em;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  line-height: 1.2; }
+
+.lead {
+  font-size: 1.2em;
+  font-weight: 300;
+  color: #7f8c8d;
+  margin-bottom: 30px;
+  line-height: 1.6; }
+
+.article-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+
+.image-caption {
+  font-size: 0.9em;
+  color: #7f8c8d;
+  text-align: center;
+  margin-bottom: 30px; }
+
+h2 {
+  font-size: 1.8em;
+  color: #34495e;
+  margin-top: 30px;
+  margin-bottom: 20px; }
+
+p {
+  margin-bottom: 20px;
+  line-height: 1.6; }
+
+ul {
+  margin-bottom: 20px;
+  padding-left: 30px; }
+
+li {
+  margin-bottom: 10px; }
+
+i {
+  font-style: italic;
+  color: #16a085; }
+
+@media (max-width: 600px) {
+  main {
+    padding: 0 10px; }
+  article {
+    padding: 20px; }
+  h1 {
+    font-size: 2em; }
+  h2 {
+    font-size: 1.5em; }
+  .lead {
+    font-size: 1.1em; } }

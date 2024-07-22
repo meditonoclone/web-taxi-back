@@ -3,6 +3,26 @@ const path = require('path');
 const router = require('./routes');
 const exphbs = require('express-handlebars');
 
+const db = require('./config/db');
+
+// conect to database
+const getNews = async()=>{
+
+  try {
+    const [results, fields] = await db.execute(
+      'SELECT * FROM `news`'
+    );
+    
+    console.log(results); // results contains rows returned by server
+    console.log(fields); // fields contains extra meta data about results, if available
+  } catch (err) {
+    console.log(err);
+  }
+  
+}
+getNews();
+
+
 // Khởi tạo ứng dụng Express
 const app = express();
 const port = 3000;

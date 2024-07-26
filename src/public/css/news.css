@@ -1,5 +1,6 @@
 @charset "UTF-8";
 .news-link {
+  width: 100%;
   display: block;
   text-decoration: none;
   color: inherit;

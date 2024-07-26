@@ -4,8 +4,8 @@ const serviceController = require('../app/controller/ServiceController');
 
 
 
-router.use('/::slug', serviceController.show);
+router.get('/::slug', serviceController.show);
 
-router.use('/', serviceController.index);
+router.get('/', serviceController.index);
 
 module.exports = router;

@@ -1,15 +1,30 @@
 /* Styles cho phần nội dung chính */
+.fast-nav{
+    display: inline;
+}
+p.published-time{
+    display: inline;
+    float: right;
+    margin: 0;
+    color: #adadad;
+}
 main {
     max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
 }
+.row img{
+    width: 100%;
+    height: auto;
 
-article {
+}
+article.row {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     padding: 30px;
     border-radius: 8px;
+    margin: 0;
+    width: 100%;
 }
 
 h1 {

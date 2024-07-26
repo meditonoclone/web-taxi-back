@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const siteController = require('../app/controller/SiteController');
 
-router.use('/contact', siteController.contact);
+router.get('/contact', siteController.contact);
 
-router.use('/login', siteController.login);
+router.get('/login', siteController.login);
 
-router.use('/signup', siteController.signup);
+router.get('/signup', siteController.signup);
 
-router.use('/resetpass', siteController.resetpass);
+router.get('/resetpass', siteController.resetpass);
 
-router.use('/', siteController.index);
+router.get('/', siteController.index);
 
 module.exports = router;

@@ -1,15 +1,19 @@
-const mysql = require('mysql2');
+const { Sequelize } = require('sequelize');
 
-const dbConfig = {
-    host: 'localhost',
-    user: 'root',
-    password: '', // Mặc định trống
-    database: 'taxi_dev',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-};
+const sequelize = new Sequelize('taxi_dev', 'root', '', {
+  host: 'localhost',
+  dialect: 'mysql', 
+  logging: false
+});
+const testconnect = async () =>{
+    try {
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
 
-const pool = mysql.createPool(dbConfig);
+}
 
-module.exports = pool.promise(); 
+testconnect();
+module.exports = sequelize;

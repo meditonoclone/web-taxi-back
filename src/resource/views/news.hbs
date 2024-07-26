@@ -7,48 +7,24 @@
         </h2>
       </div>
       <div class="news_container row">
+        {{#each news}}
         <div class="box col-lg-4 col-md-6 col-sm-12">
-          <a href="tintuc1" class="news-link" target="_blank">
+          <a href="news/{{slug}}" class="news-link" target="_blank">
             <div class="date-box">
-              <h6>July 13, 2024</h6>
+              <h6>{{formatDate published_date}}</h6>
             </div>
             <div class="img-box">
-              <img src="img/news-img.jpg" alt="Taxi at Tan Son Nhat Airport">
+              <img src={{image_url}} alt="{{caption}}">
             </div>
             <div class="detail-box">
-              <h6>Xem xét cấp thẻ cho tài xế xe taxi, xe công nghệ ra vào đón khách ở Tân Sơn Nhất</h6>
-              <p>Tân Sơn Nhất sẽ phối hợp với cơ quan chức năng tiến hành kiểm tra, giám sát để kịp thời phát hiện xử lý taxi nâng cước, nhân viên cò mồi hoặc xe dù, xe ôm hoạt động lộn xộn trong khu vực sân bay dịp hè 2024.</p>
+              <h6>{{title}}</h6>
+              <p>
+                {{description}}
+              </p>
             </div>
           </a>
         </div>
-        <div class="box col-lg-4 col-md-6 col-sm-12">
-          <a href="tintuc2" class="news-link" target="_blank">
-            <div class="date-box">
-              <h6>July 13, 2024</h6>
-            </div>
-            <div class="img-box">
-              <img src="img/news-img2.jpg" alt="Electric Taxi">
-            </div>
-            <div class="detail-box">
-              <h6>Doanh nghiệp cần sớm thấy chính sách hỗ trợ để yên tâm dùng xe điện</h6>
-              <p>Nhiều doanh nghiệp taxi sử dụng xe điện đã thấy lợi ích của phương tiện này. Nhưng cần sớm có những chính sách cụ thể để yên tâm chuyển đổi sang xe điện, thực hiện cam kết giảm phát thải carbon của Chính phủ.</p>
-            </div>
-          </a>
-        </div>
-        <div class="box col-lg-4 col-md-6 col-sm-12">
-          <a href="tintuc3" class="news-link" target="_blank">
-            <div class="date-box">
-              <h6>July 13, 2024</h6>
-            </div>
-            <div class="img-box">
-              <img src="img/news-img3.jpg" alt="Vinasun Hybrid Taxi">
-            </div>
-            <div class="detail-box">
-              <h6>Taxi điện đầy đường, Vinasun rẽ hướng rót tiền mua 550 ô tô dòng hybrid</h6>
-              <p>Thay vì dùng ô tô điện, Vinasun chọn đầu tư mới 550 xe hybrid có động cơ lai điện và xăng. Xu hướng đầu tư xe hybrid trong dịch vụ taxi là chiến lược dài hạn của hãng.</p>
-            </div>
-          </a>
-        </div>
+        {{/each}}
       </div>
     </div>
   </section>

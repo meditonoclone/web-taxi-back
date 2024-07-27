@@ -1,36 +1,40 @@
-{{#each newsDetail}}
+{{#if newsDetail}}
 
 <main class="container my-5">
     <div class="fast-nav">
         <a href="/news">Tin Tức</a>
         <i class="fas fa-angle-right"></i>
-        <a>{{slug}}</a>
+        <a>{{newsDetail.slug}}</a>
     </div>
-    <p class="published-time">{{formatDate published_date}}</p>
+    <p class="published-time">{{formatDate newsDetail.published_date}}</p>
     <article class="row">
-        <div class="col-lg-10 offset-lg-1">
-            <img src={{thumbnail}} alt="">
+        <div class="col-lg-8">
             <h1 class="mb-4">
-                {{title}}
+                {{newsDetail.title}}
             </h1>
+            <img src={{newsDetail.thumbnail}} alt="">
 
-            <p class="lead mb-4">{{description}}</p>
+            <p class="lead mb-4">{{newsDetail.description}}</p>
             <img src="" alt="">
 
             <p>
                 {{content}}
             </p>
-            <img src={{content1}} alt="">
+            <img src={{newsDetail.content1}} alt="">
 
 
             <h2 class="mt-5 mb-4">Tăng giám sát, kiểm tra taxi, xe dù hoạt động ở sân bay</h2>
 
-            <p>Một trong những nội dung trọng điểm phục vụ hè 2024, Tân Sơn Nhất xác định sẽ tăng cường giải quyết tình
-                trạng taxi, xe công nghệ, xe dịch vụ... hoạt động lộn xộn ở khu vực nội cảng. Hiện tượng taxi, xe công
-                nghệ, xe dù chèo kéo nâng cước đang có dấu hiệu gia tăng trở lại trong thời gian gần đây, đặc biệt ở khu
+            <p>Một trong những nội dung trọng điểm phục vụ hè 2024, Tân Sơn Nhất xác định sẽ tăng cường giải quyết
+                tình
+                trạng taxi, xe công nghệ, xe dịch vụ... hoạt động lộn xộn ở khu vực nội cảng. Hiện tượng taxi, xe
+                công
+                nghệ, xe dù chèo kéo nâng cước đang có dấu hiệu gia tăng trở lại trong thời gian gần đây, đặc biệt ở
+                khu
                 vực nhà để xe TCP (ga quốc nội).</p>
 
-            <p>Lãnh đạo Cảng hàng không quốc tế Tân Sơn Nhất khẳng định công tác phối hợp với cơ quan chức năng lập ra
+            <p>Lãnh đạo Cảng hàng không quốc tế Tân Sơn Nhất khẳng định công tác phối hợp với cơ quan chức năng lập
+                ra
                 tổ phản ứng nhanh, trong đó có Cảng vụ hàng không miền Nam và Đồn công an Tân Sơn Nhất.</p>
 
             <ul class="list-group list-group-flush mb-4">
@@ -38,28 +42,46 @@
                 <li class="list-group-item">Cục Hàng không yêu cầu sân bay Tân Sơn Nhất mạnh tay xử lý gian lận cước
                     taxi</li>
             </ul>
-            <img src={{content2}} alt="">
+            <img src={{newsDetail.content2}} alt="">
 
-            <p>Cảng Tân Sơn Nhất sẽ tổ chức, bố trí quân số tổ phản ứng nhanh kiểm tra, giám sát nhằm phát hiện xử lý
+            <p>Cảng Tân Sơn Nhất sẽ tổ chức, bố trí quân số tổ phản ứng nhanh kiểm tra, giám sát nhằm phát hiện xử
+                lý
                 các đối tượng cò mồi, xe dù, xe ôm hoạt động trong khu vực nội sân bay...</p>
 
-            <p>Trả lời <i>Tuổi Trẻ Online</i>, đại diện Cảng hàng không quốc tế Tân Sơn Nhất cho biết đã đề nghị Cảng vụ
-                hàng không miền Nam (cơ quan của Cục Hàng không Việt Nam) xem xét lại quy trình cấp thẻ tạm, thẻ ngắn
+            <p>Trả lời <i>Tuổi Trẻ Online</i>, đại diện Cảng hàng không quốc tế Tân Sơn Nhất cho biết đã đề nghị
+                Cảng vụ
+                hàng không miền Nam (cơ quan của Cục Hàng không Việt Nam) xem xét lại quy trình cấp thẻ tạm, thẻ
+                ngắn
                 hạn có lý lịch tư pháp… cho nhân viên của các đơn vị hoạt động kinh doanh vận tải tại cảng.</p>
 
             <h2 class="mt-5 mb-4">Dịp hè, số chuyến bay chậm chuyến ở Tân Sơn Nhất sẽ tăng</h2>
 
-            <p>Dù bố trí phương án khai thác, phục vụ cao điểm hè nhưng cảng vẫn lo ngại tỉ lệ chậm chuyến bay sẽ tăng
+            <p>Dù bố trí phương án khai thác, phục vụ cao điểm hè nhưng cảng vẫn lo ngại tỉ lệ chậm chuyến bay sẽ
+                tăng
                 trong dịp này do... "ông trời".</p>
 
             <p>Bởi, mùa hè kéo dài khoảng 3 tháng, tập trung đông đúc cả hai chiều khách đi và khách đến.</p>
 
-            <p>Trong khi thời điểm hè rơi vào mùa mưa, dự báo tỉ lệ chuyến bay chậm dự kiến có thể tăng. Tân Sơn Nhất
-                lên kế hoạch chống ngập, có phương án xử lý trong trường hợp thời tiết xấu ảnh hưởng tới hoạt động bay.
+            <p>Trong khi thời điểm hè rơi vào mùa mưa, dự báo tỉ lệ chuyến bay chậm dự kiến có thể tăng. Tân Sơn
+                Nhất
+                lên kế hoạch chống ngập, có phương án xử lý trong trường hợp thời tiết xấu ảnh hưởng tới hoạt động
+                bay.
             </p>
         </div>
-
+        <div class="col-lg-4 new-news">
+            <h4>Tin tức mới nhất</h4>
+            {{#each newNews}}
+            <div class="news-item">
+                <div class="img-container">
+                    <p>{{formatDate published_date}}</p>
+                    <img src={{image_url}} alt="" />
+                </div>
+                <h5>{{title}}</h5>
+            </div>
+            {{/each}}
+        </div>
     </article>
+
 </main>
 
 <section class="info_section layout_padding-top layout_padding2-bottom">
@@ -124,4 +146,4 @@
     </div>
 
 </section>
-{{/each}}
+{{/if}}

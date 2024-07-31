@@ -102,6 +102,13 @@ body {
 }
 
 /*header section*/
+.logout.nav-link{
+  display: inline-block;
+}
+.logout.nav-link:hover{
+  border-radius: 5%;
+  boder:1px solid red;
+}
 .hero_area {
   min-height: 100vh;
   position: relative;

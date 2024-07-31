@@ -11,7 +11,6 @@ function setEqualHeight() {
     items.forEach((item) => {
         item.style.height = `${height}px`;
     })
-    console.log(items);
   }
 
 document.addEventListener('DOMContentLoaded', setEqualHeight);

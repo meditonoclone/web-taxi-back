@@ -78,6 +78,8 @@ i {
   flex-direction: column;
   align-items: end;
   width: 100%; }
+  .new-news .news-item:hover h5 {
+    color: #8c8c8c; }
   .new-news .news-item {
     display: flex;
     justify-content: space-between;
@@ -114,8 +116,9 @@ i {
       width: 60%;
       text-align: justify;
       float: right;
-      margin: 0; }
-  .new-news .new-news h4 {
+      margin: 0;
+      color: black; }
+  .new-news .new-news ah4 {
     display: inline-block;
     color: #696969;
     margin: 48px 0; }

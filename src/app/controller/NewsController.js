@@ -2,7 +2,8 @@ const News = require('../model/News');
 const sequelize = require('../../config/db');
 const { resultsToObject, resultToObject, addProp } = require('../../util/sequelize');
 const { Op } = require('sequelize');
-
+const User = require('../model/User');
+const session = require('express-session');
 class NewsController {
     async index(req, res) {
         try {
@@ -61,7 +62,6 @@ class NewsController {
                     return {...newImgs, [`content${index}`]: img.image_url};
             }, {})
             newsDetail = {...resultToObject(data, 'model'), ...imgs};
-            console.log(newNews);
             res.render('news/news-detail',
                 {
                     newNews: newNews,

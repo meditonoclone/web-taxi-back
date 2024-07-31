@@ -71,13 +71,13 @@
         <div class="col-lg-4 new-news">
             <h4>Tin tức mới nhất</h4>
             {{#each newNews}}
-            <div class="news-item">
+            <a href={{slug}} class="news-item">
                 <div class="img-container">
                     <p>{{formatDate published_date}}</p>
                     <img src={{image_url}} alt="" />
                 </div>
                 <h5>{{title}}</h5>
-            </div>
+            </a>
             {{/each}}
         </div>
     </article>

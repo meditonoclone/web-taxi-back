@@ -8,19 +8,34 @@ const session = require('express-session');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const csurf = require('csurf');
-
-// conect to database
-const { setLocals } = require('./middleware');
-
+const flash = require('connect-flash');
+const validate = require('./socket/validate');
+const http = require('http');
+const { Server } = require('socket.io');
+const cookieSignature = require('cookie-signature');
 // Khởi tạo ứng dụng Express
 const app = express();
 const port = 3000;
 
 
+const server = http.createServer(app);
+const io = new Server(server);
+
+validate(io);//gửi lỗi validat về cho client
+
+
+// conect to database
+const { setLocals } = require('./middleware');
+
+
+
+app.use(flash());
+
+const secretKey = 'secret';
 // cấu hình session
 
 app.use(session({
-  secret: 'secret', // Khóa bí mật dùng để ký session ID
+  secret: secretKey, // Khóa bí mật dùng để ký session ID
   resave: false, // Không lưu session nếu không có thay đổi
   saveUninitialized: false,
   cookie: {
@@ -30,7 +45,17 @@ app.use(session({
   }
 }));
 
-app.use(helmet()); // Sử dụng helmet để bảo vệ ứng dụng bằng cách thiết lập các HTTP headers
+// app.use(helmet({
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       imgSrc: ["'self'", 'https://images.unsplash.com', '127.0.0.1:3000', ],
+//       scriptSrc: ["'self'", 'https://trusted-scripts.com'],
+//       frameSrc: ['https://www.google.com']
+//       // Thêm các nguồn ảnh khác mà bạn tin tưởng
+//     },
+//   },
+// }));// Sử dụng helmet để bảo vệ ứng dụng bằng cách thiết lập các HTTP headers
 
 app.use(cookieParser()); // Sử dụng cookie-parser để phân tích cú pháp cookie
 
@@ -50,7 +75,7 @@ app.engine('hbs', exphbs.engine({
     //     return session.user.name; 
     //   return 'ĐĂNG NHẬP';
     // },
-    
+
   },
   extname: 'hbs',
   defaultLayout: 'main',
@@ -71,14 +96,19 @@ app.use(
   }),
 );
 
-
-app.use((req, res, next)=>{
-  res.locals.user = req.session.user;
+//kiểm tra thông tin đăng nhập
+app.use((req, res, next) => {
+  if (req.cookies.userId && req.session.user) {
+    if (cookieSignature.unsign(req.cookies.userId, secretKey) === req.session.user.userId) {
+      res.locals.user = req.session.user;
+    }
+  }
+  res.locals.loginError = req.flash('loginError')[0];
   next();
 })
 // Routes
 router(app);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });

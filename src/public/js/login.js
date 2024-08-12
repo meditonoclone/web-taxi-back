@@ -1,34 +1,42 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const loginForm = document.getElementById('loginForm');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const rememberMeCheckbox = document.getElementById('rememberMe');
+const objectsToValidate = [
+  { 
+    selector: '#username',
+    rules: ['notEmpty', 'phone']
+  },
+  {
+      selector: '#password',
+      rules: ['notEmpty', 'password']
+  },
+]
 
-  // Kiểm tra nếu có thông tin đăng nhập đã lưu
-  if (localStorage.getItem('rememberedUser')) {
-    const rememberedUser = JSON.parse(localStorage.getItem('rememberedUser'));
-    usernameInput.value = rememberedUser.username;
-    passwordInput.value = rememberedUser.password;
-    rememberMeCheckbox.checked = true;
-  }
+validate(objectsToValidate, 'error')
 
-  loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const username = usernameInput.value;
-    const password = passwordInput.value;
-    const rememberMe = rememberMeCheckbox.checked;
+const socket = io();
+const formLogin = document.querySelector('#loginForm');
+const usernameInput = formLogin.querySelector('#username');
+const passwordInput = formLogin.querySelector('#password');
+// Gửi yêu cầu dữ liệu với tiêu chí cụ thể
 
-    // Xử lý đăng nhập ở đây (ví dụ: gửi request đến server)
 
-    // Nếu đăng nhập thành công và người dùng chọn "Lưu thông tin đăng nhập"
-    if (rememberMe) {
-      localStorage.setItem('rememberedUser', JSON.stringify({ username, password }));
-    } else {
-      localStorage.removeItem('rememberedUser');
-    }
+function requestData(criteria) {
+  socket.emit('checkLogin', criteria);
+}
 
-    // Giả lập đăng nhập thành công
-    alert('Đăng nhập thành công!');
+// Nhận dữ liệu từ server
+socket.on('reciveError', (err) => {
+  if (err) {
+    if (err == 'username')
+      showError(usernameInput, 'error', 'Tài khoản không tồn tại');
+    if (err == 'pass')
+      showError(passwordInput, 'error', 'Mật khẩu không đúng');
+  } else
+    formLogin.submit();
+});
+
+// GỬi dữ liệu để kiểm tra
+formLogin.querySelector('.btn-login').addEventListener('click', () => {
+  requestData({
+    username: usernameInput.value,
+    password: passwordInput.value,
   });
 });

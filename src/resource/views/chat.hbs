@@ -1,0 +1,173 @@
+<div id="app"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+<script>
+    // Declare variables in the global scope
+    let map;
+    let markers = [];
+    let routeLayer;
+
+    function addStyles() {
+        const leafletCss = document.createElement('link');
+        leafletCss.rel = 'stylesheet';
+        leafletCss.href = 'https://unpkg.com/leaflet/dist/leaflet.css';
+        document.head.appendChild(leafletCss);
+
+        const customStyle = document.createElement('style');
+        customStyle.textContent = `
+            #map { height: 500px; }
+            #controls { margin-bottom: 10px; }
+            #distance { margin-top: 10px; }
+            input, button { margin: 5px; }
+        `;
+        document.head.appendChild(customStyle);
+    }
+
+    function createElements() {
+        const app = document.createElement('div');
+        app.id = 'app';
+        document.body.appendChild(app);
+
+        const title = document.createElement('h1');
+        title.textContent = 'OpenStreetMap - Route Calculation';
+        app.appendChild(title);
+
+        const controls = document.createElement('div');
+        controls.id = 'controls';
+
+        const startLabel = document.createElement('label');
+        startLabel.textContent = 'Start:';
+        startLabel.setAttribute('for', 'start');
+        controls.appendChild(startLabel);
+
+        const startInput = document.createElement('input');
+        startInput.id = 'start';
+        startInput.placeholder = 'Enter start address';
+        controls.appendChild(startInput);
+
+        const endLabel = document.createElement('label');
+        endLabel.textContent = 'End:';
+        endLabel.setAttribute('for', 'end');
+        controls.appendChild(endLabel);
+
+        const endInput = document.createElement('input');
+        endInput.id = 'end';
+        endInput.placeholder = 'Enter end address';
+        controls.appendChild(endInput);
+
+        const calculateButton = document.createElement('button');
+        calculateButton.textContent = 'Calculate Route';
+        calculateButton.id = 'calculate';
+        controls.appendChild(calculateButton);
+
+        app.appendChild(controls);
+
+        const mapDiv = document.createElement('div');
+        mapDiv.id = 'map';
+        app.appendChild(mapDiv);
+
+        const distanceDiv = document.createElement('div');
+        distanceDiv.id = 'distance';
+        distanceDiv.textContent = 'Distance: N/A';
+        app.appendChild(distanceDiv);
+    }
+
+    function initMap() {
+        map = L.map('map').setView([10.762622, 106.660172], 12); // Ho Chi Minh City
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.control.scale().addTo(map);
+        L.Control.geocoder().addTo(map);
+
+        map.on('click', function (e) {
+            if (markers.length < 2) {
+                placeMarker(e.latlng);
+            } else {
+                alert('You have already selected two points.');
+            }
+        });
+    }
+
+    function placeMarker(latlng) {
+        let marker = L.marker(latlng).addTo(map);
+        markers.push(marker);
+
+        if (markers.length === 2) {
+            calculateRoute();
+        }
+    }
+
+    function clearMarkers() {
+        markers.forEach(marker => map.removeLayer(marker));
+        markers = [];
+        if (routeLayer) {
+            map.removeLayer(routeLayer);
+        }
+    }
+
+    function calculateRoute() {
+        if (markers.length < 2) return;
+
+        let start = markers[0].getLatLng();
+        let end = markers[1].getLatLng();
+
+        let url = `https://router.project-osrm.org/route/v1/driving/${start.lng},${start.lat};${end.lng},${end.lat}?overview=full&geometries=geojson`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.routes && data.routes[0]) {
+                    const route = data.routes[0];
+                    const distance = route.distance / 1000; // Convert to kilometers
+                    document.getElementById('distance').textContent = 'Distance: ' + distance.toFixed(2) + ' km';
+
+                    if (routeLayer) {
+                        map.removeLayer(routeLayer);
+                    }
+
+                    routeLayer = L.geoJSON(route.geometry).addTo(map);
+                    map.fitBounds(routeLayer.getBounds());
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function geocodeAddress(address, callback) {
+        L.Control.Geocoder.nominatim().geocode(address, function (results) {
+            if (results && results.length > 0) {
+                callback(results[0].center);
+            } else {
+                console.error('Geocode was not successful.');
+            }
+        });
+    }
+
+    function calculateRouteFromInputs() {
+        let startAddress = document.getElementById('start').value;
+        let endAddress = document.getElementById('end').value;
+
+        if (startAddress && endAddress) {
+            clearMarkers();
+            geocodeAddress(startAddress, function (startLocation) {
+                placeMarker(startLocation);
+                geocodeAddress(endAddress, function (endLocation) {
+                    placeMarker(endLocation);
+                });
+            });
+        } else {
+            alert('Please enter both start and end addresses.');
+        }
+    }
+
+    function init() {
+        addStyles();
+        createElements();
+        initMap();
+        document.getElementById('calculate').addEventListener('click', calculateRouteFromInputs);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>

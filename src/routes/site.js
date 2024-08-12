@@ -10,9 +10,14 @@ router.post('/login', siteController.login);
 
 router.get('/logout', siteController.logout);
 
-router.get('/signup', siteController.signup);
+router.post('/signup', siteController.signup);
+
+router.get('/signup', siteController.showSignup);
 
 router.get('/resetpass', siteController.resetpass);
+
+router.get('/chat', siteController.chat);
+
 
 router.get('/', siteController.index);
 

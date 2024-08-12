@@ -26,8 +26,8 @@ class NewsController {
                 {
                     noSlider: true,
                     news,
-                    jsFiles: ['news.js'],
-                    cssFiles: ['news.css']
+                    jsFiles: ['/js/news.js'],
+                    cssFiles: ['/css/news.css']
                 });
         }
         catch (error) {
@@ -67,7 +67,7 @@ class NewsController {
                     newNews: newNews,
                     newsDetail: newsDetail,
                     noSlider: true,
-                    cssFiles: ['newsDetail.css', 'news.css']
+                    cssFiles: ['/css/newsDetail.css', '/css/news.css']
                 });
         }
         catch (error) {

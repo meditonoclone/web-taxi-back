@@ -33,44 +33,35 @@
   <!-- end about section -->
   <!--price-table-->
   <section class="price-table layout_padding">
-    <h2 style="text-align: center; color: #161a18; margin-bottom: 10px;">BẢNG BÁO GIÁ TAXI KHU
-      VỰC
-      BIÊN HÒA - ĐỒNG NAI - GIÁ CHỈ TỪ 10.000/KM</h2>
+  <h2 style="text-align: center; color: #161a18; margin-bottom: 10px;">BẢNG BÁO GIÁ TAXI KHU
+    VỰC
+    BIÊN HÒA - ĐỒNG NAI - GIÁ CHỈ TỪ 10.000/KM</h2>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Các loại xe</th>
-          <th>Giá mở cửa</th>
-          <th>Giá cước các Km tiếp theo</th>
-          <th>Giá cước từ Km thứ 31</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Xe 4 chỗ nhỏ</td>
-          <td>10.000đ</td>
-          <td>12.500đ</td>
-          <td>10.500đ</td>
-        </tr>
-        <tr>
-          <td>Xe 4 chỗ lớn</td>
-          <td>11.000đ</td>
-          <td>14.000đ</td>
-          <td>11.600đ</td>
-        </tr>
-        <tr>
-          <td>Xe 7 chỗ</td>
-          <td>11.000đ</td>
-          <td>17.000đ</td>
-          <td>13.600đ</td>
-        </tr>
-        <tr>
-          <td>Thời gian chờ</td>
-          <td colspan="3">45.000đ/h</td>
-        </tr>
-      </tbody>
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th>Các loại xe</th>
+        <th>Giá mở cửa</th>
+        <th>Giá cước 10km đầu</th>
+        <th>Giá cước từ Km thứ 11 đến 30</th>
+        <th>Giá cước từ Km thứ 31</th>
+        <th>Thời gian chờ</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each prices}}
+      <tr>
+        <td>{{this.vehicle_type}}</td>
+        <td>{{this.base_fare}}</td>
+        <td>{{this.fare_first_10km}}</td>
+        <td>{{this.fare_10_to_30km}}</td>
+        <td>{{this.fare_above_30km}}</td>
+        <td>{{this.waiting_time_fare}}</td>
+      </tr>
+      {{/each}}
+
+    </tbody>
+  </table>
   </section>
   <!-- service section -->
 
@@ -141,54 +132,25 @@
           của chúng tôi
         </h2>
       </div>
-      <div class="news_container">
-        <div class="box">
-          <a href="tintuc1" class="news-link" target="_blank">
+      <div class="news_container row">
+        {{#each news}}
+        <div class="box col-lg-4 col-md-6 col-sm-12">
+          <a href="news/{{this.slug}}" class="news-link" target="_blank">
             <div class="date-box">
-              <h6>July 13, 2024</h6>
+              <h6>{{formatDate this.published_date}}</h6>
             </div>
             <div class="img-box">
-              <img src="img/news-img.jpg" alt="Taxi at Tan Son Nhat Airport">
+              <img src="{{this.image_url}}" alt={{this.slug}}>
             </div>
             <div class="detail-box">
-              <h6>Xem xét cấp thẻ cho tài xế xe taxi, xe công nghệ ra vào đón khách ở Tân Sơn Nhất</h6>
-              <p>Tân Sơn Nhất sẽ phối hợp với cơ quan chức năng tiến hành kiểm tra, giám sát để kịp thời phát hiện xử lý
-                taxi nâng cước, nhân viên cò mồi hoặc xe dù, xe ôm hoạt động lộn xộn trong khu vực sân bay dịp hè 2024.
+              <h6>{{this.title}}</h6>
+              <p>
+                {{this.description}}
               </p>
             </div>
           </a>
         </div>
-        <div class="box">
-          <a href="tintuc2" class="news-link" target="_blank">
-            <div class="date-box">
-              <h6>July 13, 2024</h6>
-            </div>
-            <div class="img-box">
-              <img src="img/news-img2.jpg" alt="Electric Taxi">
-            </div>
-            <div class="detail-box">
-              <h6>Doanh nghiệp cần sớm thấy chính sách hỗ trợ để yên tâm dùng xe điện</h6>
-              <p>Nhiều doanh nghiệp taxi sử dụng xe điện đã thấy lợi ích của phương tiện này. Nhưng cần sớm có những
-                chính sách cụ thể để yên tâm chuyển đổi sang xe điện, thực hiện cam kết giảm phát thải carbon của Chính
-                phủ.</p>
-            </div>
-          </a>
-        </div>
-        <div class="box">
-          <a href="tintuc3" class="news-link" target="_blank">
-            <div class="date-box">
-              <h6>July 13, 2024</h6>
-            </div>
-            <div class="img-box">
-              <img src="img/news-img3.jpg" alt="Vinasun Hybrid Taxi">
-            </div>
-            <div class="detail-box">
-              <h6>Taxi điện đầy đường, Vinasun rẽ hướng rót tiền mua 550 ô tô dòng hybrid</h6>
-              <p>Thay vì dùng ô tô điện, Vinasun chọn đầu tư mới 550 xe hybrid có động cơ lai điện và xăng. Xu hướng đầu
-                tư xe hybrid trong dịch vụ taxi là chiến lược dài hạn của hãng.</p>
-            </div>
-          </a>
-        </div>
+        {{/each}}
       </div>
     </div>
   </section>
@@ -420,7 +382,7 @@
         <div class="info_links">
           <ul>
             <li class=" ">
-              <a class="" href="index">Trang chủ <span class="sr-only">(current)</span></a>
+              <a class="" href="/">Trang chủ <span class="sr-only">(current)</span></a>
             </li>
             <li class="">
               <a class="" href="about"> Chúng tôi</a>

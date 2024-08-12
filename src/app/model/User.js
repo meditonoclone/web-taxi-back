@@ -3,7 +3,7 @@ const { DataTypes, Model } = require('sequelize');
 
 module.exports = (sequelize) => {
     class User extends Model {
-
+        
     };
 
     User.init({
@@ -26,11 +26,11 @@ module.exports = (sequelize) => {
         },
         account_type: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         address: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: true
         },
         profile_picture: {
             type: DataTypes.DATE,

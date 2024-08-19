@@ -104,9 +104,9 @@ body {
 .hero_area {
   min-height: 100vh;
   position: relative;
-  background: linear-gradient(rgba(255, 255, 255, 0.9), 
-  rgba(255, 255, 255, 0.6)),
-  url(../img/hero-bg.jpg);
+  background: linear-gradient(rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.6)),
+    url(../img/hero-bg.jpg);
   background-size: cover;
 
   &::before {
@@ -225,6 +225,8 @@ a:focus {
   z-index: 2;
   color: #0fe7f3;
   padding: 45px 0 75px 0;
+  width: 95% !important;
+  margin: auto;
 
   .row {
     align-items: center;
@@ -237,7 +239,6 @@ a:focus {
   }
 
   .box {
-    padding-left: 15%;
     margin-bottom: 100px;
 
     .detail-box {
@@ -276,12 +277,14 @@ a:focus {
   }
 
   .slider_form {
-    width: 400px;
+    width: 100%;
     padding: 25px;
     background-color: #0fe7f3;
     border-radius: 10px;
     margin: auto;
-
+    #map{
+      margin-bottom: 15px;
+    }
     h4 {
       font-weight: bold;
       text-align: center;
@@ -292,7 +295,8 @@ a:focus {
     form {
       margin: 15px 0;
 
-      input, select {
+      input,
+      select {
         width: 100%;
         height: 40px;
         border: none;
@@ -311,6 +315,7 @@ a:focus {
         }
 
       }
+
       button {
         font-size: x-small;
         flex: 1;
@@ -471,6 +476,7 @@ a:focus {
       flex-direction: column;
       align-items: center;
       margin-bottom: 15px;
+
       .img-box {
         height: 200px;
         overflow: hidden;
@@ -507,7 +513,7 @@ a:focus {
     position: relative;
   }
 
-  .owl-nav > div {
+  .owl-nav>div {
     margin-top: -26px;
     position: absolute;
     top: 50%;
@@ -595,13 +601,13 @@ a:focus {
     margin-bottom: 15px;
   }
 
-  
+
 
   @media (max-width: 768px) {
     .img-box {
       height: 150px;
     }
-    
+
     .img-box img {
       width: 100px;
       height: 100px;
@@ -965,8 +971,15 @@ a:focus {
 
 .error {
   color: red;
-  border : 2px solid red!important; 
+  border: 2px solid red !important;
 }
-.error, .error + span {
+
+.error,
+.error+span {
   color: red;
+}
+
+#map {
+  width: 100%;
+  height: 200px;
 }

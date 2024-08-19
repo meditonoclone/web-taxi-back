@@ -145,7 +145,9 @@ a:focus {
   align-items: center;
   z-index: 2;
   color: #0fe7f3;
-  padding: 45px 0 75px 0; }
+  padding: 45px 0 75px 0;
+  width: 95% !important;
+  margin: auto; }
   .slider_section .row {
     align-items: center; }
   .slider_section div#carouselExampleIndicators {
@@ -153,7 +155,6 @@ a:focus {
     margin-left: -20%;
     position: unset; }
   .slider_section .box {
-    padding-left: 15%;
     margin-bottom: 100px; }
     .slider_section .box .detail-box {
       padding-right: 10%; }
@@ -183,11 +184,13 @@ a:focus {
           background-color: #0b0b0a;
           color: #ffffff; }
   .slider_section .slider_form {
-    width: 400px;
+    width: 100%;
     padding: 25px;
     background-color: #0fe7f3;
     border-radius: 10px;
     margin: auto; }
+    .slider_section .slider_form #map {
+      margin-bottom: 15px; }
     .slider_section .slider_form h4 {
       font-weight: bold;
       text-align: center;
@@ -195,7 +198,8 @@ a:focus {
       margin-bottom: 20px; }
     .slider_section .slider_form form {
       margin: 15px 0; }
-      .slider_section .slider_form form input, .slider_section .slider_form form select {
+      .slider_section .slider_form form input,
+      .slider_section .slider_form form select {
         width: 100%;
         height: 40px;
         border: none;
@@ -662,5 +666,10 @@ a:focus {
   color: red;
   border: 2px solid red !important; }
 
-.error, .error + span {
+.error,
+.error + span {
   color: red; }
+
+#map {
+  width: 100%;
+  height: 200px; }

@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const csurf = require('csurf');
 const flash = require('connect-flash');
 const validate = require('./socket/validate');
+const getPrice = require('./socket/getPrice');
 const http = require('http');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
@@ -22,7 +23,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 validate(io);//gửi lỗi validat về cho client
-
+getPrice(io);
 
 // conect to database
 const { setLocals } = require('./middleware');

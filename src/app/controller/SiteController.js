@@ -34,7 +34,7 @@ class SiteController {
             }
         ));
         res.locals.news = newNews;
-        res.render('home', { home: true , jsFiles: ["https://maps.googleapis.com/maps/api/js?key=AIzaSyDgz1N_DeR-ErL6aO443RHy6zwkQF-9kjU&libraries=places", "/js/map.js"]});
+        res.render('home', {home: true , jsFiles: ["/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"]});
     }
 
     //GET login page

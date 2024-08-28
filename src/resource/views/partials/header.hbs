@@ -116,17 +116,22 @@
             <h4>
               Đặt xe ngay
             </h4>
-            <form action="" id="bookingForm">
-              <select id="vehicleType" placeholder="Loại xe" required>
+            <form action="book-taxi" method="POST" id="bookingForm">
+              <select id="vehicleType" name="vehicleType" placeholder="Loại xe" required>
                 <option value="2">Xe 4 chỗ nhỏ</option>
                 <option value="1">Xe 4 chỗ lớn</option>
                 <option value="3">Xe 7 chỗ</option>
               </select>
-              <input id="start" type="text" placeholder="Đón xe tại" required>
-              <input id="end" type="text" placeholder="Xuống xe ở" required>
+              <input id="start" name="start" type="text" placeholder="Đón xe tại" required>
+              <span></span>
+              <input id="end" name="end" type="text" placeholder="Xuống xe ở" required>
+              <span></span>
               <div id="map"></div>
               <div class="btm_input">
-                <input type="text" placeholder="Số điện thoại" required>
+                <div>
+                  <input id="phone" name="phone" type="text" placeholder="Số điện thoại" required>
+                  <span></span>
+                </div>
                 <button onclick="calculateRoute()">Ước lượng giá cước</button>
               </div>
               <p id="estimated-result">Quảng đường: <span id="result">30km</span> - Giá <span id="cost">4 tỉ</span></p>

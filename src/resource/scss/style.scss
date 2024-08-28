@@ -42,6 +42,7 @@ body {
 
 .layout_padding {
   padding: 90px 0;
+  
 }
 
 .layout_padding2 {
@@ -301,15 +302,19 @@ a:focus {
         height: 40px;
         border: none;
         outline: none;
-        margin-bottom: 15px;
+        margin-top: 15px;
         padding-left: 15px;
       }
 
       .btm_input {
         display: flex;
-
+        align-items: flex-start;
+        div{
+          width: 70%;
+          margin-right: 12px;
+        }
         input {
-          width: calc(95% - 116px);
+          width: 100%;
           margin: 0;
           margin-right: 10px;
         }
@@ -317,6 +322,7 @@ a:focus {
       }
 
       button {
+        height: 40px;
         font-size: x-small;
         flex: 1;
         min-width: 116px;
@@ -980,6 +986,7 @@ a:focus {
 }
 
 #map {
+  margin-top: 15px;
   width: 100%;
   height: 200px;
 }

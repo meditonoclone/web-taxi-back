@@ -40,9 +40,7 @@ class NewsController {
             let data;
             let newsDetail;
             let newNews;
-            newNews = await News(sequelize).findAll({ limit: 7, where: {
-                published_date: {[Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000) }
-            }, order: [['published_date', 'DESC']] });
+            newNews = await News(sequelize).findAll({ limit: 7, order: [['published_date', 'DESC']] });
             newNews = await Promise.all(newNews.map(
                 async (item, index) => {
                     let thumbnail = await item.getImages();

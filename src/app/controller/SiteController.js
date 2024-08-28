@@ -2,6 +2,7 @@ const User = require('../model/User');
 const session = require('express-session');
 const db = require('../../config/db');
 const News = require('../model/News');
+const Trip = require('../model/Trip');
 const setLocals = require('../../middleware');
 const cookieSignature = require('cookie-signature');
 const { Op } = require('sequelize');
@@ -34,7 +35,7 @@ class SiteController {
             }
         ));
         res.locals.news = newNews;
-        res.render('home', {home: true , jsFiles: ["/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"]});
+        res.render('home', {home: true , jsFiles: ['/js/validateInput.js', '/js/booking.js',"/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"]});
     }
 
     //GET login page
@@ -128,6 +129,30 @@ class SiteController {
 
     chat(req, res) {
         res.render('chat');
+    }
+
+    //GET profile
+    account(req, res) {
+        res.render('account/clientProfile', { noSlider: true, cssFiles: ['/css/account.css'], 
+            jsFiles: ['/js/account.js'] });
+    }
+
+    //POST booking
+    async booking(req, res) {
+        try{
+            console.log(req.body);
+            const trip = await Trip(db).create({
+                vehicle_type_id: 1,
+                from: 'Biên Hòa',
+                to: 'Buôn Ma Thuột',
+                contact: '0909090990',
+                order_time: new Date(),
+            });
+            console.log(trip);
+            res.redirect('account');
+        }catch(err){
+            console.error('Error booking:', err);
+        }
     }
 }
 

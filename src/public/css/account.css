@@ -1,0 +1,32 @@
+.container.layout_padding.profile .head {
+  display: flex;
+  align-items: center;
+  margin-bottom: 36px; }
+  .container.layout_padding.profile .head #avatar {
+    width: 174px;
+    height: 174px;
+    border-radius: 50%;
+    margin-right: 24px; }
+  .container.layout_padding.profile .head div {
+    display: inline-block; }
+  .container.layout_padding.profile .head h1, .container.layout_padding.profile .head h2 {
+    margin: 0; }
+  .container.layout_padding.profile .head h2 {
+    color: rgba(0, 0, 0, 0.4); }
+
+.container.layout_padding.profile .info {
+  font-size: 1.3rem; }
+
+.layout_padding.trip_history {
+  margin: auto; }
+  .layout_padding.trip_history h4 {
+    margin-left: 2.5%; }
+  .layout_padding.trip_history h4:hover {
+    cursor: pointer; }
+  .layout_padding.trip_history .hide {
+    display: none; }
+  .layout_padding.trip_history i {
+    font-size: 1.2rem;
+    color: rgba(0, 0, 0, 0.5); }
+  .layout_padding.trip_history table.price-table {
+    font-size: 0.8rem; }

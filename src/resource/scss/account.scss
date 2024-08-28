@@ -1,0 +1,44 @@
+.container.layout_padding.profile{
+    .head{
+        display: flex;
+        align-items: center;
+        margin-bottom: 36px;
+        #avatar{
+            width: 174px;
+            height: 174px;
+            border-radius: 50%;
+            margin-right: 24px;
+        }
+        div{
+            display: inline-block;
+        }
+        h1,h2{
+            margin: 0;
+        }
+        h2{
+            color: rgba(0,0,0,0.4)
+        }
+    }
+    .info{
+        font-size: 1.3rem;
+    }
+}
+.layout_padding.trip_history{
+    margin: auto;
+    h4{
+        margin-left: 2.5%;
+    }
+    h4:hover {
+        cursor: pointer;
+    }
+    .hide{
+        display: none;
+    }
+    i{
+        font-size: 1.2rem;
+        color: rgba(0,0,0,0.5)
+    }
+    table.price-table{
+        font-size:0.8rem;
+    }
+}

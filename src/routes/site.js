@@ -16,8 +16,11 @@ router.get('/signup', siteController.showSignup);
 
 router.get('/resetpass', siteController.resetpass);
 
-router.get('/chat', siteController.chat);
+// router.get('/chat', siteController.chat);
 
+router.get('/account', siteController.account);
+
+router.post('/book-taxi', siteController.booking);
 
 router.get('/', siteController.index);
 

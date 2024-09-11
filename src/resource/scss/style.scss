@@ -109,7 +109,7 @@ body {
       rgba(255, 255, 255, 0.6)),
     url(../img/hero-bg.jpg);
   background-size: cover;
-
+z-index: 2;
   &::before {
     content: "";
     position: absolute;
@@ -911,7 +911,7 @@ a:focus {
   th,
   td {
     border: 1px solid #ddd;
-    padding: 0.5rem;
+    padding: 0.5rem 0 ;
     text-align: center;
   }
 

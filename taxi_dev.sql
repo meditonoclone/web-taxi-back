@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th8 26, 2024 lúc 03:22 AM
+-- Máy chủ: 127.0.0.1:3307
+-- Thời gian đã tạo: Th8 30, 2024 lúc 08:26 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -166,6 +166,45 @@ INSERT INTO `taxi_pricing` (`vehicle_type_id`, `vehicle_type`, `base_fare`, `far
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `trip_history`
+--
+
+CREATE TABLE `trip_history` (
+  `trip_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `driver_id` int(11) DEFAULT NULL,
+  `vehicle_type_id` int(11) NOT NULL,
+  `from_location` varchar(255) NOT NULL,
+  `to_location` varchar(255) DEFAULT NULL,
+  `contact` varchar(11) NOT NULL,
+  `order_time` datetime NOT NULL,
+  `finished_time` datetime DEFAULT NULL,
+  `distance` decimal(10,2) DEFAULT NULL,
+  `cost` decimal(10,2) DEFAULT NULL,
+  `waiting_minutes` int(11) DEFAULT 0,
+  `status` enum('cancel','waiting','booked','en route','in transit','completed') NOT NULL DEFAULT 'booked'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `trip_history`
+--
+
+INSERT INTO `trip_history` (`trip_id`, `client_id`, `driver_id`, `vehicle_type_id`, `from_location`, `to_location`, `contact`, `order_time`, `finished_time`, `distance`, `cost`, `waiting_minutes`, `status`) VALUES
+(1, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:48:51', NULL, NULL, NULL, 0, 'booked'),
+(2, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:52:21', NULL, NULL, NULL, 0, 'booked'),
+(3, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:15', NULL, NULL, NULL, 0, 'booked'),
+(4, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:30', NULL, NULL, NULL, 0, 'booked'),
+(5, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:03', NULL, NULL, NULL, 0, 'booked'),
+(6, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:43', NULL, NULL, NULL, 0, 'booked'),
+(7, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:41:59', NULL, NULL, NULL, 0, 'booked'),
+(8, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:45:10', NULL, NULL, NULL, 0, 'booked'),
+(9, 1, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:47:23', NULL, NULL, NULL, 0, 'booked'),
+(10, 5, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 03:31:11', NULL, NULL, NULL, 0, 'booked'),
+(11, 5, 3, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 03:34:21', NULL, NULL, NULL, 0, 'booked');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `user`
 --
 
@@ -236,6 +275,15 @@ ALTER TABLE `taxi_pricing`
   ADD UNIQUE KEY `vehicle_type` (`vehicle_type`) USING BTREE;
 
 --
+-- Chỉ mục cho bảng `trip_history`
+--
+ALTER TABLE `trip_history`
+  ADD PRIMARY KEY (`trip_id`),
+  ADD KEY `client_id` (`client_id`),
+  ADD KEY `driver_id` (`driver_id`),
+  ADD KEY `vehicle_type_id` (`vehicle_type_id`);
+
+--
 -- Chỉ mục cho bảng `user`
 --
 ALTER TABLE `user`
@@ -271,10 +319,16 @@ ALTER TABLE `taxi_pricing`
   MODIFY `vehicle_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT cho bảng `trip_history`
+--
+ALTER TABLE `trip_history`
+  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -294,6 +348,14 @@ ALTER TABLE `images`
   ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `images_ibfk_2` FOREIGN KEY (`profile_id`) REFERENCES `driver_profile` (`profile_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `images_ibfk_3` FOREIGN KEY (`news_id`) REFERENCES `news` (`news_id`) ON DELETE SET NULL;
+
+--
+-- Các ràng buộc cho bảng `trip_history`
+--
+ALTER TABLE `trip_history`
+  ADD CONSTRAINT `trip_history_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `user` (`user_id`),
+  ADD CONSTRAINT `trip_history_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `user` (`user_id`),
+  ADD CONSTRAINT `trip_history_ibfk_3` FOREIGN KEY (`vehicle_type_id`) REFERENCES `taxi_pricing` (`vehicle_type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

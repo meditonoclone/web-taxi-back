@@ -1,0 +1,46 @@
+<section class="container profile layout_padding">
+    <div class="head">
+        <img src="{{info.profile_picture}}" alt="" id="avatar">
+        <div>
+            <h1 id="name">{{info.name}}</h1>
+            <h2 id="phone">{{info.phone}}</h2>
+        </div>
+    </div>
+    <div class="info">
+        <p>
+            Email: <span id="email">{{info.email}}</span>
+        </p>
+        <p>
+
+            Địa chỉ: <span id="address">{{info.address}}</span>
+        </p>
+    </div>
+</section>
+
+<section class="price-table layout_padding">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Mã chuyến</th>
+                <th>Thời gian đặt</th>
+                <th>Điểm đi</th>
+                <th>Điểm đến</th>
+                <th>Khách hàng</th>
+                <th>Số điện thoại khách hàng</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>{{#each newTrips}}
+            <tr>
+                <td>{{this.trip_id}}</td>
+                <td>{{dateToDatetime this.order_time}}</td>
+                <td>{{this.from_location}}</td>
+                <td>{{this.to_location}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.phone}}</td>
+                <td>{{this.status}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</section>

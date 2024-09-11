@@ -1,18 +1,18 @@
 <section class="container profile layout_padding">
     <div class="head">
-        <img src="https://s120-ava-talk.zadn.vn/e/4/1/1/1/120/7b63a5450edc710a932ce0a4af06a094.jpg" alt="" id="avatar">
+        <img src="{{info.profile_picture}}" alt="" id="avatar">
         <div>
-            <h1 id="name">Nguyễn Văn A</h1>
-            <h2 id="phone">0909090909</h2>
+            <h1 id="name">{{info.name}}</h1>
+            <h2 id="phone">{{info.phone}}</h2>
         </div>
     </div>
     <div class="info">
         <p>
-            Email: <span id="email">nguyen.van@example.com</span>
+            Email: <span id="email">{{info.email}}</span>
         </p>
         <p>
 
-            Địa chỉ: <span id="address">1 nguyễn ái quốc </span>
+            Địa chỉ: <span id="address">{{info.address}}</span>
         </p>
     </div>
 </section>
@@ -26,7 +26,7 @@
                 <th>Thời gian đặt</th>
                 <th>Loại xe</th>
                 <th>Tổng số km</th>
-                <th>Thời gian chờ</th>
+                <th>Thời gian chờ (giờ)</th>
                 <th>Số tiền</th>
                 <th>Điểm đi</th>
                 <th>Điểm đến</th>
@@ -36,19 +36,21 @@
             </tr>
         </thead>
         <tbody>
+            {{#each historyTrips}}
             <tr>
-                <td>1</td>
-                <td>12:12 12/12/2012</td>
-                <td>4 chỗ nhỏ</td>
-                <td>3</td>
-                <td>0</td>
-                <td>1.000vnd</td>
-                <td>Biên Hòa</td>
-                <td>Vĩnh Cửu</td>
-                <td>Lê Văn B</td>
-                <td>090909090111</td>
-                <td>Hoàn thành</td>
+                <td>{{this.trip_id}}</td>
+                <td>{{dateToDatetime this.order_time}}</td>
+                <td>{{this.vehicle_type}}</td>
+                <td>{{this.distance}}</td>
+                <td>{{minToHour this.waiting_minutes}}</td>
+                <td>{{this.cost}}</td>
+                <td>{{this.from_location}}</td>
+                <td>{{this.to_location}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.phone}}</td>
+                <td>{{this.status}}</td>
             </tr>
+            {{/each}}
         </tbody>
     </table>
 </section>

@@ -29,6 +29,7 @@ getPrice(io);
 const { setLocals } = require('./middleware');
 
 
+app.use(express.json());
 
 app.use(flash());
 
@@ -71,6 +72,8 @@ app.use(cookieParser()); // Sử dụng cookie-parser để phân tích cú phá
 app.engine('hbs', exphbs.engine({
   helpers: {
     formatDate: (date) => moment(date).format('DD/MM/YYYY'),
+    dateToDatetime: (date) => moment(date).format('HH:mm DD/MM/YYYY'),
+    minToHour: (min) => (min/60).toFixed(2),
     // user: () => {
     //   if (session.user)
     //     return session.user.name; 

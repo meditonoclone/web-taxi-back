@@ -4,6 +4,7 @@ const sequelize = new Sequelize('taxi_dev', 'root', '', {
   host: 'localhost',
   dialect: 'mysql', 
   logging: false,
+  port: 3307,
 });
 const testconnect = async () =>{
     try {

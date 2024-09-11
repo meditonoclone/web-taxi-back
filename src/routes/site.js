@@ -20,6 +20,8 @@ router.get('/resetpass', siteController.resetpass);
 
 router.get('/account', siteController.account);
 
+router.post('/delete-trip', siteController.deleteTrip)
+
 router.post('/book-taxi', siteController.booking);
 
 router.get('/', siteController.index);

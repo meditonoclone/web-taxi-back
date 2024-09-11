@@ -10,6 +10,7 @@ const { resultToObject, validateUserData } = require('../../util/sequelize');
 
 class SiteController {
     async index(req, res) {
+        console.log(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }))
         const [prices] = await db.query(`
             select vehicle_type,
                 FORMAT(base_fare, 0, 'de_DE') AS base_fare,
@@ -21,9 +22,7 @@ class SiteController {
         res.locals.prices = prices;
         let newNews;
         newNews = await News(db).findAll({
-            limit: 3, where: {
-                published_date: { [Op.gte]: new Date(new Date() - 3 * 24 * 60 * 60 * 1000) }
-            }, order: [['published_date', 'DESC']]
+            limit: 3, order: [['published_date', 'DESC']]
         });
         newNews = await Promise.all(newNews.map(
             async (item, index) => {
@@ -35,10 +34,10 @@ class SiteController {
             }
         ));
         res.locals.news = newNews;
-        res.render('home', {home: true , jsFiles: ['/js/validateInput.js', '/js/booking.js',"/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"]});
+        res.render('home', { home: true, jsFiles: ['/js/validateInput.js', '/js/booking.js', "/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"] });
     }
 
-    //GET login page
+    //GET page
     showLogin(req, res, next) {
         res.render('login', { cssFiles: ['/css/login.css'], noSlider: true, jsFiles: ['/js/validateInput.js', '/js/login.js', '/socket.io/socket.io.js'] });
     }
@@ -109,11 +108,10 @@ class SiteController {
     async signup(req, res) {
         try {
             const validatedData = validateUserData(req.body);
-            const [user, created] = await User(db).findOrCreate({ where: validatedData});
+            const [user, created] = await User(db).findOrCreate({ where: validatedData });
             console.log(user);
             res.redirect('/login');
-        } catch (error)
-        {
+        } catch (error) {
             console.error('Error creating new user:', error);
         }
 
@@ -132,25 +130,91 @@ class SiteController {
     }
 
     //GET profile
-    account(req, res) {
-        res.render('account/clientProfile', { noSlider: true, cssFiles: ['/css/account.css'], 
-            jsFiles: ['/js/account.js'] });
+    async account(req, res) {
+        if (!res.locals.user)
+            return res.redirect('/login');
+        try {
+            let info = await User(db).findByPk(res.locals.user.userId,
+                {
+                    attributes: { exclude: ['password'] }
+                }
+            );
+            info = { ...info.dataValues };
+            console.log(info);
+            res.locals.info = info;
+            if (info.account_type === 'client') {
+                let [historyTrips] = await db.query(`
+                    SELECT trip_id, order_time, taxi_pricing.vehicle_type, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.status
+                    FROM trip_history
+                    LEFT JOIN driver_profile ON trip_history.driver_id = driver_profile.user_id
+                    LEFT JOIN user ON trip_history.driver_id = user.user_id
+                    INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
+                    WHERE trip_history.client_id = ${info.user_id}`);
+                res.locals.historyTrips = historyTrips;
+                res.render('account/clientProfile', {
+                    noSlider: true, cssFiles: ['/css/account.css'],
+                    jsFiles: ['/js/clientAccount.js']
+                });
+            } else if (info.account_type === 'driver') {
+                let [newTrips] = await db.query(`
+                    SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
+                    FROM trip_history left join user on client_id = user.user_id 
+                    WHERE status = 'booked';`);
+                res.locals.newTrips = newTrips;
+                res.render('account/driverProfile', {
+                    noSlider: true, 
+                    cssFiles: ['/css/account.css', '/css/driverProfile.css'],
+                    jsFiles: ['/js/driverAccount.js']
+                });
+
+            } else {
+                console.log('tài khoản admin');
+                return res.redirect('/login');
+            }
+
+        } catch (err) {
+            console.error('Error get infomation:', err);
+
+        }
+    }
+    //POST delete trip client
+    async deleteTrip(req, res) {
+        try {
+            console.log('cc');
+            const { tripId } = req.body;
+            const trip = await Trip(db).findOne({
+                where: {
+                    trip_id: parseInt(tripId),
+                    client_id: req.session.user.userId
+                }
+            });
+            if (!trip) {
+                res.status(200).json('fail find trip');
+                return;
+            }
+           await trip.destroy();
+            res.status(200).json('success');
+
+        } catch (err) {
+            res.status(200).json('fail');
+        }
+
     }
 
     //POST booking
     async booking(req, res) {
-        try{
-            console.log(req.body);
+        try {
+            console.log(res.locals.user, 1);
             const trip = await Trip(db).create({
+                client_id: !res.locals.user ? null : res.locals.user.userId,
                 vehicle_type_id: 1,
-                from: 'Biên Hòa',
-                to: 'Buôn Ma Thuột',
+                from_location: 'Biên Hòa',
+                to_location: 'Buôn Ma Thuột',
                 contact: '0909090990',
                 order_time: new Date(),
             });
-            console.log(trip);
             res.redirect('account');
-        }catch(err){
+        } catch (err) {
             console.error('Error booking:', err);
         }
     }

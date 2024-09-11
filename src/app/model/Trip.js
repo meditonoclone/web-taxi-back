@@ -23,11 +23,11 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        from: {
+        from_location: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        to: {
+        to_location: {
             type: DataTypes.STRING,
             allowNull: false
         },

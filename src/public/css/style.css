@@ -57,7 +57,8 @@ body {
   min-height: 100vh;
   position: relative;
   background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6)), url(../img/hero-bg.jpg);
-  background-size: cover; }
+  background-size: cover;
+  z-index: 2; }
   .hero_area::before {
     content: "";
     position: absolute;
@@ -623,7 +624,7 @@ a:focus {
   .price-table th,
   .price-table td {
     border: 1px solid #ddd;
-    padding: 0.5rem;
+    padding: 0.5rem 0;
     text-align: center; }
   .price-table th {
     background-color: #f2f2f2;

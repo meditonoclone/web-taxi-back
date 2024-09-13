@@ -45,7 +45,40 @@
     </table>
 </section>
 <section id="historyTrips" class="price-table layout_padding">
-    Đây là lịch sử chuyến
+    <table class="price-table hide">
+        <thead>
+            <tr>
+                <th>Mã chuyến</th>
+                <th>Thời gian đặt</th>
+                <th>Tổng số km</th>
+                <th>Thời gian chờ (giờ)</th>
+                <th>Số tiền</th>
+                <th>Điểm đi</th>
+                <th>Điểm đến</th>
+                <th>Khách hàng</th>
+                <th>Số điện thoại khách hàng</th>
+                <th>Thời gian hoàn thành</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each historyTrips}}
+            <tr>
+                <td>{{this.trip_id}}</td>
+                <td>{{dateToDatetime this.order_time}}</td>
+                <td>{{this.distance}}</td>
+                <td>{{minToHour this.waiting_minutes}}</td>
+                <td>{{this.cost}}</td>
+                <td>{{this.from_location}}</td>
+                <td>{{this.to_location}}</td>
+                <td>{{this.name}}</td>
+                <td>{{this.phone}}</td>
+                <td>{{dateToDatetime this.finished_time}}</td>
+                <td>{{this.status}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 </section>
 <section id="report" class="price-table layout_padding">
     Đây là báo cáo 

@@ -163,6 +163,12 @@ class SiteController {
                     FROM trip_history left join user on client_id = user.user_id 
                     WHERE status = 'booked';`);
                 res.locals.newTrips = newTrips;
+                let [historyTrips] = await db.query(`
+                    SELECT trip_id, order_time, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.finished_time, trip_history.status
+                    FROM trip_history
+                    LEFT JOIN user ON trip_history.client_id = user.user_id
+                    WHERE trip_history.driver_id = ${info.user_id}`);
+                res.locals.historyTrips = historyTrips;
                 res.render('account/driverProfile', {
                     noSlider: true,
                     cssFiles: ['/css/account.css', '/css/driverProfile.css'],

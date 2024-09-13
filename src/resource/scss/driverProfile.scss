@@ -1,5 +1,5 @@
 .tab-bar {
-    position: sticky;
+    position: fixed;
     z-index: 1;
     bottom: 0;
     right: 0;
@@ -16,6 +16,7 @@
 
 
         li {
+            cursor: pointer;
             display: flex;
             list-style: none;
             flex: 1;
@@ -45,4 +46,7 @@
 
 #infomation, #orderList, #acceptingTrip, #historyTrips, #report{
     display: none;
+}
+.footer_section{
+    margin-bottom: 72px;
 }

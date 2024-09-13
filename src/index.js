@@ -72,7 +72,7 @@ app.use(cookieParser()); // Sử dụng cookie-parser để phân tích cú phá
 app.engine('hbs', exphbs.engine({
   helpers: {
     formatDate: (date) => moment(date).format('DD/MM/YYYY'),
-    dateToDatetime: (date) => moment(date).format('HH:mm DD/MM/YYYY'),
+    dateToDatetime: (date) => date?moment(date).format('HH:mm DD/MM/YYYY'):null,
     minToHour: (min) => (min/60).toFixed(2),
     // user: () => {
     //   if (session.user)

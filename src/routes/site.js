@@ -22,6 +22,8 @@ router.get('/account', siteController.account);
 
 router.post('/delete-trip', siteController.deleteTrip)
 
+router.post('/accept-trip', siteController.acceptTrip)
+
 router.post('/book-taxi', siteController.booking);
 
 router.get('/', siteController.index);

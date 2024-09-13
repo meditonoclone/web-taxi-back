@@ -1,10 +1,5 @@
 
-{/* <h1>Tìm đường với Google Maps</h1>
-<input id="start" type="text" placeholder="Điểm khởi hành">
-<input id="end" type="text" placeholder="Điểm đến">
-<button onclick="calculateRoute()">Tìm đường</button>
-<div id="map"></div>
-<div id="result"></div> */}
+
 const socket = io();
 const vehicleType = document.querySelector('#vehicleType');
 const spanCost = document.querySelector('#cost');

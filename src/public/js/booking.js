@@ -16,3 +16,6 @@ const objectsToValidate = [
 validate(objectsToValidate, 'error')
 
 const bookingForm = document.querySelector('#bookingForm');
+const checkCost = bookingForm.querySelector('#checkCost');
+
+checkCost.addEventListener('click', () => validateAll(objectsToValidate))

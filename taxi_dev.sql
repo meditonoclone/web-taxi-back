@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1:3307
--- Thời gian đã tạo: Th8 30, 2024 lúc 08:26 AM
+-- Thời gian đã tạo: Th9 13, 2024 lúc 03:08 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -190,7 +190,7 @@ CREATE TABLE `trip_history` (
 --
 
 INSERT INTO `trip_history` (`trip_id`, `client_id`, `driver_id`, `vehicle_type_id`, `from_location`, `to_location`, `contact`, `order_time`, `finished_time`, `distance`, `cost`, `waiting_minutes`, `status`) VALUES
-(1, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:48:51', NULL, NULL, NULL, 0, 'booked'),
+(1, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:48:51', NULL, NULL, NULL, 0, 'en route'),
 (2, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:52:21', NULL, NULL, NULL, 0, 'booked'),
 (3, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:15', NULL, NULL, NULL, 0, 'booked'),
 (4, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:30', NULL, NULL, NULL, 0, 'booked'),
@@ -199,8 +199,16 @@ INSERT INTO `trip_history` (`trip_id`, `client_id`, `driver_id`, `vehicle_type_i
 (7, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:41:59', NULL, NULL, NULL, 0, 'booked'),
 (8, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:45:10', NULL, NULL, NULL, 0, 'booked'),
 (9, 1, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:47:23', NULL, NULL, NULL, 0, 'booked'),
-(10, 5, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 03:31:11', NULL, NULL, NULL, 0, 'booked'),
-(11, 5, 3, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 03:34:21', NULL, NULL, NULL, 0, 'booked');
+(12, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:10', NULL, NULL, NULL, 0, 'booked'),
+(13, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:40', NULL, NULL, NULL, 0, 'booked'),
+(14, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:04:49', NULL, NULL, NULL, 0, 'booked'),
+(15, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:16', NULL, NULL, NULL, 0, 'booked'),
+(16, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:21', NULL, NULL, NULL, 0, 'booked'),
+(17, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:07:44', NULL, NULL, NULL, 0, 'booked'),
+(18, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:10:22', NULL, NULL, NULL, 0, 'booked'),
+(19, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:33', NULL, NULL, NULL, 0, 'booked'),
+(20, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:44', NULL, NULL, NULL, 0, 'booked'),
+(23, 5, NULL, 1, 'biên hòa', 'sài gòn', '0901234567', '2024-09-12 03:08:07', NULL, NULL, NULL, 0, 'booked');
 
 -- --------------------------------------------------------
 
@@ -322,7 +330,7 @@ ALTER TABLE `taxi_pricing`
 -- AUTO_INCREMENT cho bảng `trip_history`
 --
 ALTER TABLE `trip_history`
-  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT cho bảng `user`

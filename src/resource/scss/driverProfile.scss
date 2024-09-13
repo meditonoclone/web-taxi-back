@@ -39,3 +39,10 @@
         }
     }
 }
+.show{
+    display: block !important;
+}
+
+#infomation, #orderList, #acceptingTrip, #historyTrips, #report{
+    display: none;
+}

@@ -8,6 +8,14 @@ function showError(input, errorClass, err) {
         span.textContent = '';
     }
 }
+
+const validateAll = (objectsToValidate) => {
+    objectsToValidate.forEach(obj => {
+        const input = document.querySelector(obj.selector);
+        input.focus();
+        input.blur();
+    });
+}
 function validate(objectsToValidate, errorClass) {
     // Các rule cơ bản
     const rules = {

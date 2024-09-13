@@ -118,9 +118,9 @@
             </h4>
             <form action="book-taxi" method="POST" id="bookingForm">
               <select id="vehicleType" name="vehicleType" placeholder="Loại xe" required>
-                <option value="2">Xe 4 chỗ nhỏ</option>
-                <option value="1">Xe 4 chỗ lớn</option>
-                <option value="3">Xe 7 chỗ</option>
+                {{#each vehicles}}
+                <option value="{{this.vehicle_type_id}}">{{this.vehicle_type}}</option>
+                {{/each}}
               </select>
               <input id="start" name="start" type="text" placeholder="Đón xe tại" required>
               <span></span>
@@ -132,7 +132,7 @@
                   <input id="phone" name="phone" type="text" placeholder="Số điện thoại" required>
                   <span></span>
                 </div>
-                <button onclick="calculateRoute()">Ước lượng giá cước</button>
+                <button id="checkCost" type="button" onclick="calculateRoute()">Ước lượng giá cước</button>
               </div>
               <p id="estimated-result">Quảng đường: <span id="result">30km</span> - Giá <span id="cost">4 tỉ</span></p>
               <button type="submit">Đặt xe</button>

@@ -10,7 +10,9 @@ const { resultToObject, validateUserData } = require('../../util/sequelize');
 
 class SiteController {
     async index(req, res) {
-        console.log(new Date().toLocaleString('en-US', { timeZone: 'Asia/Ho_Chi_Minh' }))
+        const [vehicles] = await db.query(`SELECT vehicle_type_id, vehicle_type
+                                             FROM taxi_pricing`);
+        res.locals.vehicles = vehicles;
         const [prices] = await db.query(`
             select vehicle_type,
                 FORMAT(base_fare, 0, 'de_DE') AS base_fare,
@@ -162,7 +164,7 @@ class SiteController {
                     WHERE status = 'booked';`);
                 res.locals.newTrips = newTrips;
                 res.render('account/driverProfile', {
-                    noSlider: true, 
+                    noSlider: true,
                     cssFiles: ['/css/account.css', '/css/driverProfile.css'],
                     jsFiles: ['/js/driverAccount.js']
                 });
@@ -180,7 +182,6 @@ class SiteController {
     //POST delete trip client
     async deleteTrip(req, res) {
         try {
-            console.log('cc');
             const { tripId } = req.body;
             const trip = await Trip(db).findOne({
                 where: {
@@ -192,7 +193,7 @@ class SiteController {
                 res.status(200).json('fail find trip');
                 return;
             }
-           await trip.destroy();
+            await trip.destroy();
             res.status(200).json('success');
 
         } catch (err) {
@@ -200,17 +201,39 @@ class SiteController {
         }
 
     }
+    //POST driver accept trip
+    async acceptTrip(req, res) {
+        try {
+            const { tripId } = req.body;
+            const trip = await Trip(db).findOne({
+                where: {
+                    trip_id: parseInt(tripId),
+                    status: 'booked'
+                }
+            });
+            if (!trip) {
+                res.status(200).json('fail find trip');
+                return;
+            }
+            trip.status = 'en route';
+            trip.driver_id  = req.session.user.userId;
+            trip.save();
+            res.status(200).json('success');
+        } catch (err) {
+            res.status(200).json('fail');
+        }
+    }
 
     //POST booking
     async booking(req, res) {
+
         try {
-            console.log(res.locals.user, 1);
             const trip = await Trip(db).create({
                 client_id: !res.locals.user ? null : res.locals.user.userId,
-                vehicle_type_id: 1,
-                from_location: 'Biên Hòa',
-                to_location: 'Buôn Ma Thuột',
-                contact: '0909090990',
+                vehicle_type_id: req.body.vehicleType,
+                from_location: req.body.start,
+                to_location: req.body.end,
+                contact: req.body.phone,
                 order_time: new Date(),
             });
             res.redirect('account');

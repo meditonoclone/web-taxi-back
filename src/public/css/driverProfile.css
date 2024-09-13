@@ -30,3 +30,9 @@
       border-top-left-radius: 15px;
       background-color: #0fe7f3;
       color: white; }
+
+.show {
+  display: block !important; }
+
+#infomation, #orderList, #acceptingTrip, #historyTrips, #report {
+  display: none; }

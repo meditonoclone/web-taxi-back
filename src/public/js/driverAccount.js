@@ -25,9 +25,20 @@ tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('clic
         document.body.querySelector(`section:nth-child(${index + 2})`).classList.add('show');
     }))
 
-//accept trip
+// join room
+const socket = io();
+
+// Tham gia phòng 'room1'
+socket.emit('joinRoom', 'driver');
+
+// Lắng nghe sự kiện cập nhật dữ liệu từ server
+socket.on('update data', function(data) {
+  console.log('Dữ liệu mới nhận được:', data.message);
+}); 
+
+
+// accept trip
 function accept(data) {
-    console.log('cc')
     fetch('/accept-trip', {
       method: 'POST', // Phương thức POST
       headers: {

@@ -158,6 +158,8 @@ class SiteController {
                     jsFiles: ['/js/clientAccount.js']
                 });
             } else if (info.account_type === 'driver') {
+                const io = req.app.get('io');
+
                 let [newTrips] = await db.query(`
                     SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
                     FROM trip_history left join user on client_id = user.user_id 
@@ -172,7 +174,7 @@ class SiteController {
                 res.render('account/driverProfile', {
                     noSlider: true,
                     cssFiles: ['/css/account.css', '/css/driverProfile.css'],
-                    jsFiles: ['/js/driverAccount.js']
+                    jsFiles: ['/socket.io/socket.io.js', '/js/driverAccount.js']
                 });
 
             } else {
@@ -210,7 +212,9 @@ class SiteController {
     //POST driver accept trip
     async acceptTrip(req, res) {
         try {
+            const io = req.app.get('io');
             const { tripId } = req.body;
+            io.to('driver').emit('update data', { message: `Chuyến có ID: ${tripId} vừa được nhận` });
             const trip = await Trip(db).findOne({
                 where: {
                     trip_id: parseInt(tripId),

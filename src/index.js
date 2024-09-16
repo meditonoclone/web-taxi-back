@@ -11,6 +11,7 @@ const csurf = require('csurf');
 const flash = require('connect-flash');
 const validate = require('./socket/validate');
 const getPrice = require('./socket/getPrice');
+const joinRoom = require('./socket/joinRoom');
 const http = require('http');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
@@ -24,6 +25,8 @@ const io = new Server(server);
 
 validate(io);//gửi lỗi validat về cho client
 getPrice(io);
+joinRoom(io); 
+app.set('io', io);
 
 // conect to database
 const { setLocals } = require('./middleware');

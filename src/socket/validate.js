@@ -44,8 +44,6 @@ module.exports = function(io)
           socket.emit('reciveError', err);  
         })
       
-        socket.on('disconnect', () => {
-          console.log('User disconnected');
-        });
+        
       });
 };

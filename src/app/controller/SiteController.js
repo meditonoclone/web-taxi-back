@@ -7,6 +7,7 @@ const setLocals = require('../../middleware');
 const cookieSignature = require('cookie-signature');
 const { Op } = require('sequelize');
 const { resultToObject, validateUserData } = require('../../util/sequelize');
+const clients = require('../../socket/clientsList');
 
 class SiteController {
     async index(req, res) {
@@ -47,7 +48,6 @@ class SiteController {
     //POST login account
     async login(req, res, next) {
         const { username, password, rememberMe } = req.body;
-        console.log(req.body);
         let err;
         try {
             let user = await User(db).findOne({ where: { phone: username } });
@@ -62,7 +62,7 @@ class SiteController {
             }
 
             if (user && !err) {
-                req.session.user = { userId: user.user_id.toString(), name: user.name, img: user.profile_picture, rememberMe };
+                req.session.user = { userId: user.user_id.toString(), name: user.name, accountType: user.account_type, img: user.profile_picture, rememberMe };
                 // setTimeout(()=>delete session.user, session.expires);
                 const signedSessionId = cookieSignature.sign(req.session.user.userId, 'secret');
                 if (rememberMe === 'on') {
@@ -111,7 +111,6 @@ class SiteController {
         try {
             const validatedData = validateUserData(req.body);
             const [user, created] = await User(db).findOrCreate({ where: validatedData });
-            console.log(user);
             res.redirect('/login');
         } catch (error) {
             console.error('Error creating new user:', error);
@@ -142,7 +141,6 @@ class SiteController {
                 }
             );
             info = { ...info.dataValues };
-            console.log(info);
             res.locals.info = info;
             if (info.account_type === 'client') {
                 let [historyTrips] = await db.query(`
@@ -153,24 +151,37 @@ class SiteController {
                     INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
                     WHERE trip_history.client_id = ${info.user_id}`);
                 res.locals.historyTrips = historyTrips;
+                const io = req.app.get('io');
+                io.on('connection', sk => {
+                    if (req.session.user.userId) {
+                        clients.set(req.session.user.userId, sk.id);
+
+                    }
+                    sk.on('disconnect', () => {
+                        clients.delete(req.session.user.userId);
+                    });
+                });
                 res.render('account/clientProfile', {
                     noSlider: true, cssFiles: ['/css/account.css'],
-                    jsFiles: ['/js/clientAccount.js']
+                    jsFiles: ['/socket.io/socket.io.js', '/js/clientAccount.js']
                 });
             } else if (info.account_type === 'driver') {
                 const io = req.app.get('io');
+                io.on('connection', sk => {
+                    sk.join(req.session.user.accountType);
+                });
 
                 let [newTrips] = await db.query(`
                     SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
                     FROM trip_history left join user on client_id = user.user_id 
                     WHERE status = 'booked';`);
-                res.locals.newTrips = newTrips;
+                res.locals.newTrips = newTrips.length > 0 ? newTrips : null;
                 let [historyTrips] = await db.query(`
                     SELECT trip_id, order_time, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.finished_time, trip_history.status
                     FROM trip_history
                     LEFT JOIN user ON trip_history.client_id = user.user_id
                     WHERE trip_history.driver_id = ${info.user_id}`);
-                res.locals.historyTrips = historyTrips;
+                res.locals.historyTrips = historyTrips.length > 0 ? historyTrips : null;
                 res.render('account/driverProfile', {
                     noSlider: true,
                     cssFiles: ['/css/account.css', '/css/driverProfile.css'],
@@ -214,7 +225,6 @@ class SiteController {
         try {
             const io = req.app.get('io');
             const { tripId } = req.body;
-            io.to('driver').emit('update data', { message: `Chuyến có ID: ${tripId} vừa được nhận` });
             const trip = await Trip(db).findOne({
                 where: {
                     trip_id: parseInt(tripId),
@@ -226,10 +236,48 @@ class SiteController {
                 return;
             }
             trip.status = 'en route';
-            trip.driver_id  = req.session.user.userId;
+            trip.driver_id = req.session.user.userId;
             trip.save();
+            if (clients.has(trip.client_id.toString()))
+                io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
+            io.to('driver').emit('update data', true);
             res.status(200).json('success');
         } catch (err) {
+            res.status(200).json('fail');
+        }
+    }
+
+    //get newtrips for driver
+    async getNewTrips(req, res) {
+        if (req.session.user.accountType !== 'driver') {
+            return res.status(200).json('no control');
+        }
+        try {
+            let [newTrips] = await db.query(`
+                SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
+                FROM trip_history left join user on client_id = user.user_id 
+                WHERE status = 'booked';`);
+            res.status(200).json(newTrips);
+        } catch (err) {
+            console.error('Error get new trips:', err);
+            res.status(200).json('fail');
+        }
+    }
+
+    // get history trips for client
+    async getHistoryTrips(req, res) {
+        try {
+            let [historyTrips] = await db.query(`
+                SELECT trip_id, order_time, taxi_pricing.vehicle_type, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.status
+                FROM trip_history
+                LEFT JOIN driver_profile ON trip_history.driver_id = driver_profile.user_id
+                LEFT JOIN user ON trip_history.driver_id = user.user_id
+                INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
+                WHERE trip_history.client_id = ${req.session.user.userId}`);
+            console.log(historyTrips, )
+            res.status(200).json(historyTrips, req.session.user.userId);
+            } catch (err) {
+            console.error('Error get history trips:', err);
             res.status(200).json('fail');
         }
     }

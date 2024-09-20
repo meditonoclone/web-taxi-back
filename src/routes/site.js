@@ -26,6 +26,10 @@ router.post('/accept-trip', siteController.acceptTrip)
 
 router.post('/book-taxi', siteController.booking);
 
+router.get('/get-newtrips', siteController.getNewTrips)
+
+router.get('/get-history-trips', siteController.getHistoryTrips)
+
 router.get('/', siteController.index);
 
 module.exports = router;

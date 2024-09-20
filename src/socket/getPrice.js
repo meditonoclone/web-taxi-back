@@ -35,8 +35,5 @@ module.exports = function (io) {
             socket.emit('recivePrice', p.toLocaleString('vi-VN'));
         })
 
-        socket.on('disconnect', () => {
-            console.log('User disconnected');
-        });
     });
 };

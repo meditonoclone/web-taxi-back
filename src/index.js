@@ -15,6 +15,7 @@ const joinRoom = require('./socket/joinRoom');
 const http = require('http');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
+const clients = require('./socket/clientsList');
 // Khởi tạo ứng dụng Express
 const app = express();
 const port = 3000;
@@ -26,7 +27,11 @@ const io = new Server(server);
 validate(io);//gửi lỗi validat về cho client
 getPrice(io);
 joinRoom(io); 
+
+
 app.set('io', io);
+
+
 
 // conect to database
 const { setLocals } = require('./middleware');
@@ -102,6 +107,7 @@ app.use(
     extended: true,
   }),
 );
+// lưu thông tin socket cho từng user
 
 //kiểm tra thông tin đăng nhập
 app.use((req, res, next) => {

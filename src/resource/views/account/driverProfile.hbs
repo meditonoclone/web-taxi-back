@@ -30,7 +30,11 @@
                 <th>Trạng thái</th>
             </tr>
         </thead>
-        <tbody>{{#each newTrips}}
+        <tbody>
+            {{#unless newTrips}}
+                <td colspan="7">Không có chuyến nào để hiển thị</td>
+            {{/unless}}
+            {{#each newTrips}}
             <tr>
                 <td>{{this.trip_id}}</td>
                 <td>{{dateToDatetime this.order_time}}</td>
@@ -62,6 +66,9 @@
             </tr>
         </thead>
         <tbody>
+            {{#unless historyTrips}}
+                <td colspan="11">Không có chuyến nào để hiển thị</td>
+            {{/unless}}
             {{#each historyTrips}}
             <tr>
                 <td>{{this.trip_id}}</td>

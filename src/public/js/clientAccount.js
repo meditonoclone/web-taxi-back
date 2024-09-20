@@ -66,38 +66,40 @@ data.forEach(((row) => {
 const socket = io();
 const table = document.querySelector('.trip_history table');
 socket.on('update data', function (status) {
-  if(status){
+  if (status) {
     fetch('/get-history-trips', {
-      method: 'GET', 
+      method: 'GET',
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json(); // Chuyển đổi response thành JSON
-    })
-    .then(data => {
-      console.log(data)
-      if(!Array.isArray(data) || data.length == 0) 
-      {
-        table.querySelector('tbody').innerHTML = `<td colspan="11">Không có chuyến nào để hiển thị</td>`
-        return;
-      }
-  //     table.querySelector('tbody').innerHTML = data.reduce((html, row) => 
-  //     html + `
-  //     <tr>
-  //     <td>${row.trip_id}</td>
-  //     <td>${row.order_time}</td>
-  //     <td>${row.from_location}</td>
-  //     <td>${row.to_location}</td>
-  //     <td>${row.name}</td>
-  //     <td>${row.contact}</td>
-  //     <td>${row.status}</td>
-  // </tr>`
-  //,'');
-    })
-    .catch(error => {
-      console.error('Có lỗi xảy ra:', error);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json(); // Chuyển đổi response thành JSON
+      })
+      .then(data => {
+        if (!Array.isArray(data) || data.length == 0) {
+          table.querySelector('tbody').innerHTML = `<td colspan="11">Không có chuyến nào để hiển thị</td>`
+          return;
+        }
+        table.querySelector('tbody').innerHTML = data.reduce((html, row) =>
+          html + `
+      <tr>
+        <td>${row.trip_id}</td>
+        <td>${formatDate(row.order_time)}</td>
+        <td>${row.vehicle_type}</td>
+        <td>${row.distance}</td>
+        <td>${row.waiting_minutes}</td>
+        <td>${row.cost}</td>
+        <td>${row.from_location}</td>
+        <td>${row.to_location}</td>
+        <td>${row.name}</td>
+        <td>${row.phone}</td>
+        <td>${row.status}</td>
+      </tr>`
+      , '');
+      })
+      .catch(error => {
+        console.error('Có lỗi xảy ra:', error);
+      });
   }
 });

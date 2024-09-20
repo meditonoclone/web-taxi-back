@@ -247,6 +247,7 @@ class SiteController {
         }
     }
 
+
     //get newtrips for driver
     async getNewTrips(req, res) {
         if (req.session.user.accountType !== 'driver') {
@@ -257,6 +258,7 @@ class SiteController {
                 SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
                 FROM trip_history left join user on client_id = user.user_id 
                 WHERE status = 'booked';`);
+            console.log(newTrips)
             res.status(200).json(newTrips);
         } catch (err) {
             console.error('Error get new trips:', err);
@@ -264,22 +266,39 @@ class SiteController {
         }
     }
 
-    // get history trips for client
+    // get history trips for client and driver
     async getHistoryTrips(req, res) {
-        try {
-            let [historyTrips] = await db.query(`
+        if (!req.session.user)
+            return
+        if (req.session.user.accountType == 'client') {
+            try {
+                let [historyTrips] = await db.query(`
                 SELECT trip_id, order_time, taxi_pricing.vehicle_type, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.status
                 FROM trip_history
                 LEFT JOIN driver_profile ON trip_history.driver_id = driver_profile.user_id
                 LEFT JOIN user ON trip_history.driver_id = user.user_id
                 INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
                 WHERE trip_history.client_id = ${req.session.user.userId}`);
-            console.log(historyTrips, )
-            res.status(200).json(historyTrips, req.session.user.userId);
+                res.status(200).json(historyTrips);
             } catch (err) {
-            console.error('Error get history trips:', err);
-            res.status(200).json('fail');
+                console.error('Error get history trips:', err);
+                res.status(200).json('fail');
+            }
         }
+        if (req.session.user.accountType == 'driver') {
+            try {
+                let [historyTrips] = await db.query(`
+                    SELECT trip_id, order_time, distance, waiting_minutes, cost, from_location, to_location, user.name, user.phone, trip_history.finished_time, trip_history.status
+                    FROM trip_history
+                    LEFT JOIN user ON trip_history.client_id = user.user_id
+                    WHERE trip_history.driver_id = ${req.session.user.userId}`);
+                res.status(200).json(historyTrips);
+            } catch (err) {
+                console.error('Error get new trips:', err);
+                res.status(200).json('fail');
+            }
+        }
+
     }
 
     //POST booking
@@ -294,6 +313,8 @@ class SiteController {
                 contact: req.body.phone,
                 order_time: new Date(),
             });
+            const io = req.app.get('io');
+            io.to('driver').emit('update data', true);
             res.redirect('account');
         } catch (err) {
             console.error('Error booking:', err);

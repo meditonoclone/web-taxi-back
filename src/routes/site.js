@@ -28,6 +28,8 @@ router.post('/book-taxi', siteController.booking);
 
 router.get('/get-newtrips', siteController.getNewTrips)
 
+router.get('/get-newtrips', siteController.getHistoryTrips)
+
 router.get('/get-history-trips', siteController.getHistoryTrips)
 
 router.get('/', siteController.index);

@@ -1,5 +1,7 @@
 
 const tabBar = document.createElement('div');
+const orderList = document.querySelector('#orderList');
+const historyTrips = document.querySelector('#historyTrips');
 
 tabBar.classList.add('tab-bar');
 
@@ -14,8 +16,23 @@ tabBar.innerHTML =
     </ul>
 </div>`
 
-document.body.appendChild(tabBar);
+var table = document.querySelector('#orderList tbody');
 
+function addEventToStatusBtn(){
+  const rows = table.querySelectorAll('tr');
+  rows.forEach(((row) => {
+    var status = row.querySelector('td:last-child');
+    if (status.innerText === 'booked') {
+      status.addEventListener('click', () => accept({
+        tripId: row.querySelector('td:first-child').innerText
+      }));
+    }
+  }))
+}
+
+addEventToStatusBtn();
+
+document.body.appendChild(tabBar);
 tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('click',
   (e) => {
     tabBar.querySelectorAll('li').forEach((tab) => tab.classList.remove('select'));
@@ -27,14 +44,11 @@ tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('clic
 
 const socket = io();
 
-const orderList = document.querySelector('#orderList');
 
-// Lắng nghe sự kiện cập nhật dữ liệu từ server
-socket.on('update data', function (status) {
-  if(status){
-    fetch('/get-newtrips', {
-      method: 'GET', // Phương thức GET
-    })
+function updateNewTrips() {
+  fetch('/get-newtrips', {
+    method: 'GET', // Phương thức GET
+  })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -42,27 +56,70 @@ socket.on('update data', function (status) {
       return response.json(); // Chuyển đổi response thành JSON
     })
     .then(data => {
-      if(!Array.isArray(data) || data.length == 0) 
-      {
+      if (!Array.isArray(data) || data.length == 0) {
         orderList.querySelector('table tbody').innerHTML = `<td colspan="7">Không có chuyến nào để hiển thị</td>`
         return;
       }
-      orderList.querySelector('table tbody').innerHTML = data.reduce((html, row) => 
-      html + `
-      <tr>
+      orderList.querySelector('table tbody').innerHTML = data.reduce((html, row) =>
+        html + `
+    <tr>
       <td>${row.trip_id}</td>
-      <td>${row.order_time}</td>
+      <td>${formatDate(row.order_time)}</td>
       <td>${row.from_location}</td>
       <td>${row.to_location}</td>
       <td>${row.name}</td>
       <td>${row.contact}</td>
       <td>${row.status}</td>
-  </tr>`
-  ,'');
+    </tr>`
+        , '');
+      addEventToStatusBtn(); 
     })
     .catch(error => {
       console.error('Có lỗi xảy ra:', error);
     });
+}
+
+function updateHistoryTrips() {
+  fetch('/get-history-trips', {
+    method: 'GET', // Phương thức GET
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json(); // Chuyển đổi response thành JSON
+    })
+    .then(data => {
+      console.log(data)
+      if (!Array.isArray(data) || data.length == 0) {
+        historyTrips.querySelector('table tbody').innerHTML = `<td colspan="11">Không có chuyến nào để hiển thị</td>`
+        return;
+      }
+      historyTrips.querySelector('table tbody').innerHTML = data.reduce((html, row) =>
+        html + `
+    <tr>
+      <td>${row.trip_id}</td>
+      <td>${row.order_time}</td>
+      <td>${row.distance}</td>
+      <td>${row.waiting_minutes}</td>
+      <td>${row.cost}</td>
+      <td>${row.from_location}</td>
+      <td>${row.to_location}</td>
+      <td>${row.name}</td>
+      <td>${row.phone}</td>
+      <td>${row.finished_time}</td>
+      <td>${row.status}</td>
+    </tr>`
+        , '');
+    })
+    .catch(error => {
+      console.error('Có lỗi xảy ra:', error);
+    });
+}
+// Lắng nghe sự kiện cập nhật dữ liệu từ server
+socket.on('update data', function (status) {
+  if (status) {
+    updateNewTrips();
   }
 });
 
@@ -78,13 +135,15 @@ function accept(data) {
   })
     .then(response => response.json()) // Chuyển đổi phản hồi từ server thành JSON
     .then(status => {
-      if (status === 'success')
+      if (status === 'success') {
+        updateHistoryTrips();
         document.querySelector('.tab-bar li:last-child').click();
+
+      }
       console.log(status);
     })
 }
 
-var table = document.querySelectorAll('#orderList tbody tr');
 
 table.forEach(((row) => {
   var status = row.querySelector('td:last-child');

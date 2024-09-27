@@ -30,6 +30,14 @@ router.get('/get-newtrips', siteController.getNewTrips)
 
 router.get('/get-history-trips', siteController.getHistoryTrips)
 
+// Route gửi email đặt lại mật khẩu
+router.post('/forgot-password', siteController.sendResetEmail);
+
+// Route đặt lại mật khẩu
+router.post('/reset-password/:token', siteController.resetPassword);
+
+router.get('/reset-password/:token', siteController.createNewPassword);
+
 router.get('/', siteController.index);
 
 module.exports = router;

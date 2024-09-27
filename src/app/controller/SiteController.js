@@ -9,6 +9,9 @@ const { Op } = require('sequelize');
 const { resultToObject, validateUserData } = require('../../util/sequelize');
 const clients = require('../../socket/clientsList');
 
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+
 class SiteController {
     async index(req, res) {
         const [vehicles] = await db.query(`SELECT vehicle_type_id, vehicle_type
@@ -274,9 +277,9 @@ class SiteController {
                 LEFT JOIN user ON trip_history.driver_id = user.user_id
                 INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
                 WHERE trip_history.client_id = ${req.session.user.userId}`);
-            console.log(historyTrips, )
+            console.log(historyTrips,)
             res.status(200).json(historyTrips, req.session.user.userId);
-            } catch (err) {
+        } catch (err) {
             console.error('Error get history trips:', err);
             res.status(200).json('fail');
         }
@@ -299,6 +302,89 @@ class SiteController {
             console.error('Error booking:', err);
         }
     }
+
+
+    // Hàm gửi email đặt lại mật khẩu
+    async sendResetEmail(req, res) {
+        const { email } = req.body;
+        const user = await User(db).findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Email không tồn tại!' });
+        }
+
+        // Tạo token
+        const token = crypto.randomBytes(20).toString('hex');
+
+        // Lưu token và thời gian hết hạn (1 giờ)
+        user.reset_password_token = token;
+        user.token_expires = Date.now() + 3600000; // 1 giờ
+        await user.save();
+
+        // Gửi email
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'devmail172.it@gmail.com',
+                pass: 'wxhs domp isbs ekoh',
+            },
+        });
+
+        const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+        const mailOptions = {
+            from: 'devmail172.it@gmail.com',
+            to: user.email,
+            subject: 'Password Reset',
+            html: `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return res.status(500).json({ message: 'Lỗi gửi email.', error: error });
+            } else {
+                return res.status(200).json({ message: 'Email đã được gửi!' });
+            }
+        });
+
+
+    };
+
+    //GET create new password
+    createNewPassword(req, res){
+        res.render('createNewPassword', { 
+            cssFiles: ['/css/resetpass.css', '/css/login.css'],
+            jsFiles: ['/js/validateInput.js', '/socket.io/socket.io.js', '/js/createNewPassword.js'],
+            noSlider: true });
+    }
+
+    //POST Hàm xử lý đặt lại mật khẩu
+    async resetPassword(req, res) {
+        const { token } = req.params;
+        const { password } = req.body;
+
+        // Tìm người dùng có token hợp lệ và chưa hết hạn
+        const user = await User(db).findOne({
+            where: {
+                reset_password_token: token,
+                token_expires: { [Op.gt]: Date.now() }  // Kiểm tra thời gian hết hạn
+            }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn!' });
+        }
+
+        // Cập nhật mật khẩu mới
+        user.password = password;
+        user.reset_password_token = null;
+        user.token_expires = null;
+        await user.save();
+
+        res.status(200).json({ message: 'Đặt lại mật khẩu thành công!' });
+    };
+
+
 }
 
 module.exports = new SiteController();

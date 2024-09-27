@@ -78,26 +78,27 @@
   function submitForgotPassword() {
     const form = document.getElementById('forgotPasswordForm');
     const formData = new FormData(form);
-    
+    console.log(formData)
     fetch('/forgot-password', { // Đường dẫn API của bạn
       method: 'POST',
-      body: formData
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(formData))
     })
-    .then(response => response.json())  // Xử lý response thành JSON
-    .then(data => {
-      if(!data.exist){
-        alert('Email không tồn tại.');  // Thông báo email không tồn tại
-        return;  // Dừng thao tác tiếp theo nếu email không tồn tại
-      }
-      if (data.success) {
-        alert('Yêu cầu thành công! Vui lòng kiểm tra email của bạn.');  // Thông báo thành công
-      } else {
-        alert('Yêu cầu thất bại! Vui lòng thử lại sau.');  // Thông báo thất bại
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Đã có lỗi xảy ra!');  // Thông báo khi có lỗi xảy ra
-    });
+      .then(response => response.json())  // Xử lý response thành JSON
+      .then(data => {
+        if (data.notExist) {
+          alert('Email không tồn tại.');  // Thông báo email không tồn tại
+          return;  // Dừng thao tác tiếp theo nếu email không tồn tại
+        }
+        if (data.success) {
+          alert('Yêu cầu thành công! Vui lòng kiểm tra email của bạn.');  // Thông báo thành công
+        } else {
+          alert('Yêu cầu thất bại! Vui lòng thử lại sau.');  // Thông báo thất bại
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Đã có lỗi xảy ra!');  // Thông báo khi có lỗi xảy ra
+      });
   }
 </script>

@@ -138,9 +138,9 @@ function accept(data) {
       if (status === 'success') {
         updateHistoryTrips();
         document.querySelector('.tab-bar li:last-child').click();
-
+        return;
       }
-      console.log(status);
+      alert(status);
     })
 }
 

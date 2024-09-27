@@ -28,7 +28,7 @@ validate(io);//gửi lỗi validat về cho client
 getPrice(io);
 joinRoom(io); 
 
-
+io.sockets.setMaxListeners(0);
 app.set('io', io);
 
 

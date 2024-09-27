@@ -51,20 +51,20 @@ class SiteController {
     //POST login account
     async login(req, res, next) {
         const { username, password, rememberMe } = req.body;
-        let err;
         try {
             let user = await User(db).findOne({ where: { phone: username } });
             if (!user)
-                err = 'Tài khoản không tồn tại!!!'
+                return res.status(200).json({ phone: true })
             else {
 
                 user = await User(db).findOne({ where: { phone: username, password: password } });
 
                 if (!user)
-                    err = 'Mật khẩu không đúng!!!'
+                    return res.status(200).json({ pass: true })
+
             }
 
-            if (user && !err) {
+            if (user) {
                 req.session.user = { userId: user.user_id.toString(), name: user.name, accountType: user.account_type, img: user.profile_picture, rememberMe };
                 // setTimeout(()=>delete session.user, session.expires);
                 const signedSessionId = cookieSignature.sign(req.session.user.userId, 'secret');
@@ -82,10 +82,7 @@ class SiteController {
                     });
                 }
                 next();
-                res.redirect('/');
-            } else {
-                req.flash('loginError', err);
-                return res.redirect('/login');
+                res.status(200).json('');
             }
         } catch (e) {
             console.error('Error fetching user:', e);
@@ -227,6 +224,17 @@ class SiteController {
     async acceptTrip(req, res) {
         try {
             const io = req.app.get('io');
+            const acceptedTrip = await Trip(db).findOne({
+                where: {
+                    driver_id: req.session.user.userId,
+                    status: {
+                        [Op.notIn]: ['booked', 'complete']
+                    }
+                }
+            })
+            if (acceptedTrip) {
+                return res.status(200).json("Chưa hoàn thành chuyến, không thể nhận thêm!");
+            }
             const { tripId } = req.body;
             const trip = await Trip(db).findOne({
                 where: {
@@ -235,18 +243,20 @@ class SiteController {
                 }
             });
             if (!trip) {
-                res.status(200).json('fail find trip');
+                res.status(200).json('Chuyến không tồn tại');
                 return;
             }
             trip.status = 'en route';
             trip.driver_id = req.session.user.userId;
             trip.save();
-            if (clients.has(trip.client_id.toString()))
-                io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
+            if (trip.client_id)
+                if (clients.has(trip.client_id.toString()))
+                    io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
             io.to('driver').emit('update data', true);
             res.status(200).json('success');
         } catch (err) {
-            res.status(200).json('fail');
+            console.log(err);
+            res.status(200).json('Có lỗi xảy ra');
         }
     }
 
@@ -328,11 +338,12 @@ class SiteController {
 
     // Hàm gửi email đặt lại mật khẩu
     async sendResetEmail(req, res) {
+
         const { email } = req.body;
         const user = await User(db).findOne({ where: { email } });
 
         if (!user) {
-            return res.status(404).json({ message: 'Email không tồn tại!' });
+            return res.status(404).json({ notExist: true });
         }
 
         // Tạo token
@@ -365,7 +376,7 @@ class SiteController {
             if (error) {
                 return res.status(500).json({ message: 'Lỗi gửi email.', error: error });
             } else {
-                return res.status(200).json({ message: 'Email đã được gửi!' });
+                return res.status(200).json({ success: true });
             }
         });
 
@@ -373,11 +384,12 @@ class SiteController {
     };
 
     //GET create new password
-    createNewPassword(req, res){
-        res.render('createNewPassword', { 
+    createNewPassword(req, res) {
+        res.render('createNewPassword', {
             cssFiles: ['/css/resetpass.css', '/css/login.css'],
             jsFiles: ['/js/validateInput.js', '/socket.io/socket.io.js', '/js/createNewPassword.js'],
-            noSlider: true });
+            noSlider: true
+        });
     }
 
     //POST Hàm xử lý đặt lại mật khẩu
@@ -394,7 +406,7 @@ class SiteController {
         });
 
         if (!user) {
-            return res.status(400).json({ message: 'Token không hợp lệ hoặc đã hết hạn!' });
+            return res.status(400).json({ message: 'Yêu cầu không hợp lệ hoặc đã hết hạn! Gửi lại yêu cầu' });
         }
 
         // Cập nhật mật khẩu mới
@@ -403,7 +415,7 @@ class SiteController {
         user.token_expires = null;
         await user.save();
 
-        res.status(200).json({ message: 'Đặt lại mật khẩu thành công!' });
+        res.status(200).json({ message: 'Đặt lại mật khẩu thành công!', success: true });
     };
 
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1:3307
--- Thời gian đã tạo: Th9 13, 2024 lúc 03:08 AM
+-- Thời gian đã tạo: Th9 27, 2024 lúc 03:38 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -191,24 +191,42 @@ CREATE TABLE `trip_history` (
 
 INSERT INTO `trip_history` (`trip_id`, `client_id`, `driver_id`, `vehicle_type_id`, `from_location`, `to_location`, `contact`, `order_time`, `finished_time`, `distance`, `cost`, `waiting_minutes`, `status`) VALUES
 (1, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:48:51', NULL, NULL, NULL, 0, 'en route'),
-(2, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:52:21', NULL, NULL, NULL, 0, 'booked'),
-(3, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:15', NULL, NULL, NULL, 0, 'booked'),
-(4, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:30', NULL, NULL, NULL, 0, 'booked'),
-(5, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:03', NULL, NULL, NULL, 0, 'booked'),
-(6, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:43', NULL, NULL, NULL, 0, 'booked'),
-(7, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:41:59', NULL, NULL, NULL, 0, 'booked'),
-(8, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:45:10', NULL, NULL, NULL, 0, 'booked'),
-(9, 1, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:47:23', NULL, NULL, NULL, 0, 'booked'),
-(12, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:10', NULL, NULL, NULL, 0, 'booked'),
-(13, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:40', NULL, NULL, NULL, 0, 'booked'),
-(14, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:04:49', NULL, NULL, NULL, 0, 'booked'),
-(15, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:16', NULL, NULL, NULL, 0, 'booked'),
-(16, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:21', NULL, NULL, NULL, 0, 'booked'),
-(17, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:07:44', NULL, NULL, NULL, 0, 'booked'),
-(18, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:10:22', NULL, NULL, NULL, 0, 'booked'),
-(19, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:33', NULL, NULL, NULL, 0, 'booked'),
-(20, NULL, NULL, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:44', NULL, NULL, NULL, 0, 'booked'),
-(23, 5, NULL, 1, 'biên hòa', 'sài gòn', '0901234567', '2024-09-12 03:08:07', NULL, NULL, NULL, 0, 'booked');
+(2, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:52:21', NULL, NULL, NULL, 0, 'en route'),
+(3, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:15', NULL, NULL, NULL, 0, 'en route'),
+(4, NULL, 4, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:30', NULL, NULL, NULL, 0, 'en route'),
+(5, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:03', NULL, NULL, NULL, 0, 'en route'),
+(6, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:43', NULL, NULL, NULL, 0, 'en route'),
+(7, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:41:59', NULL, NULL, NULL, 0, 'en route'),
+(8, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:45:10', NULL, NULL, NULL, 0, 'en route'),
+(9, 1, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:47:23', NULL, NULL, NULL, 0, 'en route'),
+(12, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:10', NULL, NULL, NULL, 0, 'en route'),
+(13, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:40', NULL, NULL, NULL, 0, 'en route'),
+(14, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:04:49', NULL, NULL, NULL, 0, 'en route'),
+(15, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:16', NULL, NULL, NULL, 0, 'en route'),
+(16, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:21', NULL, NULL, NULL, 0, 'en route'),
+(17, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:07:44', NULL, NULL, NULL, 0, 'en route'),
+(18, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:10:22', NULL, NULL, NULL, 0, 'en route'),
+(19, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:33', NULL, NULL, NULL, 0, 'en route'),
+(20, NULL, 3, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:44', NULL, NULL, NULL, 0, 'en route'),
+(23, 5, 4, 1, 'biên hòa', 'sài gòn', '0901234567', '2024-09-12 03:08:07', NULL, NULL, NULL, 0, 'en route'),
+(24, 2, 2, 1, 'ádf', 'ádfsdf', '0866840075', '2024-09-18 06:44:35', NULL, NULL, NULL, 0, 'en route'),
+(25, 2, 2, 3, 'cc', 'cc', '0909090909', '2024-09-18 06:45:03', NULL, NULL, NULL, 0, 'en route'),
+(26, 2, 3, 2, 'cc', 'cc', '0901234567', '2024-09-18 06:45:46', NULL, NULL, NULL, 0, 'en route'),
+(27, 2, 2, 1, 'qqq', 'qqq', '0866840075', '2024-09-18 06:49:16', NULL, NULL, NULL, 0, 'en route'),
+(28, 2, 2, 1, 'xx', 'xx', '0909090909', '2024-09-18 06:51:25', NULL, NULL, NULL, 0, 'en route'),
+(29, 2, 2, 1, 'qq', 'qq', '0901234567', '2024-09-18 06:53:19', NULL, NULL, NULL, 0, 'en route'),
+(30, 2, 2, 1, 'hh', 'hh', '0909090909', '2024-09-18 06:57:43', NULL, NULL, NULL, 0, 'en route'),
+(31, 2, 2, 1, 'cc', 'cc', '0901234567', '2024-09-18 06:59:36', NULL, NULL, NULL, 0, 'en route'),
+(32, 2, 2, 1, 'cc', 'âmmamma', '0866840075', '2024-09-19 01:20:46', NULL, NULL, NULL, 0, 'en route'),
+(33, 5, 2, 1, '123', '123', '0866840075', '2024-09-19 03:38:57', NULL, NULL, NULL, 0, 'en route'),
+(34, 5, 2, 1, 'sss', 'ss', '0866840075', '2024-09-19 03:42:13', NULL, NULL, NULL, 0, 'en route'),
+(35, 5, 2, 1, 'cc', 'cc', 'adsfasdf', '2024-09-19 04:00:57', NULL, NULL, NULL, 0, 'en route'),
+(36, 5, 2, 1, 'ádfadsf', 'fasdf', '0866840075', '2024-09-19 04:03:29', NULL, NULL, NULL, 0, 'en route'),
+(37, NULL, NULL, 1, 'ADS', 'SDFGSD', '0901234567', '2024-09-19 04:24:40', NULL, NULL, NULL, 0, 'booked'),
+(38, 5, 2, 1, 'ÁDFA', 'ÁDF', '0', '2024-09-19 04:24:56', NULL, NULL, NULL, 0, 'en route'),
+(39, 5, 2, 1, 'w', 'w', '0909090909', '2024-09-19 04:27:19', NULL, NULL, NULL, 0, 'en route'),
+(40, 5, 2, 1, 'ádfas', 'ÁDFASF', '0901234567', '2024-09-19 04:30:16', NULL, NULL, NULL, 0, 'en route'),
+(41, 5, 2, 1, 'ádf', 'fdsf', '0909090909', '2024-09-19 04:31:34', NULL, NULL, NULL, 0, 'en route');
 
 -- --------------------------------------------------------
 
@@ -225,6 +243,8 @@ CREATE TABLE `user` (
   `address` varchar(255) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
+  `reset_password_token` varchar(255) DEFAULT NULL,
+  `token_expires` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -233,18 +253,18 @@ CREATE TABLE `user` (
 -- Đang đổ dữ liệu cho bảng `user`
 --
 
-INSERT INTO `user` (`user_id`, `name`, `phone`, `email`, `account_type`, `address`, `profile_picture`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'Nguyễn Văn An', '0901234567', 'nguyenvanan@gmail.com', 'admin', '123 Lê Lợi, Quận 1, TP.HCM', 'https://images.unsplash.com/photo-1560250097-0b93528c311a', 'admin123', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(2, 'Trần Thị Bình', '0912345678', 'tranthib@gmail.com', 'driver', '456 Nguyễn Huệ, Quận 1, TP.HCM', 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e', 'driver123', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(3, 'Lê Văn Cường', '0923456789', 'levanc@gmail.com', 'driver', '789 Trần Hưng Đạo, Quận 5, TP.HCM', 'https://images.unsplash.com/photo-1566492031773-4f4e44671857', 'driver456', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(4, 'Phạm Thị Dung', '0934567890', 'phamthid@gmail.com', 'driver', '101 Võ Văn Tần, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1580489944761-15a19d654956', 'driver789', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(5, 'Hoàng Văn Em', '0945678901', 'hoangvane@gmail.com', 'client', '202 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c', 'client123', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(6, 'Ngô Thị Phương', '0956789012', 'ngothip@gmail.com', 'client', '303 Điện Biên Phủ, Bình Thạnh, TP.HCM', 'https://images.unsplash.com/photo-1581403341630-a6e0b9d2d257', 'client456', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(7, 'Đặng Văn Giàu', '0967890123', 'dangvang@gmail.com', 'client', '404 Nguyễn Văn Linh, Quận 7, TP.HCM', 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c', 'client789', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(8, 'Bùi Thị Hoa', '0978901234', 'buithih@gmail.com', 'client', '505 Phan Xích Long, Phú Nhuận, TP.HCM', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2', 'clientabc', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(9, 'Lý Văn Inh', '0989012345', 'lyvani@gmail.com', 'client', '606 Cách Mạng Tháng 8, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d', 'clientdef', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(10, 'Trương Thị Kim', '0990123456', 'truongthik@gmail.com', 'client', '707 Nguyễn Đình Chiểu, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1554151228-14d9def656e4', 'clientxyz', '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(11, 'Tiến Trần', '0866840075', 'meditonoclone@gmail.com', 'client', '', NULL, 'admin123', '2024-08-08 09:45:03', '2024-08-08 09:45:03');
+INSERT INTO `user` (`user_id`, `name`, `phone`, `email`, `account_type`, `address`, `profile_picture`, `password`, `reset_password_token`, `token_expires`, `created_at`, `updated_at`) VALUES
+(1, 'Nguyễn Văn An', '0901234567', 'nguyenvanan@gmail.com', 'admin', '123 Lê Lợi, Quận 1, TP.HCM', 'https://images.unsplash.com/photo-1560250097-0b93528c311a', 'admin123', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(2, 'Trần Thị Bình', '0912345678', 'tranthib@gmail.com', 'driver', '456 Nguyễn Huệ, Quận 1, TP.HCM', 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e', 'driver123', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(3, 'Lê Văn Cường', '0923456789', 'levanc@gmail.com', 'driver', '789 Trần Hưng Đạo, Quận 5, TP.HCM', 'https://images.unsplash.com/photo-1566492031773-4f4e44671857', 'driver456', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(4, 'Phạm Thị Dung', '0934567890', 'phamthid@gmail.com', 'driver', '101 Võ Văn Tần, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1580489944761-15a19d654956', 'driver789', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(5, 'Hoàng Văn Em', '0945678901', 'hoangvane@gmail.com', 'client', '202 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c', 'client123', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(6, 'Ngô Thị Phương', '0956789012', 'ngothip@gmail.com', 'client', '303 Điện Biên Phủ, Bình Thạnh, TP.HCM', 'https://images.unsplash.com/photo-1581403341630-a6e0b9d2d257', 'client456', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(7, 'Đặng Văn Giàu', '0967890123', 'dangvang@gmail.com', 'client', '404 Nguyễn Văn Linh, Quận 7, TP.HCM', 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c', 'client789', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(8, 'Bùi Thị Hoa', '0978901234', 'buithih@gmail.com', 'client', '505 Phan Xích Long, Phú Nhuận, TP.HCM', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2', 'clientabc', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(9, 'Lý Văn Inh', '0989012345', 'lyvani@gmail.com', 'client', '606 Cách Mạng Tháng 8, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d', 'clientdef', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(10, 'Trương Thị Kim', '0990123456', 'truongthik@gmail.com', 'client', '707 Nguyễn Đình Chiểu, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1554151228-14d9def656e4', 'clientxyz', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
+(11, 'Tiến Trần', '0866840075', 'meditonoclone@gmail.com', 'client', '', NULL, 'Admin123', NULL, NULL, '2024-08-08 09:45:03', '2024-09-27 10:03:21');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -330,7 +350,7 @@ ALTER TABLE `taxi_pricing`
 -- AUTO_INCREMENT cho bảng `trip_history`
 --
 ALTER TABLE `trip_history`
-  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT cho bảng `user`

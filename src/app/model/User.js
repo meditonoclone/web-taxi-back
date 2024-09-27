@@ -3,7 +3,7 @@ const { DataTypes, Model } = require('sequelize');
 
 module.exports = (sequelize) => {
     class User extends Model {
-        
+
     };
 
     User.init({
@@ -39,7 +39,15 @@ module.exports = (sequelize) => {
         password: {
             type: DataTypes.STRING,
             allowNull: false
-        }
+        },
+        reset_password_token: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        token_expires: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
     }, {
         sequelize,
         tableName: 'user',

@@ -29,7 +29,7 @@
                 <th>Điểm đến</th>
                 <th>Khách hàng</th>
                 <th>Số điện thoại khách hàng</th>
-                <th>Trạng thái</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +44,7 @@
                 <td>{{this.to_location}}</td>
                 <td>{{this.name}}</td>
                 <td>{{this.phone}}</td>
-                <td>{{this.status}}</td>
+                <td><button class="btn btn-outline-success">Nhận chuyến</button></td>
             </tr>
             {{/each}}
         </tbody>
@@ -95,37 +95,40 @@
 <section id="acceptingTrip" class="price-table layout_padding">
 
 
-    <div class="trip-container">
+    <div class="trip-container content-wrapper">
         <h2>Chuyến đang thực hiện</h2>
-
+        {{#if currentTrip}}
         <div class="client-info">
-            <img src="{{info.profile_picture}}" alt="" id="avatar">
+            <img src="{{currentTrip.profile_picture}}" alt="" id="avatar">
             <div>
-                <h1 id="name">{{info.name}}</h1>
-                <h2 id="phone">{{info.phone}}</h2>
+                <h1 id="name">{{currentTrip.name}}</h1>
+                <a href="tel:{{currentTrip.phone}}" id="phone">{{currentTrip.phone}}</a>
             </div>
         </div>
         <div class="map">
             <div class="image-wrapper">
                 <iframe
                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31332.786265726012!2d106.86955519999998!3d10.993664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1721381184196!5m2!1sen!2s"
-                    width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                    width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
-        <div class="trip-info">
-            <p>Điểm đón: Trảng Dài Biên Hòa</p>
-            <p>Điểm đến: Sài Gòn</p>
-            <p>Quảng đường: 10km</p>
-            <div>
-                <label for="waitingTime">Thời gian chờ</label>
-                <input type="text" name="waitingTime">
+        <div class="trip-info row">
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>{{currentTrip.from_location}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span>{{currentTrip.distance}}</span></p>
+            <div class="col-sm-6 col-xs-12">
+                <button><i class="fas fa-pen"></i></button>
+                <input type="text" name="waitingTime" placeholder="Thời gian chờ">
             </div>
-            <p>Số tiền: 3 tỉ</p>
-            <p>Trạng thái: Đang trên đường đón</p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span>{{currentTrip.cost}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span>{{currentTrip.status}}</span></p>
 
         </div>
-        <button>Xác nhận đã đón khách</button>
+        <button class="btn btn-success">Xác nhận đã đón khách</button>
+        {{else}}
+        <p>Chưa nhận chuyến xe nào</p>
+        {{/if}}
     </div>
 
 

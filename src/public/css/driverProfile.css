@@ -40,3 +40,31 @@
 
 .footer_section {
   margin-bottom: 72px; }
+
+#acceptingTrip .trip-container {
+  flex-direction: column;
+  align-items: stretch; }
+  #acceptingTrip .trip-container .client-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px; }
+    #acceptingTrip .trip-container .client-info img {
+      height: 200px;
+      width: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 24px; }
+    #acceptingTrip .trip-container .client-info div {
+      display: flex;
+      flex-direction: column; }
+      #acceptingTrip .trip-container .client-info div a {
+        background-color: transparent;
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 1.5rem; }
+  #acceptingTrip .trip-container .trip-info {
+    font-size: 1.2rem; }
+    #acceptingTrip .trip-container .trip-info i {
+      color: #0fe7f3;
+      margin: 0 4px; }
+    #acceptingTrip .trip-container .trip-info div {
+      margin-bottom: 16px; }

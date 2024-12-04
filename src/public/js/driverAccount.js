@@ -18,19 +18,19 @@ tabBar.innerHTML =
 
 var table = document.querySelector('#orderList tbody');
 
-function addEventToStatusBtn(){
+function addEventToTakeTripBtn(){
   const rows = table.querySelectorAll('tr');
   rows.forEach(((row) => {
-    var status = row.querySelector('td:last-child');
-    if (status.innerText === 'booked') {
-      status.addEventListener('click', () => accept({
+    var btn = row.querySelector('td:last-child button');
+    if (btn) {
+      btn.addEventListener('click', () => accept({
         tripId: row.querySelector('td:first-child').innerText
       }));
     }
   }))
 }
 
-addEventToStatusBtn();
+addEventToTakeTripBtn();
 
 document.body.appendChild(tabBar);
 tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('click',
@@ -72,7 +72,7 @@ function updateNewTrips() {
       <td>${row.status}</td>
     </tr>`
         , '');
-      addEventToStatusBtn(); 
+      addEventToTakeTripBtn(); 
     })
     .catch(error => {
       console.error('Có lỗi xảy ra:', error);

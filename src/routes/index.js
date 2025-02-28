@@ -2,6 +2,7 @@ const siteRoute = require('./site');
 const aboutRoute = require('./about');
 const serviceRoute = require('./service');
 const newsRoute = require('./news');
+const adminRoute = require('./admin');
 function route(app){
     app.use('/news', newsRoute);
 
@@ -9,6 +10,8 @@ function route(app){
 
     app.use('/about', aboutRoute);
     
+    app.use('/admin', adminRoute);
+
     app.use('/', siteRoute);
 
 }

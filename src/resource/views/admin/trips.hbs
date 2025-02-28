@@ -1,0 +1,1077 @@
+<div class="page-inner">
+  <div class="row     row-card-no-pd mt--2">
+    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5><b>Đơn chuyến</b></h5>
+              <p class="text-muted mb-0">Hủy</p>
+              <p class="text-danger fw-bold">10</p>
+            </div>
+            <h3 class="text-info fw-bold">15</h3>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5><b>Đang thực hiện</b></h5>
+              <p class="text-muted">Đang được đón</p>
+            </div>
+            <h3 class="text-success fw-bold">100</h3>
+          </div>
+          <div class="progress progress-sm">
+            <div class="progress-bar bg-success w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <p class="text-muted mb-0">50</p>
+            <p class="text-muted mb-0">50%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5><b>Tổng số chuyến</b></h5>
+              <p class="text-muted">Đã hoàn thành</p>
+            </div>
+            <h3 class="text-info fw-bold">1000</h3>
+          </div>
+          <div class="progress progress-sm">
+            <div class="progress-bar bg-info w-85" role="progressbar" aria-valuenow="50" aria-valuemin="0"
+              aria-valuemax="100"></div>
+          </div>
+          <div class="d-flex justify-content-between mt-2">
+            <p class="text-muted mb-0">850</p>
+            <p class="text-muted mb-0">85%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 col-md-6 col-xl-3 fill-col">
+      <div class="card card-stats card-round">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-5">
+              <div class="icon-big text-center text-warning">
+                <i class="fas fa-star"></i>
+              </div>
+            </div>
+            <div class="col-7 col-stats">
+              <div class="numbers">
+                <p class="card-category">Đánh giá</p>
+                <h4 class="card-title">4.8</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <h4 class="card-title">Đơn chuyến</h4>
+            <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
+              <i class="fa fa-plus"></i>
+              Tạo chuyến
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Modal -->
+          <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold"> Tạo</span>
+                    <span class="fw-light"> chuyến </span>
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p class="small">
+                    Tạo đơn chuyến
+                  </p>
+                  <form>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Họ tên</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Số điện thoại</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 pe-0">
+                        <div class="form-group form-group-default">
+                          <label>Điểm đón</label>
+                          <input id="addPosition" type="text" class="form-control" placeholder="fill position" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group form-group-default">
+                          <label for="exampleFormControlSelect1">Loại xe</label>
+                          <select class="form-select" id="exampleFormControlSelect1">
+                            <option>4 chỗ nhỏ</option>
+                            <option>4 chỗ lớn</option>
+                            <option>7 chỗ</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" id="addRowButton" class="btn btn-primary">
+                    Add
+                  </button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive datatable-container h-600">
+            <table id="tripsOrder" class="display table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Tên khách hàng</th>
+                  <th>Số điện thoại</th>
+                  <th>Điểm đón</th>
+                  <th>Điểm đến</th>
+                  <th>Loại xe</th>
+                  <th>Thời gian đặt</th>
+                  <th style="width: 10%"></th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>Tên khách hàng</th>
+                  <th>Số điện thoại</th>
+                  <th>Điểm đón</th>
+                  <th>Điểm đến</th>
+                  <th>Loại xe</th>
+                  <th>Thời gian đặt</th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <tr>
+                  <td>Tiger Nixon</td>
+                  <td>0909090909</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Garrett Winters</td>
+                  <td>0909090909</td>
+                  <td>Accountant</td>
+                  <td>Tokyo</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ashton Cox</td>
+                  <td>0909090909</td>
+                  <td>Junior Technical Author</td>
+                  <td>San Francisco</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Cedric Kelly</td>
+                  <td>0909090909</td>
+                  <td>Senior Javascript Developer</td>
+                  <td>Edinburgh</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Airi Satou</td>
+                  <td>0909090909</td>
+                  <td>Accountant</td>
+                  <td>Tokyo</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Brielle Williamson</td>
+                  <td>0909090909</td>
+                  <td>Integration Specialist</td>
+                  <td>New York</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Herrod Chandler</td>
+                  <td>0909090909</td>
+                  <td>Sales Assistant</td>
+                  <td>San Francisco</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Rhona Davidson</td>
+                  <td>0909090909</td>
+                  <td>Integration Specialist</td>
+                  <td>Tokyo</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Colleen Hurst</td>
+                  <td>0909090909</td>
+                  <td>Javascript Developer</td>
+                  <td>San Francisco</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Sonya Frost</td>
+                  <td>0909090909</td>
+                  <td>Software Engineer</td>
+                  <td>Edinburgh</td>
+                  <td>4 chỗ nhỏ</td>
+                  <td>00:00</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <h4 class="card-title">Các chuyến đang thực hiện</h4>
+
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Modal -->
+          <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold"> Tạo</span>
+                    <span class="fw-light"> chuyến </span>
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p class="small">
+                    Tạo đơn chuyến
+                  </p>
+                  <form>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Họ tên</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Số điện thoại</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 pe-0">
+                        <div class="form-group form-group-default">
+                          <label>Điểm đón</label>
+                          <input id="addPosition" type="text" class="form-control" placeholder="fill position" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group form-group-default">
+                          <label for="exampleFormControlSelect1">Loại xe</label>
+                          <select class="form-select" id="exampleFormControlSelect1">
+                            <option>4 chỗ nhỏ</option>
+                            <option>4 chỗ lớn</option>
+                            <option>7 chỗ</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" id="addRowButton" class="btn btn-primary">
+                    Add
+                  </button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive datatable-container h-600">
+            <table id="tripsInProgress" class="display table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Mã chuyến</th>
+                  <th>Tên tài xế</th>
+                  <th>Liên hệ tài xế</th>
+                  <th>Tên khách hàng</th>
+                  <th>Liên hệ khách hàng</th>
+                  <th>Thời gian bắt đầu</th>
+                  <th>Điểm đón</th>
+                  <th>Điểm đến</th>
+                  <th>Thời gian chờ</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>001</td>
+                  <td>Nguyễn Văn A</td>
+                  <td>+84 123 456 789</td>
+                  <td>Trần Thị B</td>
+                  <td>+84 987 654 321</td>
+                  <td>10:30 sáng</td>
+                  <td>123 Đường Chính</td>
+                  <td>456 Đường Phụ</td>
+                  <td>5 phút</td>
+                  <td>Đang di chuyển</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>002</td>
+                  <td>Lê Văn C</td>
+                  <td>+84 234 567 890</td>
+                  <td>Nguyễn Thị D</td>
+                  <td>+84 876 543 210</td>
+                  <td>11:00 sáng</td>
+                  <td>789 Đường Lớn</td>
+                  <td>1011 Đường Nhỏ</td>
+                  <td>10 phút</td>
+                  <td>Đang chờ</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>003</td>
+                  <td>Phạm Văn E</td>
+                  <td>+84 345 678 901</td>
+                  <td>Hoàng Thị F</td>
+                  <td>+84 765 432 109</td>
+                  <td>11:30 sáng</td>
+                  <td>222 Đường Bắc</td>
+                  <td>333 Đường Nam</td>
+                  <td>15 phút</td>
+                  <td>Hoàn thành</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>004</td>
+                  <td>Trần Văn G</td>
+                  <td>+84 456 789 012</td>
+                  <td>Vũ Thị H</td>
+                  <td>+84 654 321 098</td>
+                  <td>12:00 trưa</td>
+                  <td>555 Đường Tây</td>
+                  <td>666 Đường Đông</td>
+                  <td>0 phút</td>
+                  <td>Đã hủy</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>005</td>
+                  <td>Võ Văn I</td>
+                  <td>+84 567 890 123</td>
+                  <td>Đặng Thị J</td>
+                  <td>+84 543 210 987</td>
+                  <td>12:30 trưa</td>
+                  <td>888 Đường Số 1</td>
+                  <td>999 Đường Số 2</td>
+                  <td>8 phút</td>
+                  <td>Đang di chuyển</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>006</td>
+                  <td>Đỗ Văn K</td>
+                  <td>+84 678 901 234</td>
+                  <td>Trương Thị L</td>
+                  <td>+84 432 109 876</td>
+                  <td>1:00 chiều</td>
+                  <td>111 Đường Trái</td>
+                  <td>222 Đường Phải</td>
+                  <td>12 phút</td>
+                  <td>Đang chờ</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>007</td>
+                  <td>Hoàng Văn M</td>
+                  <td>+84 789 012 345</td>
+                  <td>Hà Thị N</td>
+                  <td>+84 321 098 765</td>
+                  <td>1:30 chiều</td>
+                  <td>333 Đường Cao</td>
+                  <td>444 Đường Thấp</td>
+                  <td>20 phút</td>
+                  <td>Đang di chuyển</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>008</td>
+                  <td>Nguyễn Văn O</td>
+                  <td>+84 890 123 456</td>
+                  <td>Phạm Thị P</td>
+                  <td>+84 210 987 654</td>
+                  <td>2:00 chiều</td>
+                  <td>555 Đường Học</td>
+                  <td>666 Đường Làm</td>
+                  <td>5 phút</td>
+                  <td>Hoàn thành</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>009</td>
+                  <td>Trần Văn Q</td>
+                  <td>+84 901 234 567</td>
+                  <td>Ngô Thị R</td>
+                  <td>+84 109 876 543</td>
+                  <td>2:30 chiều</td>
+                  <td>777 Đường Thị</td>
+                  <td>888 Đường Thành</td>
+                  <td>0 phút</td>
+                  <td>Đã hủy</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>010</td>
+                  <td>Vũ Văn S</td>
+                  <td>+84 123 345 678</td>
+                  <td>Lê Thị T</td>
+                  <td>+84 876 210 543</td>
+                  <td>3:00 chiều</td>
+                  <td>999 Đường Xanh</td>
+                  <td>000 Đường Đỏ</td>
+                  <td>7 phút</td>
+                  <td>Đang chờ</td>
+                  <td>
+                    <div class="form-button-action">
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg"
+                        data-original-title="Edit Task">
+                        <i class="fa fa-edit"></i>
+                      </button>
+                      <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger"
+                        data-original-title="Remove">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <h4 class="card-title">Các chuyến đã hoàn thành</h4>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Modal -->
+          <div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title">
+                    <span class="fw-mediumbold"> Tạo</span>
+                    <span class="fw-light"> chuyến </span>
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p class="small">
+                    Tạo đơn chuyến
+                  </p>
+                  <form>
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Họ tên</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="form-group form-group-default">
+                          <label>Số điện thoại</label>
+                          <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                        </div>
+                      </div>
+                      <div class="col-md-6 pe-0">
+                        <div class="form-group form-group-default">
+                          <label>Điểm đón</label>
+                          <input id="addPosition" type="text" class="form-control" placeholder="fill position" />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group form-group-default">
+                          <label for="exampleFormControlSelect1">Loại xe</label>
+                          <select class="form-select" id="exampleFormControlSelect1">
+                            <option>4 chỗ nhỏ</option>
+                            <option>4 chỗ lớn</option>
+                            <option>7 chỗ</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" id="addRowButton" class="btn btn-primary">
+                    Add
+                  </button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive datatable-container h-600">
+            <table id="tripsCompleted" class="display table table-striped table-hover">
+              <thead>
+                <tr>
+                  <th>Mã chuyến</th>
+                  <th>Tên tài xế</th>
+                  <th>Liên hệ tài xế</th>
+                  <th>Tên khách hàng</th>
+                  <th>Liên hệ khách hàng</th>
+                  <th>Thời gian bắt đầu</th>
+                  <th>Thời gian hoàn thành</th>
+                  <th>Điểm đón</th>
+                  <th>Điểm đến</th>
+                  <th>Thời gian chờ</th>
+                  <th>Quảng đường</th>
+                  <th>Số tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CH001</td>
+                  <td>Nguyễn Văn A</td>
+                  <td>0901234567</td>
+                  <td>Trần Thị B</td>
+                  <td>0937654321</td>
+                  <td>2025-01-01 08:00</td>
+                  <td>2025-01-01 08:30</td>
+                  <td>Quận 1</td>
+                  <td>Quận 3</td>
+                  <td>5 phút</td>
+                  <td>5 km</td>
+                  <td>80,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH002</td>
+                  <td>Phạm Văn C</td>
+                  <td>0912345678</td>
+                  <td>Hoàng Thị D</td>
+                  <td>0945678901</td>
+                  <td>2025-01-02 09:00</td>
+                  <td>2025-01-02 09:40</td>
+                  <td>Quận 2</td>
+                  <td>Quận 7</td>
+                  <td>10 phút</td>
+                  <td>8 km</td>
+                  <td>120,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH003</td>
+                  <td>Võ Văn E</td>
+                  <td>0923456789</td>
+                  <td>Nguyễn Thị F</td>
+                  <td>0976543210</td>
+                  <td>2025-01-03 10:15</td>
+                  <td>2025-01-03 10:50</td>
+                  <td>Quận Bình Thạnh</td>
+                  <td>Quận 10</td>
+                  <td>0 phút</td>
+                  <td>10 km</td>
+                  <td>150,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH004</td>
+                  <td>Trần Văn G</td>
+                  <td>0934567890</td>
+                  <td>Phạm Thị H</td>
+                  <td>0909876543</td>
+                  <td>2025-01-04 14:00</td>
+                  <td>2025-01-04 14:45</td>
+                  <td>Quận 9</td>
+                  <td>Quận Thủ Đức</td>
+                  <td>15 phút</td>
+                  <td>12 km</td>
+                  <td>180,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH005</td>
+                  <td>Ngô Văn I</td>
+                  <td>0987654321</td>
+                  <td>Trần Thị J</td>
+                  <td>0910987654</td>
+                  <td>2025-01-05 07:30</td>
+                  <td>2025-01-05 08:00</td>
+                  <td>Quận 5</td>
+                  <td>Quận 11</td>
+                  <td>8 phút</td>
+                  <td>6 km</td>
+                  <td>90,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH006</td>
+                  <td>Phan Văn K</td>
+                  <td>0943210987</td>
+                  <td>Nguyễn Thị L</td>
+                  <td>0965432109</td>
+                  <td>2025-01-06 13:30</td>
+                  <td>2025-01-06 14:00</td>
+                  <td>Quận 6</td>
+                  <td>Quận 12</td>
+                  <td>12 phút</td>
+                  <td>7 km</td>
+                  <td>100,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH007</td>
+                  <td>Lê Văn M</td>
+                  <td>0921234567</td>
+                  <td>Phạm Thị N</td>
+                  <td>0987656789</td>
+                  <td>2025-01-07 16:00</td>
+                  <td>2025-01-07 16:35</td>
+                  <td>Quận 8</td>
+                  <td>Quận Tân Bình</td>
+                  <td>20 phút</td>
+                  <td>15 km</td>
+                  <td>200,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH008</td>
+                  <td>Vũ Văn O</td>
+                  <td>0915432109</td>
+                  <td>Ngô Thị P</td>
+                  <td>0943216548</td>
+                  <td>2025-01-08 18:00</td>
+                  <td>2025-01-08 18:50</td>
+                  <td>Quận Tân Phú</td>
+                  <td>Quận 4</td>
+                  <td>25 phút</td>
+                  <td>18 km</td>
+                  <td>220,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH009</td>
+                  <td>Đặng Văn Q</td>
+                  <td>0932198765</td>
+                  <td>Lê Thị R</td>
+                  <td>0976432187</td>
+                  <td>2025-01-09 11:30</td>
+                  <td>2025-01-09 12:00</td>
+                  <td>Quận 7</td>
+                  <td>Quận Bình Tân</td>
+                  <td>10 phút</td>
+                  <td>9 km</td>
+                  <td>140,000 VNĐ</td>
+                </tr>
+                <tr>
+                  <td>CH010</td>
+                  <td>Nguyễn Văn S</td>
+                  <td>0904321765</td>
+                  <td>Võ Thị T</td>
+                  <td>0954321987</td>
+                  <td>2025-01-10 06:15</td>
+                  <td>2025-01-10 06:45</td>
+                  <td>Quận 10</td>
+                  <td>Quận Gò Vấp</td>
+                  <td>5 phút</td>
+                  <td>5 km</td>
+                  <td>80,000 VNĐ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-xxl-6 col-12 fill-col">
+      <div class="card ">
+        <div class="card-header">
+          <div class="card-head-row card-tools-still-right">
+            <h4 class="card-title">Biểu đồ chuyến</h4>
+            <div class="card-tools ">
+              <ul class="nav nav-pills nav-primary me-2">
+                <li class="nav-item">
+                  <a class="nav-link " href="#">Tuần</a>
+                </li>
+                <li class="nav-item submenu">
+                  <a class="nav-link active" href="#">Tháng</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="tripsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col col-xxl-9 col-12 fill-col">
+      <div class="card ">
+        <div class="card-header">
+          <div class="card-head-row card-tools-still-right">
+            <h4 class="card-title">Thống kê số chuyến taxi theo thời gian và khu vực</h4>
+
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-container">
+            <canvas id="taxiDemandChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="rating">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Đánh giá</h4>
+          <div class="icon-big ">
+            <h5 class="d-inline">4.8</h5>
+            <i class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i
+              class="fas fa-star text-warning"></i><i class="fas fa-star text-warning"></i><i
+              class="fas fa-star text-warning"></i>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="nav nav-pills nav-secondary" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#pills-home" role="tab"
+                aria-controls="pills-home" aria-selected="true">Tất cả</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">5 sao</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">4 sao</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">3 sao</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">2 sao</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">1 sao</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#pills-profile" role="tab"
+                aria-controls="pills-profile" aria-selected="false" tabindex="-1">Có bình luận</a>
+            </li>
+          </ul>
+          <div class="tab-content mt-2 mb-3" id="pills-without-border-tabContent">
+            <div class="tab-pane fade show active" id="pills-home-nobd" role="tabpanel"
+              aria-labelledby="pills-home-tab-nobd">
+              <div class="card-list py-4">
+                <div class="item-list border-bottom">
+                  <div class="avatar">
+                    <img src="assets/img/jm_denis.jpg" alt="..." class="avatar-img rounded-circle">
+                  </div>
+                  <div class="info-rating ms-3 pe-2 me-2">
+                    <div class="username">Jimmy Denis</div>
+                    <div class="rating text-warning d-inline"><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                        class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="detail-rating text-muted">
+                      <span>Mã chuyến: 111</span>
+                      <span>
+                        15:15 22/2/2025
+                      </span>
+                    </div>
+                  <div class="rating-content mt-4">
+                    Quá tiện
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

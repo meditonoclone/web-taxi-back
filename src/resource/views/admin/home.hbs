@@ -1,0 +1,307 @@
+<div class="page-inner">
+    {{!-- <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+        <div>
+            <h3 class="fw-bold mb-3">Dashboard</h3>
+            <h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+        </div>
+        <div class="ms-md-auto py-2 py-md-0">
+            <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+            <a href="#" class="btn btn-primary btn-round">Add Customer</a>
+        </div>
+    </div> --}}
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="numOfTrips">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                <i class="fas fa-car"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Số chuyến</p>
+                                <h4 class="card-title">1,294</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="numOfClients">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-info bubble-shadow-small">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Lượng khách hàng</p>
+                                <h4 class="card-title" id="">1303</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="earnings">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-success bubble-shadow-small">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Doanh thu</p>
+                                <h4 class="card-title">120.000.000 VNĐ</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row ">
+        <div class="col-xxl-8">
+            <div class="card h-95">
+                <div class="card-header">
+                    <div class="card-title">Tổng quan</div>
+                </div>
+                <div class="card-body row">
+                    <div class="text-content col-md-4">
+                        <div class="text-center">
+                            <div class="text-center mb-3">
+                                <p class="text-muted mb-1">Tháng này</p>
+                                <div class="text-center">
+                                    <h2 class="mb-0">$86,990</h2>
+                                    <div class="badge bg-success mt-2">
+                                        + 21.68%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-sm-6 border-end">
+                                    <div class="border-bottom  p-3">
+                                        <p class="text-muted mb-1">Đặt</p>
+                                        <h5 class="m-0">3,690</h5>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="border-bottom p-3">
+                                        <p class="text-muted mb-1">Chuyến</p>
+                                        <h5 class="m-0">6065</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-sm-6 border-end">
+                                    <div class="border-bottom  p-3">
+                                        <p class="text-muted mb-1">Growth</p>
+                                        <h5 class="m-0">18.9%</h5>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="border-bottom p-3">
+                                        <p class="text-muted mb-1">Signups</p>
+                                        <h5 class="m-0">560</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-0">
+                                <div class="col-sm-6 border-end">
+                                    <div class=" p-3">
+                                        <p class="text-muted mb-1">Đánh giá</p>
+                                        <h5 class="m-0">$9,984</h5>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="p-3">
+                                        <p class="text-muted mb-1">Doanh thu</p>
+                                        <h5 class="m-0">$6,443</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-container col-md-8">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-4">
+            <div class="card h-95">
+                <div class="card-header">
+                    <h4 class="card-title">Lượng khách hàng</h4>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="passengersChart"></canvas>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <i class="bi bi-caret-up-fill text-primary"></i>
+                            <h3 class="m-0 mt-1">54%</h3>
+                            <p class="text-secondary m-0">Male</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-caret-up-fill text-primary"></i>
+                            <h3 class="m-0 mt-1">36%</h3>
+                            <p class="text-secondary m-0">Female</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-caret-down-fill text-danger"></i>
+                            <h3 class="m-0 mt-1">10%</h3>
+                            <p class="text-secondary m-0">Other</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-xxl-3 col-md-6 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Hình thức đặt chuyến</div>
+                </div>
+                <div class="card-body">
+
+                    <div class="chart-container">
+                        <canvas id="bookingMedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col col-xxl-3 col-md-6 fill-col col-12">
+            <div class="card ">
+                <div class="card-header">
+                    <div class="card-title">
+                        Lượt đặt chuyến tháng này
+                    </div>
+                </div>
+                <div class="card-body p-3 text-center">
+                    <div class="text-end text-success">
+                        6%
+                        <i class="fa fa-chevron-up"></i>
+                    </div>
+                    <div class="h1 m-0">43</div>
+                    <div class="text-muted mb-3">Lượt trên tổng số 8000 lượt</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        Doanh thu tháng này
+                    </div>
+                </div>
+                <div class="card-body p-3 text-center">
+                    <div class="text-end text-danger">
+                        6%
+                        <i class="fa fa-chevron-down"></i>
+                    </div>
+                    <div class="h1 m-0">43.000.000</div>
+                    <div class="text-muted mb-3">VND</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col col-xxl-6 col-12 fill-col">
+            <div class="card ">
+                <div class="card-header">
+                    <div class="card-title">
+                        Lượt khách
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="clientTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-round">
+                <div class="card-header">
+                    <div class="card-head-row card-tools-still-right">
+                        <h4 class="card-title">Thống kê chuyến</h4>
+                        <div class="card-tools ">
+                            <ul class="nav nav-pills nav-primary me-2">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">Hôm nay</a>
+                                </li>
+                                <li class="nav-item submenu">
+                                    <a class="nav-link" href="#">1 tuần</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">30 ngày</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link disabled" href="#">90 ngày</a>
+                                </li>
+                            </ul>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-angle-down"></span>
+                            </button>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs btn-refresh-card">
+                                <span class="fa fa-sync-alt"></span>
+                            </button>
+                            <button class="btn btn-icon btn-link btn-primary btn-xs">
+                                <span class="fa fa-times"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">4 chỗ nhỏ</th>
+                                <th scope="col">4 chỗ lớn</th>
+                                <th scope="col">7 chỗ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Doanh thu</td>
+                                <td>9.000.000</td>
+                                <td>10.000.00</td>
+                                <td>15.000.000</td>
+                            </tr>
+                            <tr>
+                                <td>Số chuyến</td>
+                                <td>69</td>
+                                <td>69</td>
+                                <td>69</td>
+                            </tr>
+                            <tr>
+                                <td>Thời gian chờ</td>
+                                <td>10.5</td>
+                                <td>10.5</td>
+                                <td>10.5</td>
+                            </tr>
+                            <tr>
+                                <td>Số khách hàng</td>
+                                <td>20</td>
+                                <td>20</td>
+                                <td>20</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

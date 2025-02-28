@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Basic -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Taxi Biên Hòa</title>
+    {{#if cssFiles}}
+    {{#each cssFiles}}
+    <link rel="stylesheet" href="{{this}}">
+    {{/each}}
+    {{/if}}
+    <!-- Fonts and icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/plugins.min.css" />
+    <link rel="stylesheet" href="/css/admin.min.css" />
+
+
+
+</head>
+
+<body>
+    <div class="wrapper">
+        {{>admin/sidebar}}
+        <div class="main-panel">
+            {{>admin/header}}
+            <div class="container">
+                {{{body}}}
+            </div>
+            {{>admin/footer}}
+
+        </div>
+    </div>
+    <script src="/js/core/jquery-3.7.1.min.js"></script>
+    <script src="/js/core/popper.min.js"></script>
+    <script src="/js/core/bootstrap.min.js"></script>
+
+    <!-- jQuery Scrollbar -->
+    <script src="/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <!-- jQuery Sparkline -->
+    <script src="/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- Chart Circle -->
+    <script src="/js/plugin/chart-circle/circles.min.js"></script>
+
+    <!-- Datatables -->
+    <script src="/js/plugin/datatables/datatables.min.js"></script>
+
+    <!-- Bootstrap Notify -->
+    <script src="/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <!-- jQuery Vector Maps -->
+    <script src="/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="/js/plugin/jsvectormap/world.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- admin JS -->
+    <script src="/js/admin/admin.js"></script>
+    
+    {{#each jsFiles}}
+    <script src="{{this}}"></script>
+
+    {{/each}}
+</body>
+
+</html>

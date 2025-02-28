@@ -1,0 +1,744 @@
+<div class="page-inner">
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="numOfTrips">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Khách hàng</p>
+                                <h4 class="card-title">1,294</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="numOfTrips">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                <i class="fas fa-car"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Tài xế </p>
+                                <h4 class="card-title">1,294</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="card card-stats card-round">
+                <div class="card-body" id="numOfTrips">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ms-3 ms-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Admin</p>
+                                <h4 class="card-title">13</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title">Khách hàng</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+
+
+                    <div class="table-responsive datatable-container h-600">
+                        <table id="clientTable" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên khách hàng</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Địa chỉ thường dùng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Ngày hoạt động gần nhất</th>
+                                    <th>Số chuyến đi</th>
+                                    <th>Số lần hủy chuyến</th>
+                                    <th>Tổng tiền đã chi</th>
+                                    <th>Ghi chú</th>
+                                    <th>Hành động</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nguyễn Văn A</td>
+                                    <td>nguyenvana@example.com</td>
+                                    <td>0901234567</td>
+                                    <td>Quận 1, TP.HCM</td>
+                                    <td>Hoạt động</td>
+                                    <td>2024-01-01</td>
+                                    <td>2025-02-26</td>
+                                    <td>150</td>
+                                    <td>5</td>
+                                    <td>12,000,000 VNĐ</td>
+                                    <td>Khách quen</td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modifyClient"
+                                                title="" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#clientHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Trần Thị B</td>
+                                    <td>tranthib@example.com</td>
+                                    <td>0937654321</td>
+                                    <td>Quận 3, TP.HCM</td>
+                                    <td>Khóa</td>
+                                    <td>2023-11-15</td>
+                                    <td>2024-12-20</td>
+                                    <td>75</td>
+                                    <td>10</td>
+                                    <td>5,500,000 VNĐ</td>
+                                    <td>Hủy nhiều</td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modifyClient"
+                                                title="" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#clientHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Phạm Văn C</td>
+                                    <td>phamvanc@example.com</td>
+                                    <td>0912345678</td>
+                                    <td>Quận 7, TP.HCM</td>
+                                    <td>Hoạt động</td>
+                                    <td>2022-08-10</td>
+                                    <td>2025-02-20</td>
+                                    <td>200</td>
+                                    <td>2</td>
+                                    <td>18,500,000 VNĐ</td>
+                                    <td>Ưu tiên</td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modifyClient"
+                                                title="" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#clientHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Lê Thị D</td>
+                                    <td>lethid@example.com</td>
+                                    <td>0945678901</td>
+                                    <td>Quận Bình Thạnh, TP.HCM</td>
+                                    <td>Hoạt động</td>
+                                    <td>2023-03-22</td>
+                                    <td>2025-02-25</td>
+                                    <td>95</td>
+                                    <td>4</td>
+                                    <td>7,800,000 VNĐ</td>
+                                    <td>Chưa có ghi chú</td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modifyClient"
+                                                title="" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#clientHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Võ Văn E</td>
+                                    <td>vovane@example.com</td>
+                                    <td>0976543210</td>
+                                    <td>Quận 5, TP.HCM</td>
+                                    <td>Khóa</td>
+                                    <td>2021-12-01</td>
+                                    <td>2024-06-30</td>
+                                    <td>50</td>
+                                    <td>15</td>
+                                    <td>3,200,000 VNĐ</td>
+                                    <td>Hủy nhiều</td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#modifyClient"
+                                                title="" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#clientHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h4 class="card-title">Tài xế</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+
+
+                    <div class="table-responsive datatable-container h-600">
+                        <table id="driverTable" class="display table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên tài xế</th>
+                                    <th>Email</th>
+                                    <th>Số điện thoại</th>
+                                    <th>Tuổi</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Bằng lái</th>
+                                    <th>Phương tiện</th>
+                                    <th>Ngày đăng ký</th>
+                                    <th>Ngày hoạt động gần nhất</th>
+                                    <th>Số chuyến đi</th>
+                                    <th>Số lần hủy chuyến</th>
+                                    <th>Tỷ lệ đánh giá</th>
+                                    <th>Tổng thu nhập</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Nguyễn Văn A</td>
+                                    <td>nguyenvana@gmail.com</td>
+                                    <td>0987654321</td>
+                                    <td>35</td>
+                                    <td>Hà Nội</td>
+                                    <td>B2</td>
+                                    <td>Toyota Vios - 30A-12345</td>
+                                    <td>2023-05-12</td>
+                                    <td>2025-02-25</td>
+                                    <td>1,200</td>
+                                    <td>15</td>
+                                    <td>4.8/5</td>
+                                    <td>250,000,000 VNĐ</td>
+                                    <td><span style="color: green;">Active</span></td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" title=""
+                                                data-bs-target="#modifyDriver" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#driverHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Trần Thị B</td>
+                                    <td>tranthib@gmail.com</td>
+                                    <td>0912345678</td>
+                                    <td>29</td>
+                                    <td>TP.HCM</td>
+                                    <td>C</td>
+                                    <td>Hyundai i10 - 51B-67890</td>
+                                    <td>2022-08-20</td>
+                                    <td>2025-02-20</td>
+                                    <td>900</td>
+                                    <td>10</td>
+                                    <td>4.6/5</td>
+                                    <td>180,000,000 VNĐ</td>
+                                    <td><span style="color: red;">Suspended</span></td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" title=""
+                                                data-bs-target="#modifyDriver" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#driverHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="tooltip" title=""
+                                                class="btn btn-link btn-danger" data-original-title="Remove">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Phạm Văn C</td>
+                                    <td>phamvanc@gmail.com</td>
+                                    <td>0976543210</td>
+                                    <td>42</td>
+                                    <td>Đà Nẵng</td>
+                                    <td>D</td>
+                                    <td>Ford Ranger - 43C-56789</td>
+                                    <td>2021-12-10</td>
+                                    <td>2025-02-22</td>
+                                    <td>1,500</td>
+                                    <td>20</td>
+                                    <td>4.9/5</td>
+                                    <td>300,000,000 VNĐ</td>
+                                    <td><span style="color: green;">Active</span></td>
+                                    <td>
+                                        <div class="form-button-action">
+                                            <button type="button" data-bs-toggle="modal" title=""
+                                                data-bs-target="#modifyDriver" class="btn btn-link btn-primary btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#driverHistory"
+                                                title="" class="btn btn-link btn-warning btn-lg"
+                                                data-original-title="Edit Task">
+                                                <i class="fas fa-history"></i>
+                                            </button>
+                                            <button type="button" title="" class="btn btn-link btn-danger"
+                                                data-original-title="Remove" data-bs-toggle="modal"
+                                                data-bs-target="#modifyDriver">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                            <!-- Modal -->
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modifyDriver" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        Sửa thông tin Tài xế
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">
+                        Thông tin
+                    </p>
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Họ tên</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0">
+                                <div class="form-group form-group-default">
+                                    <label>Số điện thoại</label>
+                                    <input id="addPosition" type="text" class="form-control"
+                                        placeholder="fill position" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0">
+                                <div class="form-group form-group-default">
+                                    <label>Email</label>
+                                    <input id="addPosition" type="text" class="form-control"
+                                        placeholder="fill position" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Địa chỉ</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0">
+                                <div class="form-group form-group-default">
+                                    <label>Thông tin xe</label>
+                                    <input id="addPosition" type="text" class="form-control"
+                                        placeholder="fill position" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default">
+                                    <label for="exampleFormControlSelect1">Loại xe</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>4 chỗ nhỏ</option>
+                                        <option>4 chỗ lớn</option>
+                                        <option>7 chỗ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default">
+                                    <label>Mã bằng lái</label>
+                                    <input id="Name" type="text" class="form-control" placeholder="Fill Name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Tải lên giấy tờ</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default">
+                                    <label for="exampleFormControlSelect1">Trạng thái</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Active</option>
+                                        <option>Disable</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" id="addRowButton" class="btn btn-primary">
+                        Sửa
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modifyClient" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        Sửa thông tin Khách hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="small">
+                        Thông tin
+                    </p>
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Họ tên</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0">
+                                <div class="form-group form-group-default">
+                                    <label>Số điện thoại</label>
+                                    <input id="addPosition" type="text" class="form-control"
+                                        placeholder="fill position" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 pe-0">
+                                <div class="form-group form-group-default">
+                                    <label>Email</label>
+                                    <input id="addPosition" type="text" class="form-control"
+                                        placeholder="fill position" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group form-group-default">
+                                    <label>Địa chỉ</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Tải lên Ảnh</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group form-group-default">
+                                    <label for="exampleFormControlSelect1">Trạng thái</label>
+                                    <select class="form-select" id="exampleFormControlSelect1">
+                                        <option>Active</option>
+                                        <option>Disable</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" id="addRowButton" class="btn btn-primary">
+                        Sửa
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="clientHistory" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        Lịch sử chuyến
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-head-bg-success">
+                        <thead>
+                            <tr>
+                                <th scope="col">Trip ID</th>
+                                <th scope="col">Thời gian đặt</th>
+                                <th scope="col">Điểm đón</th>
+                                <th scope="col">Điếm đến</th>
+                                <th scope="col">Thời gian chờ</th>
+                                <th scope="col">Số tiền</th>
+                                <th scope="col">Tài xế</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Đánh giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1001</td>
+                                <td>2025-02-25 14:30</td>
+                                <td>123 Nguyễn Trãi, Hà Nội</td>
+                                <td>456 Lê Lợi, Hà Nội</td>
+                                <td>10 phút</td>
+                                <td>150,000 VND</td>
+                                <td>Nguyễn Văn A</td>
+                                <td><span class="badge bg-success">Hoàn thành</span></td>
+                                <td>4.8/5</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>2025-02-24 09:15</td>
+                                <td>789 Trần Hưng Đạo, TP.HCM</td>
+                                <td>321 Phạm Văn Đồng, TP.HCM</td>
+                                <td>5 phút</td>
+                                <td>120,000 VND</td>
+                                <td>Trần Đình B</td>
+                                <td><span class="badge bg-danger">Đã hủy</span></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>2025-02-23 18:45</td>
+                                <td>567 Quang Trung, Đà Nẵng</td>
+                                <td>890 Lý Tự Trọng, Đà Nẵng</td>
+                                <td>15 phút</td>
+                                <td>200,000 VND</td>
+                                <td>Phạm Văn C</td>
+                                <td><span class="badge bg-warning text-dark">Đang chờ</span></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>1004</td>
+                                <td>2025-02-22 12:00</td>
+                                <td>234 Lê Văn Sỹ, Hà Nội</td>
+                                <td>678 Đống Đa, Hà Nội</td>
+                                <td>7 phút</td>
+                                <td>180,000 VND</td>
+                                <td>Lê Hữu D</td>
+                                <td><span class="badge bg-success">Hoàn thành</span></td>
+                                <td>5.0/5</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="driverHistory" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">
+                        Lịch sử chuyến
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-head-bg-success">
+                        <thead>
+                            <tr>
+                                <th scope="col">Trip ID</th>
+                                <th scope="col">Thời gian đặt</th>
+                                <th scope="col">Điểm đón</th>
+                                <th scope="col">Điếm đến</th>
+                                <th scope="col">Thời gian chờ</th>
+                                <th scope="col">Số tiền</th>
+                                <th scope="col">Mã khách hàng</th>
+                                <th scope="col">Khách hàng</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Đánh giá</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1001</td>
+                                <td>2025-02-25 14:30</td>
+                                <td>123 Nguyễn Trãi, Hà Nội</td>
+                                <td>456 Lê Lợi, Hà Nội</td>
+                                <td>10 phút</td>
+                                <td>150,000 VND</td>
+                                <td>C001</td>
+                                <td>Nguyễn Văn A</td>
+                                <td><span class="badge bg-success">Hoàn thành</span></td>
+                                <td>4.8/5</td>
+                            </tr>
+                            <tr>
+                                <td>1002</td>
+                                <td>2025-02-24 09:15</td>
+                                <td>789 Trần Hưng Đạo, TP.HCM</td>
+                                <td>321 Phạm Văn Đồng, TP.HCM</td>
+                                <td>5 phút</td>
+                                <td>120,000 VND</td>
+                                <td>C002</td>
+                                <td>Trần Đình B</td>
+                                <td><span class="badge bg-danger">Đã hủy</span></td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>1003</td>
+                                <td>2025-02-23 10:00</td>
+                                <td>567 Quang Trung, Đà Nẵng</td>
+                                <td>890 Lý Tự Trọng, Đà Nẵng</td>
+                                <td>15 phút</td>
+                                <td>200,000 VND</td>
+                                <td>C003</td>
+                                <td>Phạm Văn C</td>
+                                <td><span class="badge bg-warning text-dark">Đang chờ</span></td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+
+
+                    </table>
+
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                        Đóng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

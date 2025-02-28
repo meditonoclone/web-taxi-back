@@ -1,0 +1,712 @@
+<html lang="en"><head>
+    <!-- Basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Site Metas -->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+    <title>Taxi Biên Hòa</title>
+    <link rel="stylesheet" href="/css/account.css">
+    <link rel="stylesheet" href="/css/driverProfile.css">
+    <!-- Include jQuery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  
+  <!-- Include Owl Carousel CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+  
+  <!-- Include Owl Carousel JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  
+  
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+  
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet">
+  
+    <!-- responsive style -->
+    <link href="/css/responsive.css" rel="stylesheet">
+  
+    
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script></head>
+  
+    <body class="sub_page">
+  
+      <!-- Header -->
+      <div class="hero_area">
+        <header class="header_section">
+          <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg custom_nav-container ">
+              <a class="navbar-brand" href="/">
+                <span>
+                  Taxi Biên Hòa
+                </span>
+              </a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+      
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                  <ul class="navbar-nav  ">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="/">Trang chủ <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/about"> Về chúng tôi</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/service"> Dịch vụ </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/news"> Tin tức</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/contact">Liên hệ với chúng tôi</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/account">
+                        Trần Thị Bình
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
+        </header>
+      </div>
+      <section id="infomation" class="container profile layout_padding">
+      <div class="head">
+          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e" alt="" id="avatar">
+          <div>
+              <h1 id="name">Trần Thị Bình</h1>
+              <h2 id="phone">0912345678</h2>
+          </div>
+      </div>
+      <div class="info">
+          <p>
+              Email: <span id="email">tranthib@gmail.com</span>
+          </p>
+          <p>
+  
+              Địa chỉ: <span id="address">456 Nguyễn Huệ, Quận 1, TP.HCM</span>
+          </p>
+      </div>
+      <a href="/logout"><button type="button" class="btn btn-outline-danger">Đăng xuất</button><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Chỉnh sửa thông tin</button>
+  </a>
+  
+  </section>
+  
+  <section id="orderList" class="price-table layout_padding"><h4>Các chuyến mới hiện tại</h4>
+      <table class="table">
+          <thead class="thead-dark">
+              <tr>
+                  <th>Mã chuyến</th>
+                  <th>Thời gian đặt</th>
+                  <th>Điểm đi</th>
+                  <th>Điểm đến</th>
+                  <th>Khách hàng</th>
+                  <th>Số điện thoại khách hàng</th>
+                  <th>Trạng thái</th>
+              </tr>
+          </thead>
+          <tbody>
+      <tr>
+        <td>11</td>
+        <td>16:49 03/10/2024</td>
+        <td>Biên Hòa</td>
+        <td>Buôn Ma Thuột</td>
+        <td>Hoàng Văn Em</td>
+        <td>0866840075</td>
+        <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td>
+      </tr>
+      <tr>
+        <td>11</td>
+        <td>16:49 03/10/2024</td>
+        <td>Biên Hòa</td>
+        <td>Buôn Ma Thuột</td>
+        <td>Lê Lợi</td>
+        <td>0909091111</td>
+        
+      <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td></tr><tr>
+        <td>11</td>
+        <td>16:49 03/10/2024</td>
+        <td>Biên Hòa</td>
+        <td>Buôn Ma Thuột</td>
+        <td>Hoàng Văn Anh</td>
+        <td>0866840035</td>
+        
+      <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td></tr>
+      
+      <tr>
+        <td>11</td>
+        <td>16:49 03/10/2024</td>
+        <td>Biên Hòa</td>
+        <td>Buôn Ma Thuột</td>
+        <td>Hoàng Tôn</td>
+        <td>0866840075</td>
+        
+      <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td></tr>
+      <tr>
+        <td>10</td>
+        <td>16:49 03/10/2024</td>
+        <td>Hồ Chí Minh</td>
+        <td>Hà Nội</td>
+        <td>Trần Thiện Thanh Bảo</td>
+        <td>0901234567</td>
+        
+      <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td></tr>
+      <tr>
+        <td>11</td>
+        <td>16:49 03/10/2024</td>
+        <td>Biên Hòa</td>
+        <td>Buôn Ma Thuột</td>
+        <td>Quang Trung</td>
+        <td>0866840075</td>
+        
+      <td><button type="button" class="btn btn-outline-danger" style="
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Nhận chuyến
+  </button>
+  
+  
+  </td></tr></tbody>
+      </table>
+  </section>
+  <section id="historyTrips" class="price-table layout_padding">
+      <h4 style="
+      display: inline-block;
+      margin-bottom: 24px;
+  ">Lịch sử các chuyến đã hoàn thành</h4><i class="fas fa-search"></i>
+      <input type="text" placeholder="Tìm kiếm chuyến" style="
+      float: right;
+      padding: 9px;
+      border-radius: 4px;
+      width: 250px;
+      border-color: #e5e5e5;
+  ">
+      <table class="price-table hide">
+      <thead>
+          <tr>
+              <th>Mã chuyến</th>
+              <th>Thời gian đặt</th>
+              <th>Tổng số km</th>
+              <th>Thời gian chờ (giờ)</th>
+              <th>Số tiền (VNĐ)</th>
+              <th>Điểm đi</th>
+              <th>Điểm đến</th>
+              <th>Khách hàng</th>
+              <th>Số điện thoại khách hàng</th>
+              <th>Thời gian hoàn thành</th>
+              <th>Trạng thái</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td>1</td>
+              <td>12:59 20/09/2024</td>
+              <td>10.5 km</td>
+              <td>0.25</td>
+              <td>120,000</td>
+              <td>Trường Chinh, Hà Nội</td>
+              <td>Nguyễn Trãi, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>13:20 20/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>2</td>
+              <td>12:59 20/09/2024</td>
+              <td>8.0 km</td>
+              <td>0.15</td>
+              <td>100,000</td>
+              <td>Cầu Giấy, Hà Nội</td>
+              <td>Thanh Xuân, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>13:15 20/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>3</td>
+              <td>13:08 20/09/2024</td>
+              <td>12.3 km</td>
+              <td>0.30</td>
+              <td>130,000</td>
+              <td>Long Biên, Hà Nội</td>
+              <td>Đống Đa, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>13:35 20/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>4</td>
+              <td>13:08 20/09/2024</td>
+              <td>7.5 km</td>
+              <td>0.10</td>
+              <td>90,000</td>
+              <td>Ba Đình, Hà Nội</td>
+              <td>Hoàn Kiếm, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>13:25 20/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>5</td>
+              <td>23:12 27/09/2024</td>
+              <td>9.0 km</td>
+              <td>0.20</td>
+              <td>110,000</td>
+              <td>Tây Hồ, Hà Nội</td>
+              <td>Cầu Giấy, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>23:35 27/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>6</td>
+              <td>23:12 27/09/2024</td>
+              <td>15.0 km</td>
+              <td>0.35</td>
+              <td>160,000</td>
+              <td>Gia Lâm, Hà Nội</td>
+              <td>Cầu Giấy, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>23:50 27/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>7</td>
+              <td>23:22 27/09/2024</td>
+              <td>6.8 km</td>
+              <td>0.05</td>
+              <td>85,000</td>
+              <td>Hoàng Mai, Hà Nội</td>
+              <td>Đống Đa, Hà Nội</td>
+              <td>Hoàng Văn Em</td>
+              <td>0945678901</td>
+              <td>23:40 27/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+          <tr>
+              <td>8</td>
+              <td>23:28 27/09/2024</td>
+              <td>13.2 km</td>
+              <td>0.25</td>
+              <td>140,000</td>
+              <td>Hà Đông, Hà Nội</td>
+              <td>Thanh Xuân, Hà Nội</td>
+              <td>Nguyễn Văn Bảo</td>
+              <td>0934567890</td>
+              <td>23:55 27/09/2024</td>
+              <td>Đã hoàn thành</td>
+          </tr>
+      </tbody>
+  </table>
+  
+  
+  </section>
+  <section id="report" class="price-table layout_padding">
+       <h1>Báo cáo và Thống kê Tài xế</h1>
+  
+          <!-- Bộ lọc thời gian -->
+          <div class="filter">
+              <label for="from-date">Từ ngày:</label>
+              <input type="date" id="from-date">
+  
+              <label for="to-date">Đến ngày:</label>
+              <input type="date" id="to-date">
+  
+              <button id="filter-btn" style="
+      padding: 1px 12px;
+  ">Lọc</button>
+          </div>
+  
+          <!-- Bảng báo cáo thống kê -->
+          <table class="report-table">
+              <tbody><tr>
+                  <th>Chỉ số</th>
+                  <th>Giá trị</th>
+              </tr>
+              <tr>
+                  <td>Tổng số chuyến hoàn thành</td>
+                  <td>25 chuyến</td>
+              </tr>
+              <tr>
+                  <td>Tổng quãng đường di chuyển</td>
+                  <td>250 km</td>
+              </tr>
+              <tr>
+                  <td>Tổng thời gian làm việc</td>
+                  <td>30 giờ</td>
+              </tr>
+              <tr>
+                  <td>Tổng thời gian chờ</td>
+                  <td>2 giờ</td>
+              </tr>
+              <tr>
+                  <td>Tổng doanh thu</td>
+                  <td>15,000,000 VNĐ</td>
+              </tr>
+              <tr>
+                  <td>Tỷ lệ đánh giá trung bình</td>
+                  <td>4.8/5</td>
+              </tr>
+          </tbody></table>
+  
+          <!-- Biểu đồ thống kê -->
+          <div class="charts">
+              <h2>Doanh thu theo ngày</h2>
+              <canvas id="revenueChart" style="margin: 0px auto; box-sizing: border-box; display: block; height: 502px; max-width: 50%; width: 1004px;" width="903" height="451"></canvas>
+  
+              <h2>Số chuyến hoàn thành</h2>
+              <canvas id="tripsChart" style="height: 1004px;width: 2008px;margin: 0px auto;box-sizing: border-box;display: block;height: 502px;max-width: 50%;width: 1004px;" width="903" height="451"></canvas>
+          </div>
+  
+          <!-- Nút hành động -->
+          <div class="action-buttons">
+              <a href="#" style="
+      display: inline-block;
+      margin-left: 45.5%;
+  "><button type="button" class="btn btn-outline-danger" style="
+      padding: 8px;
+      font-weight: bold;
+  ">In Báo Cáo</button><button type="button" class="btn btn-outline-danger" style="
+      padding: 8px;
+      font-weight: bold;
+      margin-left:  12px;
+      border-color: green;
+      color: green;
+  ">Quay lại</button>
+  </a>
+          </div>
+      <style>   #report * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+  }
+  
+  #report {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+  }
+  
+  #report nav {
+      background-color: #2c3e50;
+      padding: 10px 20px;
+  }
+  
+  #report nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: space-around;
+  }
+  
+  #report nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+  }
+  
+  #report nav ul li a.active {
+      font-weight: bold;
+  }
+  
+  #report .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  #report h1 {
+      text-align: center;
+      margin-bottom: 30px;
+  }
+  
+  #report .filter {
+      text-align: center;
+      margin-bottom: 20px;
+  }
+  
+  #report .filter label {
+      margin: 0 10px;
+  }
+  
+  #report .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+  }
+  
+  #report .report-table th, #report .report-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+  }
+  
+  #report .report-table th {
+      background-color: #2c3e50;
+      color: white;
+  }
+  
+  #report .charts {
+      margin: 30px 0;
+   
+  
+  
+  }</style>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script>
+          // Dữ liệu mẫu cho biểu đồ
+  const revenueData = {
+      labels: ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10'],
+      datasets: [{
+          label: 'Doanh thu (VNĐ)',
+          data: [2000000, 1500000, 1800000, 2200000, 2100000, 2300000, 1700000],
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+      }]
+  };
+  
+  const tripsData = {
+      labels: ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10'],
+      datasets: [{
+          label: 'Số chuyến',
+          data: [4, 3, 5, 6, 5, 7, 4],
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',
+          borderColor: 'rgba(153, 102, 255, 1)',
+          borderWidth: 1
+      }]
+  };
+  
+  // Vẽ biểu đồ doanh thu
+  const revenueChart = new Chart(document.getElementById('revenueChart'), {
+      type: 'line',
+      data: revenueData,
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+  
+  // Vẽ biểu đồ số chuyến hoàn thành
+  const tripsChart = new Chart(document.getElementById('tripsChart'), {
+      type: 'bar',
+      data: tripsData,
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+  
+  // Xử lý nút in báo cáo
+  document.getElementById('print-btn').addEventListener('click', function () {
+      window.print();
+  });
+  
+  // Xử lý nút quay lại
+  document.getElementById('back-btn').addEventListener('click', function () {
+      window.history.back();
+  });
+  
+      </script>
+  </section>
+  <section id="acceptingTrip" class="price-table layout_padding show">
+  <div class="trip-container bg-white">
+          <div class="bg-primary text-white p-3">
+              <h2 class="mb-0">Chuyến đang thực hiện</h2>
+          </div>
+          <div class="p-4">
+              <div class="client-info d-flex align-items-center mb-4">
+                  <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c" alt="" id="avatar">
+                  <div>
+                      <h3 class="mb-0" style="
+      margin-left: 17px;
+  ">Hoàng Văn Em</h3>
+                      <p class="text-muted mb-0" style="
+      margin-left: 17px;
+  "><i class="fas fa-phone me-2"></i>0912345678</p>
+                  </div>
+              </div>
+              <div class="map mb-4">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d31332.786265726012!2d106.86955519999998!3d10.993664!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1721381184196!5m2!1sen!2s" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              </div>
+              <div class="trip-info">
+                  <div class="row mb-3">
+                      <div class="col-md-6">
+                          <p><i class="fas fa-map-marker-alt text-primary me-2"></i> <strong>Điểm đón:</strong> Trảng Dài Biên Hòa</p>
+                      </div>
+                      <div class="col-md-6">
+                          <p><i class="fas fa-map-pin text-primary me-2"></i> <strong>Điểm đến:</strong> Sài Gòn</p>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-md-6">
+                          <p><i class="fas fa-route text-primary me-2"></i> <strong>Quảng đường:</strong> </p>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="input-group">
+                              <span class="input-group-text"><i class="fas fa-clock text-primary"></i></span>
+                              <input type="text" class="form-control" placeholder="Thời gian chờ">
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row mb-3">
+                      <div class="col-md-6">
+                          <p><i class="fas fa-money-bill-wave text-primary me-2"></i> <strong>Số tiền:</strong></p>
+                      </div>
+                      <div class="col-md-6">
+                          <p><i class="fas fa-info-circle text-primary me-2"></i> <strong>Trạng thái:</strong> Đang trên đường đón</p>
+                      </div>
+                  </div>
+              </div>
+              <button class="btn btn-success w-100">Xác nhận đã đón khách</button>
+          </div>
+      </div><style>
+          .trip-container {
+              max-width: 800px;
+              margin: 2rem auto;
+              box-shadow: 0 0 10px rgba(0,0,0,0.1);
+              border-radius: 10px;
+              overflow: hidden;
+          }
+          .client-info img {
+              width: 80px;
+              height: 80px;
+              object-fit: cover;
+              border-radius: 50%;
+          }
+          .map iframe {
+              width: 100%;
+              height: 300px;
+              border: none;
+          }
+      </style>
+  
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  
+      
+  
+  
+  </section>
+      <section class="container-fluid footer_section">
+          <div class="container">
+            <p>
+              © 2024
+              <a href="https://www.facebook.com/groups/336818609470485">Dịch vụ của chúng tôi</a>
+            </p>
+          </div>
+        </section>
+      
+        <!-- owl carousel script -->
+        <script type="text/javascript">
+          $(".owl-carousel").owlCarousel({
+          loop: true,
+          margin: 20,
+          navText: [],
+          autoplay: true,
+          autoplayHoverPause: true,
+          responsive: {
+            0: {
+            items: 1
+              },
+          768: {
+            items: 2
+              },
+          1000: {
+            items: 2
+              },
+          }});
+        </script>    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+      <script src="/js/script.js"></script>
+      <script type="text/javascript" src="/js/bootstrap.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+  
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/driverAccount.js"></script><div class="tab-bar"><div class="tab-bar">
+      <ul>
+          <li class="">Thông tin cá nhân</li>
+          <li class="">Đơn chuyến</li>
+          <li class="">Lịch sử chuyến</li>
+          <li class="">Báo cáo</li>
+          <li class="select">Trạng thái chuyến đi hiện tại</li>
+      </ul>
+  </div></div>
+  
+    
+  
+  </body><chatgpt-sidebar data-gpts-theme="light"></chatgpt-sidebar><ddict-div style="visibility: visible !important;"></ddict-div><chatgpt-sidebar-popups data-gpts-theme="light"></chatgpt-sidebar-popups></html>

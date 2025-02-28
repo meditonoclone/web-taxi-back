@@ -201,7 +201,7 @@ class SiteController {
 
             } else {
                 console.log('tài khoản admin');
-                return res.redirect('/login');
+                return res.redirect('admin');  
             }
 
         } catch (err) {

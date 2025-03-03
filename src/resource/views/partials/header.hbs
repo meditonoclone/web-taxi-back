@@ -122,10 +122,16 @@
                 <option value="{{this.vehicle_type_id}}">{{this.vehicle_type}}</option>
                 {{/each}}
               </select>
-              <input id="start" name="start" type="text" placeholder="Đón xe tại" required>
-              <span></span>
-              <input id="end" name="end" type="text" placeholder="Xuống xe ở" required>
-              <span></span>
+              <div class="form-goup">
+                <input id="start" name="start" type="text" placeholder="Đón xe tại" required>
+                <span></span>
+
+              </div>
+              <div class="form-group">
+
+                <input id="end" name="end" type="text" placeholder="Xuống xe ở" required>
+                <span></span>
+              </div>
               <div id="map"></div>
               <div class="btm_input">
                 <div>

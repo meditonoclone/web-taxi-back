@@ -1,4 +1,50 @@
+function setupAutocomplete(inputId) {
+    let input = document.getElementById(inputId);
+    if (!input) return;
+    input.parentElement.style.position = "relative"
+    let ul = document.createElement("ul");
+    ul.classList.add("suggestions-container");
+    input.parentNode.appendChild(ul);
 
+    input.addEventListener("input", async function () {
+        let query = this.value.trim();
+        if (query.length < 2) {
+            ul.innerHTML = "";
+            return;
+        }
+
+        try {
+            let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC`);
+            let data = await response.json();
+            
+            ul.innerHTML = "";
+            if (!data.predictions || data.predictions.length === 0) return;
+            
+            data.predictions.forEach(place => {
+                let li = document.createElement("li");
+                li.classList.add("suggestion-item");
+                li.textContent = place.description;
+                li.onclick = () => {
+                    input.value = place.description;
+                    ul.innerHTML = "";
+                };
+                ul.appendChild(li);
+            });
+        } catch (error) {
+            console.error("Error fetching suggestions:", error);
+        }
+    });
+
+    document.addEventListener("click", function (e) {
+        if (!input.contains(e.target) && !ul.contains(e.target)) {
+            ul.innerHTML = "";
+        }
+    });
+}
+
+
+setupAutocomplete("start");
+setupAutocomplete("end");
 
 const socket = io();
 const vehicleType = document.querySelector('#vehicleType');
@@ -18,28 +64,15 @@ function requestData(s, type) {
 
 
 async function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: 10.9574, lng: 106.8426 }, // Vị trí trung tâm bản đồ (Biên Hòa, Việt Nam)
-        zoom: 7,
-        streetViewControl: false,
-        mapTypeControl: false,
-        fullscreenControl: false,
-        zoomControl: false,
-        zoomControlOptions: {
-            position: google.maps.ControlPosition.RIGHT_BOTTOM
-        }
+    map = new new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openmap.vn/styles/day-v1/style.json?apikey=UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC', // stylesheet location
+        center: [106.8427, 10.9574], // starting position [lng, lat]
+        zoom: 9 // starting zoom
+      });
 
-    });
 
-    directionsService = new google.maps.DirectionsService();
-    directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
 
-    startInput = document.getElementById('start');
-    endInput = document.getElementById('end');
-
-    new google.maps.places.Autocomplete(startInput);
-    new google.maps.places.Autocomplete(endInput);
 }
 
 async function calculateRoute() {
@@ -55,7 +88,6 @@ async function calculateRoute() {
         alert("Vui lòng nhập cả điểm khởi hành và điểm đến.");
         return;
     }
-
     directionsService.route(
         {
             origin: start,
@@ -80,4 +112,3 @@ async function calculateRoute() {
 }
 
 window.onload = initMap;
-

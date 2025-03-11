@@ -19,6 +19,7 @@ module.exports = function (io) {
                 where vehicle_type_id = ${type}`);
 
                     p = parseInt(price.base_fare);
+                    console.log(p);
                     if(s <= 10)
                         p+= parseInt(price.fare_first_10km) * (s - 1);
                     else if(s <= 30)

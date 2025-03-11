@@ -1,4 +1,24 @@
 const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC'
+
+async function reverseGeocoding(lngLat){
+    try{
+        let response = await fetch(`https://mapapis.openmap.vn/v1/geocode/reverse?latlng=${lngLat.lat},${lngLat.lng}&apikey=${apiKey}`);
+        let data = await response.json();
+        return data.results[0].formatted_address;
+    } catch(error){
+        console.error(`Lỗi chuyển đổi ${error}`);
+    }
+}
+async function forwardGeocoding(address){
+    try{
+        let response = await fetch(`https://mapapis.openmap.vn/v1/geocode/forward?address=${address}&apikey=${apiKey}`);
+        let data = await response.json();
+        return data.results[0].geometry.location;
+    } catch(error){
+        console.error(`Lỗi chuyển đổi ${error}`);
+    }
+}
+
 function setupAutocomplete(inputId) {
     let input = document.getElementById(inputId);
     if (!input) return;
@@ -15,12 +35,11 @@ function setupAutocomplete(inputId) {
         }
 
         try {
-            let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=${apiKeyapiKey}`);
+            let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=${apiKey}`);
             let data = await response.json();
-
             ul.innerHTML = "";
             if (!data.predictions || data.predictions.length === 0) return;
-
+            
             data.predictions.forEach(place => {
                 let li = document.createElement("li");
                 li.classList.add("suggestion-item");
@@ -61,10 +80,24 @@ let route;
 function requestData(s, type) {
     socket.emit('getPrice', s, type);
 }
+function createPoint(lngLat){
+    let point = new maplibregl.Marker({
+        draggable: true,
+    })
+        .setLngLat(lngLat)
+        .addTo(map)
 
+    point.on('dragend', function () {
+        savedPosition = point.getLngLat(); // Lấy vị trí mới
+        console.log("Marker đã di chuyển đến:", savedPosition);
+        drawRoute();
+
+    });
+    return point;
+}
 async function getRoute(start, end) {
     const url = `https://mapapis.openmap.vn/v1/direction?origin=${start._lngLat.lat},${start._lngLat.lng}&destination=${end._lngLat.lat},${end._lngLat.lng}&vehicle=car&apikey=${apiKey}`
-    
+
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -78,8 +111,7 @@ async function drawRoute() {
     if (!endPoint || !startPoint) return;
     route = await getRoute(startPoint, endPoint);
     const pll = route.overview_polyline.points;
-    console.log(pll);
-    const decodedCoordinates = polyline.decode(pll).map(coord => [coord[1], coord[0]]);
+    const decodedCoordinates = polyline.decode(pll).map(coord => [coord[1], coord[0]]); //giải mã polyline và đão tọa độ
     console.log(decodedCoordinates);
     if (map.getSource('route')) {
         map.getSource('route').setData({
@@ -125,24 +157,13 @@ async function initMap() {
         zoom: 13, // starting zoom
         maplibreLogo: false,
     });
-    
+
     map.on('click', (e) => {
-        if(!startPoint)
-        {
-            startPoint = new maplibregl.Marker({
-                draggable: true,
-            })
-                .setLngLat(e.lngLat)
-                .addTo(map)
+        if (!startPoint) {
+            startPoint = createPoint(e.lngLat);
 
-        }else if(!endPoint)
-        {
-            endPoint = new maplibregl.Marker({
-                draggable: true,
-            })
-                .setLngLat(e.lngLat)
-                .addTo(map)
-
+        } else if (!endPoint) {
+            endPoint = createPoint(e.lngLat)
             drawRoute();
         }
     });
@@ -152,39 +173,17 @@ async function initMap() {
 
 
 async function calculateRoute() {
-    const start = startInput.value;
-    const end = endInput.value;
-    document.getElementById('result').innerText = `Quãng đường: ${3}`;
-    requestData(distance, vehicleType.value);
-    // Nhận dữ liệu từ server
-    socket.on('recivePrice', (price) => {
-        spanCost.innerText = `Giá: ${price} VNĐ`;
-    });
-    if (!start || !end) {
+    if (!route) {
         alert("Vui lòng nhập cả điểm khởi hành và điểm đến.");
         return;
     }
-    directionsService.route(
-        {
-            origin: start,
-            destination: end,
-            travelMode: google.maps.TravelMode.DRIVING,
-        },
-        (response, status) => {
-            if (status === google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(response);
-                const distance = response.routes[0].legs[0].distance.text;
-                document.getElementById('result').innerText = `Quãng đường: ${distance}`;
-                requestData(distance, vehicleType.value);
-                // Nhận dữ liệu từ server
-                socket.on('recivePrice', (price) => {
-                    spanCost.innerText = `Giá: ${price} VNĐ`;
-                });
-            } else {
-                alert('Không tìm thấy đường: ' + status);
-            }
-        }
-    );
+    document.getElementById('result').innerText = `Quãng đường: ${route.legs[0].distance.text}`;
+    requestData((route.legs[0].distance.value/1000), vehicleType.value);
+    // Nhận dữ liệu từ server
+    socket.on('recivePrice', (price) => {
+        spanCost.innerText = ` - Giá: ${price} VNĐ`;
+    });
+    
 }
 
 window.onload = initMap;

@@ -1,4 +1,16 @@
 const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC'
+const socket = io();
+const vehicleType = document.querySelector('#vehicleType');
+const spanCost = document.querySelector('#cost');
+let map;
+let directionsService;
+let directionsRenderer;
+let startInput;
+let endInput;
+// let endPoint;
+// let startPoint;
+let markers = []
+let route;
 
 async function reverseGeocoding(lngLat){
     try{
@@ -19,7 +31,7 @@ async function forwardGeocoding(address){
     }
 }
 
-function setupAutocomplete(inputId) {
+function setupAutocomplete(inputId, position) {
     let input = document.getElementById(inputId);
     if (!input) return;
     input.parentElement.style.position = "relative"
@@ -44,8 +56,23 @@ function setupAutocomplete(inputId) {
                 let li = document.createElement("li");
                 li.classList.add("suggestion-item");
                 li.textContent = place.description;
-                li.onclick = () => {
+                li.onclick = async () => {
                     input.value = place.description;
+                    if(position == 0)//điểm bắt đầu
+                    {
+                        let lngLat = await forwardGeocoding(place.description)
+                        markers[0] = createPoint(lngLat)
+                    }
+                    else if(position == -1)//điểm kết thúc
+                    {
+                        let lngLat = await forwardGeocoding(place.description)
+                        markers[markers.length] = createPoint(lngLat)
+                    }
+                    else
+                    {
+                        let lngLat = await forwardGeocoding(place.description)
+                        markers[position] = createPoint(lngLat)
+                    }
                     ul.innerHTML = "";
                 };
                 ul.appendChild(li);
@@ -63,20 +90,10 @@ function setupAutocomplete(inputId) {
 }
 
 
-setupAutocomplete("start");
-setupAutocomplete("end");
+setupAutocomplete("start", 0);
+setupAutocomplete("end", -1);
 
-const socket = io();
-const vehicleType = document.querySelector('#vehicleType');
-const spanCost = document.querySelector('#cost');
-let map;
-let directionsService;
-let directionsRenderer;
-let startInput;
-let endInput;
-let endPoint;
-let startPoint;
-let route;
+
 function requestData(s, type) {
     socket.emit('getPrice', s, type);
 }
@@ -95,8 +112,18 @@ function createPoint(lngLat){
     });
     return point;
 }
-async function getRoute(start, end) {
-    const url = `https://mapapis.openmap.vn/v1/direction?origin=${start._lngLat.lat},${start._lngLat.lng}&destination=${end._lngLat.lat},${end._lngLat.lng}&vehicle=car&apikey=${apiKey}`
+async function getRoute(markers) {
+    let origin = `${markers[0]._lngLat.lat},${markers[0]._lngLat.lng}`;
+    let destination = 
+    markers.reduce((string, marker, i, a) => {
+        if(i == 0) return string;
+        if(i == a.length-1)
+        {
+            return `${string}${marker._lngLat.lat},${marker._lngLat.lng}`
+        }
+        return `${string}${marker._lngLat.lat},${marker._lngLat.lng};`
+    }, '');
+    const url = `https://mapapis.openmap.vn/v1/direction?origin=${origin}&destination=${destination}&vehicle=car&apikey=${apiKey}`
 
     try {
         const response = await fetch(url);
@@ -108,8 +135,8 @@ async function getRoute(start, end) {
 }
 
 async function drawRoute() {
-    if (!endPoint || !startPoint) return;
-    route = await getRoute(startPoint, endPoint);
+    if (markers.length < 2) return;
+    route = await getRoute(markers);
     const pll = route.overview_polyline.points;
     const decodedCoordinates = polyline.decode(pll).map(coord => [coord[1], coord[0]]); //giải mã polyline và đão tọa độ
     console.log(decodedCoordinates);
@@ -152,20 +179,20 @@ async function drawRoute() {
 async function initMap() {
     map = new maplibregl.Map({
         container: 'map',
-        style: 'https://tiles.openmap.vn/styles/day-v1/style.json?apikey=UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC', // stylesheet location
+        style: `https://tiles.openmap.vn/styles/day-v1/style.json?apikey=${apiKey}`, // stylesheet location
         center: [106.86212, 10.958527], // starting position [lng, lat]
         zoom: 13, // starting zoom
         maplibreLogo: false,
     });
 
     map.on('click', (e) => {
-        if (!startPoint) {
-            startPoint = createPoint(e.lngLat);
+        if (markers.length < 2) // tạo tối đa 2 điểm
+        {
+            let point = createPoint(e.lngLat);
+            console.log(point);
+            markers.push(point);
 
-        } else if (!endPoint) {
-            endPoint = createPoint(e.lngLat)
-            drawRoute();
-        }
+        } 
     });
 
 }

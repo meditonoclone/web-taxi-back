@@ -66,7 +66,7 @@ function setupAutocomplete(inputId, position) {
                     else if(position == -1)//điểm kết thúc
                     {
                         let lngLat = await forwardGeocoding(place.description)
-                        markers[markers.length] = createPoint(lngLat)
+                        markers[1] = createPoint(lngLat)
                     }
                     else
                     {

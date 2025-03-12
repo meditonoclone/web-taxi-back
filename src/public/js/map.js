@@ -12,21 +12,21 @@ let endInput;
 let markers = []
 let route;
 
-async function reverseGeocoding(lngLat){
-    try{
+async function reverseGeocoding(lngLat) {
+    try {
         let response = await fetch(`https://mapapis.openmap.vn/v1/geocode/reverse?latlng=${lngLat.lat},${lngLat.lng}&apikey=${apiKey}`);
         let data = await response.json();
         return data.results[0].formatted_address;
-    } catch(error){
+    } catch (error) {
         console.error(`Lỗi chuyển đổi ${error}`);
     }
 }
-async function forwardGeocoding(address){
-    try{
+async function forwardGeocoding(address) {
+    try {
         let response = await fetch(`https://mapapis.openmap.vn/v1/geocode/forward?address=${address}&apikey=${apiKey}`);
         let data = await response.json();
         return data.results[0].geometry.location;
-    } catch(error){
+    } catch (error) {
         console.error(`Lỗi chuyển đổi ${error}`);
     }
 }
@@ -51,28 +51,19 @@ function setupAutocomplete(inputId, position) {
             let data = await response.json();
             ul.innerHTML = "";
             if (!data.predictions || data.predictions.length === 0) return;
-            
+
             data.predictions.forEach(place => {
                 let li = document.createElement("li");
                 li.classList.add("suggestion-item");
                 li.textContent = place.description;
                 li.onclick = async () => {
                     input.value = place.description;
-                    if(position == 0)//điểm bắt đầu
-                    {
-                        let lngLat = await forwardGeocoding(place.description)
-                        markers[0] = createPoint(lngLat)
-                    }
-                    else if(position == -1)//điểm kết thúc
-                    {
-                        let lngLat = await forwardGeocoding(place.description)
-                        markers[1] = createPoint(lngLat)
-                    }
-                    else
-                    {
-                        let lngLat = await forwardGeocoding(place.description)
+                    let lngLat = await forwardGeocoding(place.description)
+                    if (!markers[position])
                         markers[position] = createPoint(lngLat)
-                    }
+                    else
+                        markers[position].setLngLat([lngLat.lng, lngLat.lat])
+
                     ul.innerHTML = "";
                 };
                 ul.appendChild(li);
@@ -91,13 +82,13 @@ function setupAutocomplete(inputId, position) {
 
 
 setupAutocomplete("start", 0);
-setupAutocomplete("end", -1);
+setupAutocomplete("end", 1);
 
 
 function requestData(s, type) {
     socket.emit('getPrice', s, type);
 }
-function createPoint(lngLat){
+function createPoint(lngLat) {
     let point = new maplibregl.Marker({
         draggable: true,
     })
@@ -113,16 +104,15 @@ function createPoint(lngLat){
     return point;
 }
 async function getRoute(markers) {
+    if (markers.length < 2) return;
     let origin = `${markers[0]._lngLat.lat},${markers[0]._lngLat.lng}`;
-    let destination = 
-    markers.reduce((string, marker, i, a) => {
-        if(i == 0) return string;
-        if(i == a.length-1)
-        {
-            return `${string}${marker._lngLat.lat},${marker._lngLat.lng}`
-        }
-        return `${string}${marker._lngLat.lat},${marker._lngLat.lng};`
-    }, '');
+    let destination = markers
+        .slice(2) // Bỏ qua markers[0] (điểm đầu) & markers[1] (điểm cuối)
+        .map(marker => `${marker._lngLat.lat},${marker._lngLat.lng}`)
+        .join(';'); // Nối chuỗi bằng dấu ";"
+
+    destination = `${destination}${destination ? ';' : ''}${markers[1]._lngLat.lat},${markers[1]._lngLat.lng}`;
+
     const url = `https://mapapis.openmap.vn/v1/direction?origin=${origin}&destination=${destination}&vehicle=car&apikey=${apiKey}`
 
     try {
@@ -192,7 +182,7 @@ async function initMap() {
             console.log(point);
             markers.push(point);
 
-        } 
+        }
     });
 
 }
@@ -200,17 +190,18 @@ async function initMap() {
 
 
 async function calculateRoute() {
-    if (!route) {
+    if (markers.length < 2) {
         alert("Vui lòng nhập cả điểm khởi hành và điểm đến.");
         return;
     }
+    drawRoute();
     document.getElementById('result').innerText = `Quãng đường: ${route.legs[0].distance.text}`;
-    requestData((route.legs[0].distance.value/1000), vehicleType.value);
+    requestData((route.legs[0].distance.value / 1000), vehicleType.value);
     // Nhận dữ liệu từ server
     socket.on('recivePrice', (price) => {
         spanCost.innerText = ` - Giá: ${price} VNĐ`;
     });
-    
+
 }
 
 window.onload = initMap;

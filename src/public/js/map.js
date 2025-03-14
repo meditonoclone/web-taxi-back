@@ -316,7 +316,23 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             (error) => {
                 console.error("Lỗi lấy vị trí:", error);
-                alert("Không thể truy cập vị trí. Hãy kiểm tra cài đặt trình duyệt.");
+
+                let errorMessage;
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Bạn đã từ chối cấp quyền vị trí. Vui lòng kiểm tra cài đặt trình duyệt.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Không thể lấy vị trí. Hãy bật GPS và kiểm tra kết nối mạng.";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Yêu cầu lấy vị trí quá lâu, thử lại hoặc di chuyển ra ngoài trời.";
+                        break;
+                    default:
+                        errorMessage = "Lỗi không xác định khi lấy vị trí.";
+                }
+
+                alert(errorMessage);
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );

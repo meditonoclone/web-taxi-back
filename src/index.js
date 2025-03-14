@@ -12,17 +12,24 @@ const flash = require('connect-flash');
 const validate = require('./socket/validate');
 const getPrice = require('./socket/getPrice');
 const joinRoom = require('./socket/joinRoom');
-const http = require('http');
+const https = require('https');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
 const clients = require('./socket/clientsList');
+const fs = require('fs')
+
 // Khởi tạo ứng dụng Express
 const app = express();
 const port = 3000;
+const options = {
+  key: fs.readFileSync(path.join(__dirname, "certs", "localhost.key")),
+  cert: fs.readFileSync(path.join(__dirname, "certs", "localhost.crt")),
+};
 
-
-const server = http.createServer(app);
+const server = https.createServer(options, app);
 const io = new Server(server);
+
+
 
 validate(io);//gửi lỗi validat về cho client
 getPrice(io);

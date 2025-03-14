@@ -8,6 +8,8 @@ let directionsRenderer;
 let inputs = []
 let markers = []
 let route;
+let currentLocation;
+
 
 async function reverseGeocoding(lngLat) {
     try {
@@ -28,6 +30,11 @@ async function forwardGeocoding(address) {
     }
 }
 
+
+
+
+
+
 function setupAutocomplete(inputId, position) {
     let input = document.getElementById(inputId);
     inputs[position] = input;
@@ -37,28 +44,46 @@ function setupAutocomplete(inputId, position) {
     let ul = document.createElement("ul");
     ul.classList.add("suggestions-container");
     input.parentNode.appendChild(ul);
+    input.addEventListener("focus", async () => {
+        if (inputs.indexOf(input) !== 0 || !currentLocation)
+            return
+        let liCurrentLocation = await addCurrentLocationOption();
 
-    input.addEventListener("input", async function () {
-        let query = this.value.trim();
         ul.innerHTML = "";
+        ul.appendChild(liCurrentLocation);
+    })
+    input.addEventListener("keyup", async function (e) {
+        let inputValue = e.target.value;
 
-        // Nếu input rỗng hoặc ít hơn 2 ký tự thì hiển thị "Vị trí hiện tại"
-        if (query.length < 2) {
-            addCurrentLocationOption();
-            return;
+        if (e.key !== " ") {
+            return
         }
+        let query = this.value.trim();
+
+        ul.innerHTML = '';
+        // // if (inputs.indexOf(input) === 0)
+
+        // //     if (currentLocation) {
+        // //         liCurrentLocation = addCurrentLocationOption();
+        // //         ul.appendChild(liCurrentLocation);
+        //     }
+
+
 
         try {
             let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=${apiKey}`);
             let data = await response.json();
             if (!data.predictions || data.predictions.length === 0) return;
-
+            console.log(3)
             data.predictions.forEach(place => {
                 let li = document.createElement("li");
                 li.classList.add("suggestion-item");
                 li.textContent = place.description;
                 li.onclick = async () => {
+                    console.log(2)
                     input.value = place.description;
+                    input.dispatchEvent(new Event("input", { bubbles: true }));
+
                     let lngLat = await forwardGeocoding(place.description);
                     if (!markers[position]) {
                         markers[position] = createPoint(lngLat, position);
@@ -69,9 +94,6 @@ function setupAutocomplete(inputId, position) {
                 };
                 ul.appendChild(li);
             });
-
-            // Luôn hiển thị lựa chọn "Vị trí hiện tại" đầu tiên
-            addCurrentLocationOption();
         } catch (error) {
             console.error("Error fetching suggestions:", error);
         }
@@ -82,32 +104,18 @@ function setupAutocomplete(inputId, position) {
         let li = document.createElement("li");
         li.classList.add("suggestion-item");
         li.textContent = "📍 Vị trí hiện tại";
-        li.onclick = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    console.log(1);
-                    let { latitude, longitude } = position.coords;
-                    input.value = forwardGeocoding({ latitude, longitude });
-
-                    let lngLat = { lng, lat };
-                    if (!markers[position]) {
-                        markers[position] = createPoint(lngLat, position);
-                    } else {
-                        markers[position].setLngLat([longitude, latitude]);
-                    }
-
-                    ul.innerHTML = "";
-                }, (error) => {
-                    console.error("Lỗi lấy vị trí:", error);
-                    alert("Không thể lấy vị trí hiện tại.");
-                },
-                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-                );
+        li.addEventListener("click", async () => {
+            if (!markers[0]) {
+                markers[0] = createPoint(currentLocation, 0);
             } else {
-                alert("Trình duyệt của bạn không hỗ trợ định vị.");
+                markers[0].setLngLat([currentLocation.lng, currentLocation.lat]);
             }
-        };
-        ul.prepend(li);
+
+            ul.innerHTML = "";
+            inputs[0].value = await reverseGeocoding(currentLocation);
+            input.dispatchEvent(new Event("input", { bubbles: true }));
+        })
+        return li;
     }
 
     // Ẩn danh sách khi click bên ngoài
@@ -186,6 +194,8 @@ function createPoint(lngLat, position) {
 
     point.on('dragend', async function () {
         inputs[position].value = await reverseGeocoding(point.getLngLat());
+        inputs[position].dispatchEvent(new Event("input", { bubbles: true }));
+
         savedPosition = point.getLngLat(); // Lấy vị trí mới
 
         drawRoute();
@@ -267,8 +277,11 @@ async function initMap() {
     map.on('click', async (e) => {
         if (markers.length < 2) // tạo tối đa 2 điểm
         {
+            console.log(e.lngLat)
             let point = createPoint(e.lngLat, markers.length);
             inputs[markers.length].value = await reverseGeocoding(e.lngLat);
+            inputs[markers.length].dispatchEvent(new Event("input", { bubbles: true }));
+
             markers.push(point);
 
         }
@@ -294,3 +307,20 @@ async function calculateRoute() {
 }
 
 window.onload = initMap;
+document.addEventListener("DOMContentLoaded", () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log("Vị trí hiện tại:", position.coords);
+                currentLocation = { lng: position.coords.longitude, lat: position.coords.latitude };
+            },
+            (error) => {
+                console.error("Lỗi lấy vị trí:", error);
+                alert("Không thể truy cập vị trí. Hãy kiểm tra cài đặt trình duyệt.");
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    } else {
+        alert("Trình duyệt của bạn không hỗ trợ định vị.");
+    }
+});

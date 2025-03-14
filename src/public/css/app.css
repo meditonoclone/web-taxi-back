@@ -934,5 +934,7 @@ a:focus {
 
 .footer_section a {
   color: #000000; }
-
+.disapear{
+  display: none;
+}
 /*# sourceMappingURL=style.css.map */

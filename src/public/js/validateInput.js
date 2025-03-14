@@ -90,8 +90,11 @@ function validate(objectsToValidate, errorClass) {
         input.addEventListener('blur', () => {
             if (obj.rules.includes('confirmPassword'))
                 return;
-            input.value = input.value.trim();
-            validateInput(input, obj.rules, span);
+            setTimeout(() => {
+                input.value = input.value.trim();
+                validateInput(input, obj.rules, span);
+
+            }, 300)
         });
 
         // Xóa lỗi khi input thay đổi

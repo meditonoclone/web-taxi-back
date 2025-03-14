@@ -681,14 +681,26 @@ a:focus {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
 .suggestions-container{
-  z-index: 2;
+  z-index: 99;
   box-sizing: border-box;
   position: absolute;
   color: black  ;
   background-color: white;
   width: 100%;
+  list-style: none;
+  padding: 0;
+}
+.suggestion-item{
+  z-index: 1000;
+  pointer-events: auto;
+}
+.suggestion-item:last-child{
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 .suggestion-item:hover{
   background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
+}
+.disapear{
+  display: none;
 }

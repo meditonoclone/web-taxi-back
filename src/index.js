@@ -122,6 +122,6 @@ app.use((req, res, next) => {
 // Routes
 router(app);
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
   console.log(`App listening at http://localhost:${port}`);
 });

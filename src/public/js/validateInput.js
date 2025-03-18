@@ -16,7 +16,7 @@ const validateAll = (objectsToValidate) => {
         input.blur();
     });
 }
-function validate(objectsToValidate, errorClass) {
+function validate(form, objectsToValidate, errorClass, callApi) {
     // Các rule cơ bản
     const rules = {
         phone: value => /^0\d{9}$/.test(value) ? '' : 'Số điện thoại không hợp lệ',
@@ -68,7 +68,7 @@ function validate(objectsToValidate, errorClass) {
 
     let isValid = true;
 
-    document.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         let isValid = true;
         objectsToValidate.forEach(obj => {
@@ -76,11 +76,14 @@ function validate(objectsToValidate, errorClass) {
             const span = input.nextElementSibling;
             if (!validateInput(input, obj.rules, span))
                 isValid = false;
-            else
-                e.target.submit();
         });
         if (!isValid)
             document.querySelector(`.${errorClass}`).focus();
+        else if (callApi)
+            await callApi(e)
+        else
+            e.target.submit();
+
     })
 
     objectsToValidate.forEach(obj => {

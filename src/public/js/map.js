@@ -10,6 +10,9 @@ let markers = []
 let route;
 let currentLocation;
 
+let mapDetailTrip
+
+
 
 async function reverseGeocoding(lngLat) {
     try {
@@ -30,45 +33,61 @@ async function forwardGeocoding(address) {
     }
 }
 
+function createPoint(lngLat, position, map) {
+    let point = new maplibregl.Marker({
+        draggable: true,
+    })
+        .setLngLat(lngLat)
+        .addTo(map)
+
+
+    point.on('dragend', async function () {
+        inputs[position].value = await reverseGeocoding(point.getLngLat());
+        inputs[position].dispatchEvent(new Event("input", { bubbles: true }));
+
+        savedPosition = point.getLngLat(); // Lấy vị trí mới
+
+    });
+    map.setCenter(lngLat);
+
+    return point;
+}
+
+async function initMap() {
+    let map = new maplibregl.Map({
+        container: 'map',
+        style: `https://tiles.openmap.vn/styles/day-v1/style.json?apikey=${apiKey}`, // stylesheet location
+        center: [106.86212, 10.958527], // starting position [lng, lat]
+        zoom: 13, // starting zoom
+        maplibreLogo: false,
+    });
+
+    map.on('click', async (e) => {
+        if (markers.length < 2) // tạo tối đa 2 điểm
+        {
+            console.log(e.lngLat)
+            let point = createPoint(e.lngLat, markers.length, map);
+            inputs[markers.length].value = await reverseGeocoding(e.lngLat);
+            inputs[markers.length].dispatchEvent(new Event("input", { bubbles: true }));
+
+            markers.push(point);
+
+        }
+    });
+    return map;
+}
 
 
 
-
-
-function setupAutocomplete(inputId, position) {
+function setupAutocomplete(inputId, position, markers, map) {
     let input = document.getElementById(inputId);
     inputs[position] = input;
     if (!input) return;
     input.parentElement.style.position = "relative";
 
     let ul = document.createElement("ul");
-    ul.classList.add("suggestions-container");
-    input.parentNode.appendChild(ul);
-    input.addEventListener("focus", async () => {
-        if (inputs.indexOf(input) !== 0 || !currentLocation)
-            return
-        let liCurrentLocation = await addCurrentLocationOption();
 
-        ul.innerHTML = "";
-        ul.appendChild(liCurrentLocation);
-    })
-    input.addEventListener("keyup", async function (e) {
-        let inputValue = e.target.value;
-
-        if (e.key !== " ") {
-            return
-        }
-        let query = this.value.trim();
-
-        ul.innerHTML = '';
-        // // if (inputs.indexOf(input) === 0)
-
-        // //     if (currentLocation) {
-        // //         liCurrentLocation = addCurrentLocationOption();
-        // //         ul.appendChild(liCurrentLocation);
-        //     }
-
-
+    async function loadPlace(query) {
 
         try {
             let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=${apiKey}`);
@@ -86,9 +105,10 @@ function setupAutocomplete(inputId, position) {
 
                     let lngLat = await forwardGeocoding(place.description);
                     if (!markers[position]) {
-                        markers[position] = createPoint(lngLat, position);
+                        markers[position] = createPoint(lngLat, position, map);
                     } else {
                         markers[position].setLngLat([lngLat.lng, lngLat.lat]);
+                        map.setCenter([lngLat.lng, lngLat.lat])
                     }
                     ul.innerHTML = "";
                 };
@@ -97,6 +117,41 @@ function setupAutocomplete(inputId, position) {
         } catch (error) {
             console.error("Error fetching suggestions:", error);
         }
+    }
+    ul.classList.add("suggestions-container");
+    input.parentNode.appendChild(ul);
+    input.addEventListener("blur", async () => {
+        let query = input.value.trim();
+
+        await loadPlace(query);
+
+        ul.firstChild.click();
+    })
+    input.addEventListener("focus", async () => {
+        if (inputs.indexOf(input) !== 0 || !currentLocation)
+            return
+        let liCurrentLocation = await addCurrentLocationOption();
+
+        ul.innerHTML = "";
+        ul.appendChild(liCurrentLocation);
+    })
+    input.addEventListener("keyup", async function (e) {
+
+        if (e.key !== " ") {
+            return
+        }
+        let query = this.value.trim();
+
+        ul.innerHTML = '';
+        // // if (inputs.indexOf(input) === 0)
+
+        // //     if (currentLocation) {
+        // //         liCurrentLocation = addCurrentLocationOption();
+        // //         ul.appendChild(liCurrentLocation);
+        //     }
+
+        loadPlace(query)
+
     });
 
     // Thêm tùy chọn "Vị trí hiện tại"
@@ -106,7 +161,7 @@ function setupAutocomplete(inputId, position) {
         li.textContent = "📍 Vị trí hiện tại";
         li.addEventListener("click", async () => {
             if (!markers[0]) {
-                markers[0] = createPoint(currentLocation, 0);
+                markers[0] = createPoint(currentLocation, 0, map);
             } else {
                 markers[0].setLngLat([currentLocation.lng, currentLocation.lat]);
             }
@@ -127,57 +182,13 @@ function setupAutocomplete(inputId, position) {
 }
 
 
-// function setupAutocomplete(inputId, position) {
-//     let input = document.getElementById(inputId);
-//     inputs[position] = input;
-//     if (!input) return;
-//     input.parentElement.style.position = "relative"
-//     let ul = document.createElement("ul");
-//     ul.classList.add("suggestions-container");
-//     input.parentNode.appendChild(ul);
 
-//     input.addEventListener("input", async function () {
-//         let query = this.value.trim();
-//         if (query.length < 2) {
-//             ul.innerHTML = "";
-//             return;
-//         }
 
-//         try {
-//             let response = await fetch(`https://mapapis.openmap.vn/v1/autocomplete?input=${query}&apikey=${apiKey}`);
-//             let data = await response.json();
-//             ul.innerHTML = "";
-//             if (!data.predictions || data.predictions.length === 0) return;
 
-//             data.predictions.forEach(place => {
-//                 let li = document.createElement("li");
-//                 li.classList.add("suggestion-item");
-//                 li.textContent = place.description;
-//                 li.onclick = async () => {
-//                     input.value = place.description;
-//                     let lngLat = await forwardGeocoding(place.description)
-//                     if (!markers[position])
-//                         markers[position] = createPoint(lngLat, position)
-//                     else
-//                         markers[position].setLngLat([lngLat.lng, lngLat.lat])
 
-//                     ul.innerHTML = "";
-//                 };
-//                 ul.appendChild(li);
-//             });
-//         } catch (error) {
-//             console.error("Error fetching suggestions:", error);
-//         }
-//     });
 
-//     document.addEventListener("click", function (e) {
-//         if (!input.contains(e.target) && !ul.contains(e.target)) {
-//             ul.innerHTML = "";
-//         }
-//     });
-// }
-setupAutocomplete("start", 0);
-setupAutocomplete("end", 1);
+
+
 
 
 
@@ -185,24 +196,7 @@ setupAutocomplete("end", 1);
 function requestData(s, type) {
     socket.emit('getPrice', s, type);
 }
-function createPoint(lngLat, position) {
-    let point = new maplibregl.Marker({
-        draggable: true,
-    })
-        .setLngLat(lngLat)
-        .addTo(map)
 
-    point.on('dragend', async function () {
-        inputs[position].value = await reverseGeocoding(point.getLngLat());
-        inputs[position].dispatchEvent(new Event("input", { bubbles: true }));
-
-        savedPosition = point.getLngLat(); // Lấy vị trí mới
-
-        drawRoute();
-
-    });
-    return point;
-}
 async function getRoute(markers) {
     if (markers.length < 2) return;
     let origin = `${markers[0]._lngLat.lat},${markers[0]._lngLat.lng}`;
@@ -224,7 +218,7 @@ async function getRoute(markers) {
     }
 }
 
-async function drawRoute() {
+async function drawRoute(markers, map) {
     if (markers.length < 2) return;
     route = await getRoute(markers);
     const pll = route.overview_polyline.points;
@@ -265,29 +259,7 @@ async function drawRoute() {
     }
 }
 
-async function initMap() {
-    map = new maplibregl.Map({
-        container: 'map',
-        style: `https://tiles.openmap.vn/styles/day-v1/style.json?apikey=${apiKey}`, // stylesheet location
-        center: [106.86212, 10.958527], // starting position [lng, lat]
-        zoom: 13, // starting zoom
-        maplibreLogo: false,
-    });
 
-    map.on('click', async (e) => {
-        if (markers.length < 2) // tạo tối đa 2 điểm
-        {
-            console.log(e.lngLat)
-            let point = createPoint(e.lngLat, markers.length);
-            inputs[markers.length].value = await reverseGeocoding(e.lngLat);
-            inputs[markers.length].dispatchEvent(new Event("input", { bubbles: true }));
-
-            markers.push(point);
-
-        }
-    });
-
-}
 
 
 
@@ -296,7 +268,7 @@ async function calculateRoute() {
         alert("Vui lòng nhập cả điểm khởi hành và điểm đến.");
         return;
     }
-    drawRoute();
+    drawRoute(markers, map);
     document.getElementById('result').innerText = `Quãng đường: ${route.legs[0].distance.text}`;
     requestData((route.legs[0].distance.value / 1000), vehicleType.value);
     // Nhận dữ liệu từ server
@@ -306,7 +278,17 @@ async function calculateRoute() {
 
 }
 
-window.onload = initMap;
+async function initMapDetail() {
+    let map = new maplibregl.Map({
+        container: 'mapTrip',
+        style: `https://tiles.openmap.vn/styles/day-v1/style.json?apikey=${apiKey}`, // stylesheet location
+        center: [106.86212, 10.958527], // starting position [lng, lat]
+        zoom: 13, // starting zoom
+        maplibreLogo: false,
+    });
+    return map;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -340,3 +322,26 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Trình duyệt của bạn không hỗ trợ định vị.");
     }
 });
+
+window.onload = async () => {
+    map = await initMap();
+    setupAutocomplete("start", 0, markers, map);
+    setupAutocomplete("end", 1, markers, map);
+    mapDetailTrip = await initMapDetail()
+}
+
+let myLocation = new maplibregl.Marker({
+    draggable: false,
+})
+    .setLngLat(currentLocation)
+    .addTo(mapDetailTrip)
+let driverLocation
+socket.on('reciveLocation', (location) => {
+    if(!driverLocation)
+        driverLocation = new maplibregl.Marker({
+            draggable: false,
+        })
+        .setLngLat(location)
+        .addTo(mapDetailTrip)
+    driverLocation.setLngLat(location)
+})

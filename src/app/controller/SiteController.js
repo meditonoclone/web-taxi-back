@@ -8,7 +8,6 @@ const cookieSignature = require('cookie-signature');
 const { Op } = require('sequelize');
 const { resultToObject, validateUserData } = require('../../util/sequelize');
 const clients = require('../../socket/clientsList');
-
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
@@ -166,11 +165,9 @@ class SiteController {
                     jsFiles: ['/socket.io/socket.io.js', '/js/clientAccount.js']
                 });
             } else if (info.account_type === 'driver') {
-                const io = req.app.get('io');
-                io.on('connection', sk => {
-                    sk.join(req.session.user.accountType);
-                });
-
+                // const sk = req.app.get('sk');
+                // sk.join(req.session.user.accountType);
+                // console.log(sk.rooms)
                 let [newTrips] = await db.query(`
                     SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
                     FROM trip_history left join user on client_id = user.user_id 
@@ -328,7 +325,8 @@ class SiteController {
 
     //POST booking
     async booking(req, res) {
-
+        console.log(req.body)
+        let message = 'Đặt chuyến thành công';
         try {
             const trip = await Trip(db).create({
                 client_id: !res.locals.user ? null : res.locals.user.userId,
@@ -338,11 +336,18 @@ class SiteController {
                 contact: req.body.phone,
                 order_time: new Date(),
             });
+            if(!res.locals.user)
+            {
+                req.session.tripId = trip.dataValues.trip_id;
+                req.session.save();
+            }
             const io = req.app.get('io');
             io.to('driver').emit('update data', true);
-            res.redirect('account');
+            res.json({success: true, message, tripId: trip.dataValues.trip_id});
         } catch (err) {
             console.error('Error booking:', err);
+            message = 'Không thể đặt'
+            res.json({success: false, message})
         }
     }
 
@@ -428,7 +433,10 @@ class SiteController {
 
         res.status(200).json({ message: 'Đặt lại mật khẩu thành công!', success: true });
     };
-
+    getTrip(req, res){
+        console.log(req.session.tripId)
+        return res.json({trip:req.session.tripId})
+    }
 
 }
 

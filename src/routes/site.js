@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer')
 const siteController = require('../app/controller/SiteController');
 
 router.get('/contact', siteController.contact);
@@ -24,7 +25,7 @@ router.post('/delete-trip', siteController.deleteTrip)
 
 router.post('/accept-trip', siteController.acceptTrip)
 
-router.post('/book-taxi', siteController.booking);
+router.post('/book-taxi', multer().none(), siteController.booking);
 
 router.get('/get-newtrips', siteController.getNewTrips)
 
@@ -39,6 +40,8 @@ router.post('/forgot-password', siteController.sendResetEmail);
 router.post('/reset-password/:token', siteController.resetPassword);
 
 router.get('/reset-password/:token', siteController.createNewPassword);
+
+router.get('/get-trip', siteController.getTrip)
 
 router.get('/', siteController.index);
 

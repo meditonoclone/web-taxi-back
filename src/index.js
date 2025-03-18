@@ -7,11 +7,9 @@ const db = require('./config/db');
 const session = require('express-session');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
+const socketHandler = require('./socket')
 const csurf = require('csurf');
 const flash = require('connect-flash');
-const validate = require('./socket/validate');
-const getPrice = require('./socket/getPrice');
-const joinRoom = require('./socket/joinRoom');
 const https = require('https');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
@@ -30,13 +28,10 @@ const server = https.createServer(options, app);
 const io = new Server(server);
 
 
-
-validate(io);//gửi lỗi validat về cho client
-getPrice(io);
-joinRoom(io); 
-
-io.sockets.setMaxListeners(0);
+socketHandler(io);
 app.set('io', io);
+io.sockets.setMaxListeners(0);
+
 
 
 
@@ -130,5 +125,5 @@ app.use((req, res, next) => {
 router(app);
 
 server.listen(port, '0.0.0.0', () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at https://localhost:${port}`);
 });

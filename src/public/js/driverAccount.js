@@ -1,8 +1,10 @@
-
+const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC';
+const socket = io();
 const tabBar = document.createElement('div');
 const orderList = document.querySelector('#orderList');
 const historyTrips = document.querySelector('#historyTrips');
-
+let currentLocation;
+let mapDetailTrip
 tabBar.classList.add('tab-bar');
 
 tabBar.innerHTML =
@@ -18,7 +20,7 @@ tabBar.innerHTML =
 
 var table = document.querySelector('#orderList tbody');
 
-function addEventToTakeTripBtn(){
+function addEventToTakeTripBtn() {
   const rows = table.querySelectorAll('tr');
   rows.forEach(((row) => {
     var btn = row.querySelector('td:last-child button');
@@ -42,7 +44,6 @@ tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('clic
     document.body.querySelector(`section:nth-child(${index + 2})`).classList.add('show');
   }))
 
-const socket = io();
 
 
 function updateNewTrips() {
@@ -72,7 +73,7 @@ function updateNewTrips() {
       <td>${row.status}</td>
     </tr>`
         , '');
-      addEventToTakeTripBtn(); 
+      addEventToTakeTripBtn();
     })
     .catch(error => {
       console.error('Có lỗi xảy ra:', error);
@@ -145,7 +146,7 @@ function accept(data) {
 }
 
 
-table.forEach(((row) => {
+table.querySelectorAll('row').forEach(((row) => {
   var status = row.querySelector('td:last-child');
   if (status.innerText === 'booked') {
     status.addEventListener('click', () => accept({
@@ -153,3 +154,83 @@ table.forEach(((row) => {
     }));
   }
 }))
+
+
+//map
+
+
+let myLocation
+let clientLocation
+function getCurrentPosition() {
+  if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+          (position) => {
+               currentLocation = {
+                  lng: position.coords.longitude,
+                  lat: position.coords.latitude
+              };
+              if(myLocation)
+                myLocation.setLngLat(currentLocation)
+              else
+              {
+                myLocation = new maplibregl.Marker({
+                  draggable: false,
+                })
+                  .setLngLat(currentLocation)
+                  .addTo(mapDetailTrip)
+              }
+              socket.emit('sendLocation', currentLocation)
+          },
+          (error) => {
+            console.error("Lỗi lấy vị trí:", error);
+
+            let errorMessage;
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Bạn đã từ chối cấp quyền vị trí. Vui lòng kiểm tra cài đặt trình duyệt.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Không thể lấy vị trí. Hãy bật GPS và kiểm tra kết nối mạng.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "Yêu cầu lấy vị trí quá lâu, thử lại hoặc di chuyển ra ngoài trời.";
+                    break;
+                default:
+                    errorMessage = "Lỗi không xác định khi lấy vị trí.";
+            }
+
+            alert(errorMessage);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+  } else {
+      alert("Trình duyệt của bạn không hỗ trợ định vị.");
+  }
+}
+async function initMapDetail() {
+  let map = new maplibregl.Map({
+    container: 'map',
+    style: `https://tiles.openmap.vn/styles/day-v1/style.json?apikey=${apiKey}`, // stylesheet location
+    center: [106.86212, 10.958527], // starting position [lng, lat]
+    zoom: 13, // starting zoom
+    maplibreLogo: false,
+  });
+  return map;
+}
+
+window.onload = async () => {
+  getCurrentPosition();
+
+  mapDetailTrip = await initMapDetail()
+
+}
+
+socket.on('reciveLocation', (location) => {
+  if (!clientLocation)
+    clientLocation = new maplibregl.Marker({
+      draggable: false,
+    })
+      .setLngLat(location)
+      .addTo(mapDetailTrip)
+  clientLocation.setLngLat(location)
+})

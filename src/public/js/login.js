@@ -9,11 +9,11 @@ const objectsToValidate = [
   },
 ]
 
-validate(objectsToValidate, 'error')
 
 const formLogin = document.querySelector('#loginForm');
 const usernameInput = formLogin.querySelector('#username');
 const passwordInput = formLogin.querySelector('#password');
+validate(formLogin, objectsToValidate, 'error')
 
 function login() {
   const formData = new FormData(formLogin);

@@ -704,3 +704,83 @@ a:focus {
 .disapear{
   display: none;
 }
+
+.modal {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.modal .client-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal .client-info img {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 24px;
+}
+
+.modal .client-info div {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal .client-info div a {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 1.5rem;
+}
+
+.modal .trip-info {
+  font-size: 1.2rem;
+}
+
+.modal .trip-info i {
+  color: #0fe7f3;
+  margin: 0 4px;
+}
+
+.modal .trip-info div {
+  margin-bottom: 16px;
+}
+
+.modal-body button{
+  width: 60%;
+  margin: 0 20%;
+}
+
+.modal #mapTrip{
+  height: 200px;
+}
+button[data-target = "#detailTrip"]{
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  bottom: 24px;
+  right: 24px;
+  font-size: 36px;
+  position: fixed;
+  z-index: 2;
+  display:  none;
+}
+.btn-pulse {
+  background-color: #3498db;
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

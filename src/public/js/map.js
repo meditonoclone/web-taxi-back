@@ -1,17 +1,16 @@
-const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC'
+const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC';
 const socket = io();
 const vehicleType = document.querySelector('#vehicleType');
 const spanCost = document.querySelector('#cost');
 let map;
 let directionsService;
 let directionsRenderer;
-let inputs = []
-let markers = []
+let inputs = [];
+let markers = [];
 let route;
 let currentLocation;
-
-let mapDetailTrip
-
+let mapDetailTrip;
+let room;
 
 
 async function reverseGeocoding(lngLat) {
@@ -43,7 +42,6 @@ function createPoint(lngLat, position, map) {
 
     point.on('dragend', async function () {
         inputs[position].value = await reverseGeocoding(point.getLngLat());
-        inputs[position].dispatchEvent(new Event("input", { bubbles: true }));
 
         savedPosition = point.getLngLat(); // Lấy vị trí mới
 
@@ -124,8 +122,8 @@ function setupAutocomplete(inputId, position, markers, map) {
         let query = input.value.trim();
 
         await loadPlace(query);
-
-        ul.firstChild.click();
+        if (ul.firstChild)
+            ul.firstChild.click();
     })
     input.addEventListener("focus", async () => {
         if (inputs.indexOf(input) !== 0 || !currentLocation)
@@ -194,6 +192,7 @@ function setupAutocomplete(inputId, position, markers, map) {
 
 
 function requestData(s, type) {
+    console.log(s, type)
     socket.emit('getPrice', s, type);
 }
 
@@ -268,15 +267,16 @@ async function calculateRoute() {
         alert("Vui lòng nhập cả điểm khởi hành và điểm đến.");
         return;
     }
-    drawRoute(markers, map);
-    document.getElementById('result').innerText = `Quãng đường: ${route.legs[0].distance.text}`;
-    requestData((route.legs[0].distance.value / 1000), vehicleType.value);
+    await drawRoute(markers, map);
+    if (route)
+        requestData((route.legs[0].distance.value / 1000), vehicleType.value);
     // Nhận dữ liệu từ server
-    socket.on('recivePrice', (price) => {
-        spanCost.innerText = ` - Giá: ${price} VNĐ`;
-    });
 
 }
+socket.on('receivePrice', (price) => {
+    spanCost.innerText = ` - Giá: ${price} VNĐ`;
+    document.getElementById('result').innerText = `Quãng đường: ${route.legs[0].distance.text}`;
+});
 
 async function initMapDetail() {
     let map = new maplibregl.Map({
@@ -321,27 +321,93 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         alert("Trình duyệt của bạn không hỗ trợ định vị.");
     }
+    getRealtimePosition();
+
 });
+let myLocation
 
 window.onload = async () => {
+
     map = await initMap();
     setupAutocomplete("start", 0, markers, map);
     setupAutocomplete("end", 1, markers, map);
     mapDetailTrip = await initMapDetail()
 }
 
-let myLocation = new maplibregl.Marker({
-    draggable: false,
-})
-    .setLngLat(currentLocation)
-    .addTo(mapDetailTrip)
+function getRealtimePosition() {
+    if (navigator.geolocation) {
+        navigator.geolocation.watchPosition(
+            (position) => {
+                if (myLocation)
+                    myLocation.setLngLat({
+                        lng: position.coords.longitude,
+                        lat: position.coords.latitude
+                    })
+                else {
+                    myLocation = new maplibregl.Marker({
+                        element: null,
+                        draggable: false,
+                    })
+                        .setLngLat({
+                            lng: position.coords.longitude,
+                            lat: position.coords.latitude
+                        })
+                        .addTo(mapDetailTrip)
+                }
+
+                if (room) {
+                    console.log(room)
+                    socket.emit('sendLocation', room.toString(), {
+                        lng: position.coords.longitude,
+                        lat: position.coords.latitude
+                    })
+                }
+            },
+            (error) => {
+                console.error("Lỗi lấy vị trí:", error);
+
+                let errorMessage;
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = "Bạn đã từ chối cấp quyền vị trí. Vui lòng kiểm tra cài đặt trình duyệt.";
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = "Không thể lấy vị trí. Hãy bật GPS và kiểm tra kết nối mạng.";
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = "Yêu cầu lấy vị trí quá lâu, thử lại hoặc di chuyển ra ngoài trời.";
+                        break;
+                    default:
+                        errorMessage = "Lỗi không xác định khi lấy vị trí.";
+                }
+
+                alert(errorMessage);
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    } else {
+        alert("Trình duyệt của bạn không hỗ trợ định vị.");
+    }
+}
+
+
+
 let driverLocation
-socket.on('reciveLocation', (location) => {
-    if(!driverLocation)
+socket.on('receiveLocation', (location) => {
+    if (!driverLocation)
         driverLocation = new maplibregl.Marker({
             draggable: false,
         })
-        .setLngLat(location)
-        .addTo(mapDetailTrip)
+            .setLngLat(location)
+            .addTo(mapDetailTrip)
     driverLocation.setLngLat(location)
+})
+
+document.addEventListener('DOMContentLoaded', async () => {
+    room = await getTrip(); // vào lại phòng nếu đẫ đặt chuyến trước đó
+    if (room) {
+        socket.emit('joinRoom', room.toString())
+        document.querySelector('button[data-target="#detailTrip"]').style.display = 'block'
+    }
+    console.log(room)
 })

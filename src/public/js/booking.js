@@ -13,10 +13,18 @@ const bookTaxi = async (e) => {
   e.preventDefault();
 
   const formData = new FormData(e.target);
-  for (const [key, value] of formData.entries()) {
-    console.log(key, value); // Xem có dữ liệu không
-}
-  
+  const pickupLatitude = markers[0].getLngLat().lat;
+  const pickupLongitude = markers[0].getLngLat().lng;
+  const dropoffLatitude = markers[1].getLngLat().lat;
+  const dropoffLongitude = markers[1].getLngLat().lng;
+
+  // Thêm tọa độ vào FormData
+  formData.append("pickup_latitude", pickupLatitude);
+  formData.append("pickup_longitude", pickupLongitude);
+  formData.append("dropoff_latitude", dropoffLatitude);
+  formData.append("dropoff_longitude", dropoffLongitude);
+
+
   const response = await fetch("/book-taxi", {
     method: "POST",
     body: formData
@@ -25,11 +33,13 @@ const bookTaxi = async (e) => {
   const result = await response.json();
 
   if (result.success) {
-    alert( "🚖 Đặt chuyến thành công!")
-    let room = await getTrip();
+    alert("🚖 Đặt chuyến thành công!")
+    room = await getTrip();
     socket.emit('joinRoom', room.toString())
+    document.querySelector('button[data-target="#detailTrip"]').style.display = 'block'
+
   } else {
-    alert( "❌ Lỗi: " + result.message)
+    alert("❌ Lỗi: " + result.message)
   }
 }
 const objectsToValidate = [
@@ -52,3 +62,8 @@ validate(bookingForm, objectsToValidate, 'error', bookTaxi)
 
 
 checkCost.addEventListener('click', () => validateAll(objectsToValidate))
+
+
+socket.on('message', message => {
+  alert(message);
+})

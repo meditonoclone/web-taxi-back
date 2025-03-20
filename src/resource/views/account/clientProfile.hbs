@@ -18,7 +18,41 @@
     <a href="/logout"><button type="button" class="btn btn-outline-danger">Đăng xuất</button></a>
 
 </section>
+<section id="acceptingTrip" class="price-table layout_padding">
 
+
+    <div class="trip-container content-wrapper">
+        <h2>Chuyến đang thực hiện</h2>
+        {{#if currentTrip}}
+        <div class="client-info">
+            <img src="{{currentTrip.profile_picture}}" alt="" id="avatar">
+            <div>
+                <h4 id="name">Tài xế: {{currentTrip.name}}</h4>
+                <a href="tel:{{currentTrip.phone}}" id="phone">{{currentTrip.phone}}</a>
+            </div>
+        </div>
+        <div id="map">
+        </div>
+        <div class="trip-info row">
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>{{currentTrip.from_location}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span>{{currentTrip.distance}}</span></p>
+            <div class="col-sm-6 col-xs-12">
+                <button><i class="fas fa-pen"></i></button>
+                <input type="text" name="waitingTime" placeholder="Thời gian chờ">
+            </div>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span>{{currentTrip.cost}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span>{{currentTrip.status}}</span></p>
+
+        </div>
+        <button id="cancelBtn" class="btn btn-danger" onclick="cancel()">Hủy chuyến</button>
+        {{else}}
+        <p>Chưa nhận chuyến xe nào</p>
+        {{/if}}
+    </div>
+
+
+</section>
 <section class="trip_history layout_padding">
     <h4>Lịch sử chuyến xe <i class="fas fa-chevron-up"></i><i class="fas fa-chevron-down hide"></i> </h4>
     <table class="price-table hide">

@@ -39,7 +39,7 @@ class SiteController {
             }
         ));
         res.locals.news = newNews;
-        res.render('home', { home: true, jsFiles: ['/js/validateInput.js', '/js/booking.js', "/socket.io/socket.io.js", "https://maps.googleapis.com/maps/api/js?key=AIzaSyBhCS8jbeI2pduvBwHQ_WeGPIURYveeNgs&libraries=places", "/js/map.js"] });
+        res.render('home', { home: true, jsFiles: ['/js/validateInput.js', "/socket.io/socket.io.js",  "/js/map.js", '/js/booking.js'] });
     }
 
     //GET page
@@ -150,6 +150,15 @@ class SiteController {
                     INNER JOIN taxi_pricing ON trip_history.vehicle_type_id = taxi_pricing.vehicle_type_id
                     WHERE trip_history.client_id = ${info.user_id}`);
                 res.locals.historyTrips = historyTrips;
+                let [currentTrip] = await db.query(`
+                    SELECT trip_id, order_time, distance, waiting_minutes, cost, from_location,
+                        to_location, user.name, user.phone, trip_history.finished_time, trip_history.status,
+                        user.profile_picture
+                    FROM trip_history
+                    LEFT JOIN user ON trip_history.driver_id = user.user_id
+                    WHERE trip_history.client_id = ${info.user_id} and trip_history.status NOT IN ('cancled','completed')`);
+                res.locals.currentTrip = currentTrip.length > 0 ? currentTrip[0] : null;
+                req.session.tripId = currentTrip.length > 0 ? currentTrip[0].trip_id : null;
                 const io = req.app.get('io');
                 io.on('connection', sk => {
                     if (req.session.user.userId) {
@@ -161,7 +170,7 @@ class SiteController {
                     });
                 });
                 res.render('account/clientProfile', {
-                    noSlider: true, cssFiles: ['/css/account.css'],
+                    noSlider: true, cssFiles: ['/css/account.css', '/css/clientProfile.css'],
                     jsFiles: ['/socket.io/socket.io.js', '/js/clientAccount.js']
                 });
             } else if (info.account_type === 'driver') {
@@ -169,7 +178,7 @@ class SiteController {
                 // sk.join(req.session.user.accountType);
                 // console.log(sk.rooms)
                 let [newTrips] = await db.query(`
-                    SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
+                    SELECT trip_id,order_time, from_location, to_location, contact, status, user.name, contact 
                     FROM trip_history left join user on client_id = user.user_id 
                     WHERE status = 'booked';`);
                 res.locals.newTrips = newTrips.length > 0 ? newTrips : null;
@@ -189,6 +198,7 @@ class SiteController {
                     LEFT JOIN user ON trip_history.client_id = user.user_id
                     WHERE trip_history.driver_id = ${info.user_id} and trip_history.status = 'en route'`);
                 res.locals.currentTrip = currentTrip.length > 0 ? currentTrip[0] : null;
+                req.session.tripId = currentTrip.length > 0 ? currentTrip[0].trip_id : null;
 
                 res.render('account/driverProfile', {
                     noSlider: true,
@@ -208,11 +218,13 @@ class SiteController {
     }
     //POST delete trip client
     async deleteTrip(req, res) {
+        console.log(req.session.tripId, 123)
         try {
-            const { tripId } = req.body;
+
+            // const { tripId } = req.body;
             const trip = await Trip(db).findOne({
                 where: {
-                    trip_id: parseInt(tripId),
+                    trip_id: req.session.tripId,
                     client_id: req.session.user.userId
                 }
             });
@@ -255,13 +267,14 @@ class SiteController {
                 return;
             }
             trip.status = 'en route';
+            req.session.tripId = tripId;
             trip.driver_id = req.session.user.userId;
             trip.save();
             if (trip.client_id)
                 if (clients.has(trip.client_id.toString()))
                     io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
             io.to('driver').emit('update data', true);
-            res.status(200).json('success');
+            res.status(200).json({status: 'success', tripId: trip.trip_id});
         } catch (err) {
             console.log(err);
             res.status(200).json('Có lỗi xảy ra');
@@ -279,7 +292,6 @@ class SiteController {
                 SELECT trip_id,order_time, from_location, to_location, contact, status, user.name 
                 FROM trip_history left join user on client_id = user.user_id 
                 WHERE status = 'booked';`);
-            console.log(newTrips)
             res.status(200).json(newTrips);
         } catch (err) {
             console.error('Error get new trips:', err);
@@ -335,9 +347,13 @@ class SiteController {
                 to_location: req.body.end,
                 contact: req.body.phone,
                 order_time: new Date(),
+                pickup_latitude: req.body.pickup_latitude,
+                pickup_longitude: req.body.pickup_longitude,
+                dropoff_latitude: req.body.dropoff_latitude,
+                dropoff_longitude: req.body.dropoff_longitude,
             });
             if(!res.locals.user)
-            {
+            { 
                 req.session.tripId = trip.dataValues.trip_id;
                 req.session.save();
             }

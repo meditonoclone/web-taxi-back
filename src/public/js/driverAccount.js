@@ -4,7 +4,8 @@ const tabBar = document.createElement('div');
 const orderList = document.querySelector('#orderList');
 const historyTrips = document.querySelector('#historyTrips');
 let currentLocation;
-let mapDetailTrip
+let mapDetailTrip;
+let room;
 tabBar.classList.add('tab-bar');
 
 tabBar.innerHTML =
@@ -45,6 +46,7 @@ tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('clic
   }))
 
 
+socket.emit('joinRoom', 'driver');
 
 function updateNewTrips() {
   fetch('/get-newtrips', {
@@ -68,7 +70,7 @@ function updateNewTrips() {
       <td>${formatDate(row.order_time)}</td>
       <td>${row.from_location}</td>
       <td>${row.to_location}</td>
-      <td>${row.name}</td>
+      <td>${row.name?row.name:''}</td>
       <td>${row.contact}</td>
       <td>${row.status}</td>
     </tr>`
@@ -91,7 +93,6 @@ function updateHistoryTrips() {
       return response.json(); // Chuyển đổi response thành JSON
     })
     .then(data => {
-      console.log(data)
       if (!Array.isArray(data) || data.length == 0) {
         historyTrips.querySelector('table tbody').innerHTML = `<td colspan="11">Không có chuyến nào để hiển thị</td>`
         return;
@@ -135,13 +136,14 @@ function accept(data) {
     body: JSON.stringify(data)// Chuyển đổi đối tượng JavaScript thành chuỗi JSON
   })
     .then(response => response.json()) // Chuyển đổi phản hồi từ server thành JSON
-    .then(status => {
-      if (status === 'success') {
+    .then(result => {
+      if (result.status === 'success') {
         updateHistoryTrips();
         document.querySelector('.tab-bar li:last-child').click();
+        room = result.tripId.toString();
+        socket.emit('joinRoom', result.tripId.toString(), 'Chuyến đã được nhận');
         return;
       }
-      alert(status);
     })
 }
 
@@ -161,50 +163,61 @@ table.querySelectorAll('row').forEach(((row) => {
 
 let myLocation
 let clientLocation
-function getCurrentPosition() {
+const driverImg = document.querySelector("#infomation #avatar").cloneNode(true);
+driverImg.style.width = '30px';  // Điều chỉnh kích thước
+driverImg.style.height = '30px';
+driverImg.style.borderRadius = '50%'
+const clientImg = document.querySelector("#acceptingTrip #avatar").cloneNode(true);
+if (clientImg) {
+
+  clientImg.style.width = '30px';  // Điều chỉnh kích thước
+  clientImg.style.height = '30px';
+  clientImg.style.borderRadius = '50%'
+}
+function getRealtimePosition() {
   if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(
-          (position) => {
-               currentLocation = {
-                  lng: position.coords.longitude,
-                  lat: position.coords.latitude
-              };
-              if(myLocation)
-                myLocation.setLngLat(currentLocation)
-              else
-              {
-                myLocation = new maplibregl.Marker({
-                  draggable: false,
-                })
-                  .setLngLat(currentLocation)
-                  .addTo(mapDetailTrip)
-              }
-              socket.emit('sendLocation', currentLocation)
-          },
-          (error) => {
-            console.error("Lỗi lấy vị trí:", error);
+    navigator.geolocation.watchPosition(
+      (position) => {
+        currentLocation = {
+          lng: position.coords.longitude,
+          lat: position.coords.latitude
+        };
+        if (myLocation)
+          myLocation.setLngLat(currentLocation)
+        else {
+          myLocation = new maplibregl.Marker({
+            element: driverImg,
+            draggable: false,
+          })
+            .setLngLat(currentLocation)
+            .addTo(mapDetailTrip)
+        }
+        socket.emit('sendLocation', room.toString(), currentLocation)
+      },
+      (error) => {
+        console.error("Lỗi lấy vị trí:", error);
 
-            let errorMessage;
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    errorMessage = "Bạn đã từ chối cấp quyền vị trí. Vui lòng kiểm tra cài đặt trình duyệt.";
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    errorMessage = "Không thể lấy vị trí. Hãy bật GPS và kiểm tra kết nối mạng.";
-                    break;
-                case error.TIMEOUT:
-                    errorMessage = "Yêu cầu lấy vị trí quá lâu, thử lại hoặc di chuyển ra ngoài trời.";
-                    break;
-                default:
-                    errorMessage = "Lỗi không xác định khi lấy vị trí.";
-            }
+        let errorMessage;
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "Bạn đã từ chối cấp quyền vị trí. Vui lòng kiểm tra cài đặt trình duyệt.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "Không thể lấy vị trí. Hãy bật GPS và kiểm tra kết nối mạng.";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "Yêu cầu lấy vị trí quá lâu, thử lại hoặc di chuyển ra ngoài trời.";
+            break;
+          default:
+            errorMessage = "Lỗi không xác định khi lấy vị trí.";
+        }
 
-            alert(errorMessage);
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-      );
+        alert(errorMessage);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
   } else {
-      alert("Trình duyệt của bạn không hỗ trợ định vị.");
+    alert("Trình duyệt của bạn không hỗ trợ định vị.");
   }
 }
 async function initMapDetail() {
@@ -217,15 +230,27 @@ async function initMapDetail() {
   });
   return map;
 }
-
+async function getTrip() {
+  try {
+    const response = await fetch("/get-trip");
+    const data = await response.json();
+    return data.trip
+  } catch (error) {
+    console.error("Lỗi:", error);
+  }
+}
 window.onload = async () => {
-  getCurrentPosition();
-
-  mapDetailTrip = await initMapDetail()
+  room = await getTrip();
+  getRealtimePosition();
+  console.log(room)
+  socket.emit('joinRoom', room.toString());
+  mapDetailTrip = await initMapDetail();
 
 }
 
-socket.on('reciveLocation', (location) => {
+socket.on('receiveLocation', (location) => {
+  console.log('đang nhận vị trí',clientImg);
+  
   if (!clientLocation)
     clientLocation = new maplibregl.Marker({
       draggable: false,

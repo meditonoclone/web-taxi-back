@@ -12,10 +12,12 @@ function showError(input, errorClass, err) {
 const validateAll = (objectsToValidate) => {
     objectsToValidate.forEach(obj => {
         const input = document.querySelector(obj.selector);
-        input.focus();
-        input.blur();
+        if (input) { // Kiểm tra input có tồn tại không 
+            input.dispatchEvent(new Event('blur', { bubbles: true })); 
+        }
     });
-}
+};
+
 function validate(form, objectsToValidate, errorClass, callApi) {
     // Các rule cơ bản
     const rules = {

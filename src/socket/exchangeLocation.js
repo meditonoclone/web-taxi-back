@@ -1,6 +1,7 @@
 const db = require('../config/db');
 module.exports = function (io, socket) {
-  socket.on('sendLocation', ({ roomId, latitude, longitude }) => {
-    socket.to(roomId).emit('receiveLocation', { latitude, longitude });
+  
+  socket.on('sendLocation', (room, lngLat) => {
+    socket.broadcast.to(room).emit('receiveLocation', lngLat);
   });
 };

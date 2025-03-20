@@ -59,7 +59,19 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM('cancel', 'waiting', 'booked', 'en route', 'in transit', 'completed'),
             allowNull: false,
             defaultValue: 'booked'
-        }
+        },
+        pickup_latitude: {
+            type: DataTypes.DECIMAL(10, 7)
+        },
+        pickup_longitude: {
+            type: DataTypes.DECIMAL(10, 7)
+        },
+        dropoff_latitude: {
+            type: DataTypes.DECIMAL(10, 7)
+        },
+        dropoff_longitude: {
+            type: DataTypes.DECIMAL(10, 7)
+        },
     }, {
         sequelize,
         modelName: 'Trip',

@@ -6,6 +6,18 @@ const historyTrips = document.querySelector('#historyTrips');
 let currentLocation;
 let mapDetailTrip;
 let room;
+const statusMap = {
+  "en route": "Đang đón",
+  "in transit": "Đang di chuyển",
+  "waiting": "Đang chờ",
+  "booking": "Đang đặt",
+  "completed": "Hoàn thành"
+};
+const textBtn = {
+  "en route": "Xác nhận đón",
+  "in transit": "Hoàn thành",
+  "waiting": "Tiếp tục chuyến"
+}
 tabBar.classList.add('tab-bar');
 
 tabBar.innerHTML =
@@ -70,9 +82,9 @@ function updateNewTrips() {
       <td>${formatDate(row.order_time)}</td>
       <td>${row.from_location}</td>
       <td>${row.to_location}</td>
-      <td>${row.name?row.name:''}</td>
+      <td>${row.name ? row.name : ''}</td>
       <td>${row.contact}</td>
-      <td>${row.status}</td>
+      <td><button class="btn btn-outline-success">Nhận chuyến</button></td>
     </tr>`
         , '');
       addEventToTakeTripBtn();
@@ -110,7 +122,7 @@ function updateHistoryTrips() {
       <td>${row.name}</td>
       <td>${row.phone}</td>
       <td>${row.finished_time}</td>
-      <td>${row.status}</td>
+      <td>${statusMap[row.status]}</td>
     </tr>`
         , '');
     })
@@ -127,7 +139,7 @@ socket.on('update data', function (status) {
 
 
 // accept trip
-function accept(data) {
+async function accept(data) {
   fetch('/accept-trip', {
     method: 'POST', // Phương thức POST
     headers: {
@@ -135,16 +147,59 @@ function accept(data) {
     },
     body: JSON.stringify(data)// Chuyển đổi đối tượng JavaScript thành chuỗi JSON
   })
-    .then(response => response.json()) // Chuyển đổi phản hồi từ server thành JSON
-    .then(result => {
-      if (result.status === 'success') {
-        updateHistoryTrips();
-        document.querySelector('.tab-bar li:last-child').click();
-        room = result.tripId.toString();
-        socket.emit('joinRoom', result.tripId.toString(), 'Chuyến đã được nhận');
-        return;
+    .then(response => {
+      if (!response.ok) {
+        console.log(response.json())
+        throw new Error('Network response was not ok');
       }
+      return response.json(); // Chuyển đổi response thành JSON
     })
+    .then(async result => {
+
+      console.log(result)
+
+      updateHistoryTrips();
+      document.querySelector('#acceptingTrip > div').innerHTML = 
+      `
+      <div class="client-info">
+            <img src="${result.currentTrip.profile_picture?result.currentTrip.profile_picture:''}" alt="" id="avatar">
+            <div>
+                <h1 id="name">${result.currentTrip.name?result.currentTrip.name:''}</h1>
+                <a href="tel:${result.currentTrip.contact}" id="phone">${result.currentTrip.contact}</a>
+            </div>
+        </div>
+        <div id="map">
+        </div>
+        <div class="trip-info row">
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>${result.currentTrip.from_location}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>${result.currentTrip.to_location}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">${result.currentTrip.distance?result.currentTrip.distance:''}</span></p>
+            <div class="col-sm-6 col-xs-12">
+                <button><i class="fas fa-pen"></i></button>
+                <input type="text" name="waitingTime" placeholder="Thời gian chờ">
+            </div>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span id="cost">${result.currentTrip.cost?result.currentTrip.cost:''}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span id="status">${statusMap[result.currentTrip.status]}</span></p>
+
+        </div>
+        <button id="btnNextStatus" class="btn btn-success">Xác nhận đón</button>`
+      let btnNextStatus = document.getElementById("btnNextStatus")
+      
+      room = result.currentTrip.trip_id.toString();
+      if (btnNextStatus) {
+        btnNextStatus.addEventListener("click", () => {
+          const tripId = room; // ID chuyến đi
+
+          updateTripStatus(tripId);
+        });
+      }
+      document.querySelector('.tab-bar li:last-child').click();
+      socket.emit('joinRoom', room, 'Chuyến đã được nhận');
+      mapDetailTrip = await initMapDetail();
+      console.log(mapDetailTrip)
+      return;
+    })
+    .catch(error => console.log('Có lỗi xảy ra: ', error))
 }
 
 
@@ -163,16 +218,31 @@ table.querySelectorAll('row').forEach(((row) => {
 
 let myLocation
 let clientLocation
-const driverImg = document.querySelector("#infomation #avatar").cloneNode(true);
-driverImg.style.width = '30px';  // Điều chỉnh kích thước
-driverImg.style.height = '30px';
-driverImg.style.borderRadius = '50%'
-const clientImg = document.querySelector("#acceptingTrip #avatar").cloneNode(true);
-if (clientImg) {
+let driverImg = document.querySelector("#infomation #avatar");
+if (!driverImg) {
+  driverImg = document.createElement('img')
+  driverImg.src = 'img/taxi.jpg'
+}
+else {
+  driverImg = driverImg.cloneNode(true)
+  driverImg.style.width = '30px';  // Điều chỉnh kích thước
+  driverImg.style.height = '30px';
+  driverImg.style.borderRadius = '50%'
 
+}
+
+
+let clientImg = document.querySelector("#acceptingTrip #avatar");
+if (!clientImg) {
+  clientImg = document.createElement('img')
+  clientImg.src = 'img/taxi.jpg'
+}
+else {
+  clientImg = clientImg.cloneNode(true)
   clientImg.style.width = '30px';  // Điều chỉnh kích thước
   clientImg.style.height = '30px';
   clientImg.style.borderRadius = '50%'
+
 }
 function getRealtimePosition() {
   if (navigator.geolocation) {
@@ -182,6 +252,8 @@ function getRealtimePosition() {
           lng: position.coords.longitude,
           lat: position.coords.latitude
         };
+        if (!mapDetailTrip)
+          return
         if (myLocation)
           myLocation.setLngLat(currentLocation)
         else {
@@ -240,17 +312,19 @@ async function getTrip() {
   }
 }
 window.onload = async () => {
-  room = await getTrip();
   getRealtimePosition();
+  room = await getTrip();
   console.log(room)
-  socket.emit('joinRoom', room.toString());
-  mapDetailTrip = await initMapDetail();
+  if (room) {
+    socket.emit('joinRoom', room.toString());
+    mapDetailTrip = await initMapDetail();
+  }
 
 }
 
 socket.on('receiveLocation', (location) => {
-  console.log('đang nhận vị trí',clientImg);
-  
+  console.log('đang nhận vị trí', clientImg);
+
   if (!clientLocation)
     clientLocation = new maplibregl.Marker({
       draggable: false,
@@ -259,3 +333,55 @@ socket.on('receiveLocation', (location) => {
       .addTo(mapDetailTrip)
   clientLocation.setLngLat(location)
 })
+
+// progress trip
+
+async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
+  try {
+    const response = await fetch("/update-trip", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        tripId: tripId,
+        status: newStatus
+      })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log("Cập nhật thành công:", result);
+      if (result.newStatus == "completed")
+        document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"
+      else
+        modifyBtnAndStatus(result.newStatus);
+      alert(result.message);
+    } else {
+      console.error("Lỗi cập nhật:", result);
+      alert("Lỗi: " + result.message);
+    }
+  } catch (error) {
+    console.error("Lỗi kết nối API:", error);
+    alert("Lỗi kết nối đến server!");
+  }
+}
+
+function modifyBtnAndStatus(status) {
+  if (!textBtn.hasOwnProperty(status))
+    return
+  document.getElementById("btnNextStatus").innerText = textBtn[status]
+  document.getElementById("status").innerText = statusMap[status]
+}
+// Ví dụ gọi hàm khi tài xế bấm nút
+let btnNextStatus = document.getElementById("btnNextStatus")
+if (btnNextStatus) {
+  btnNextStatus.addEventListener("click", () => {
+    const tripId = room; // ID chuyến đi
+
+    updateTripStatus(tripId);
+  });
+}
+
+// xử lí

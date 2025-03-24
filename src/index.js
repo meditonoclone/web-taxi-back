@@ -84,11 +84,14 @@ app.engine('hbs', exphbs.engine({
     formatDate: (date) => moment(date).format('DD/MM/YYYY'),
     dateToDatetime: (date) => date?moment(date).format('HH:mm DD/MM/YYYY'):null,
     minToHour: (min) => (min/60).toFixed(2),
-    // user: () => {
-    //   if (session.user)
-    //     return session.user.name; 
-    //   return 'ĐĂNG NHẬP';
-    // },
+    transStatus: (status) => {
+      const statusMap = {
+        "en route": "Đang đón",
+        "in transit": "Đang di chuyển",
+        "waiting": "Đang chờ"
+      }
+      return statusMap[status]
+    }
 
   },
   extname: 'hbs',

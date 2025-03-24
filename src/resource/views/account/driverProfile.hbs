@@ -110,16 +110,16 @@
         <div class="trip-info row">
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>{{currentTrip.from_location}}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span>{{currentTrip.distance}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">{{currentTrip.distance}}</span></p>
             <div class="col-sm-6 col-xs-12">
                 <button><i class="fas fa-pen"></i></button>
                 <input type="text" name="waitingTime" placeholder="Thời gian chờ">
             </div>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span>{{currentTrip.cost}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span>{{currentTrip.status}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span id="cost">{{currentTrip.cost}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span id="status">{{transStatus currentTrip.status}}</span></p>
 
         </div>
-        <button class="btn btn-success">Xác nhận đã đón khách</button>
+        <button id="btnNextStatus" class="btn btn-success">Xác nhận đã đón khách</button>
         {{else}}
         <p>Chưa nhận chuyến xe nào</p>
         {{/if}}

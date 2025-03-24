@@ -36,7 +36,7 @@ function loadTrips(table, data) {
   table.querySelector('tbody').innerHTML = tbody;
 }
 function cancel(e) {
-  if(!confirm('Xác nhận hủy chuyến'))
+  if (!confirm('Xác nhận hủy chuyến'))
     return;
   fetch('/delete-trip', {
     method: 'POST', // Phương thức POST
@@ -84,7 +84,11 @@ socket.on('update data', function (status) {
           return;
         }
         table.querySelector('tbody').innerHTML = data.reduce((html, row) =>
-          html + `
+        {
+          if(row.tripId = room){
+
+          }
+          return html + `
       <tr>
         <td>${row.trip_id}</td>
         <td>${formatDate(row.order_time)}</td>
@@ -98,7 +102,8 @@ socket.on('update data', function (status) {
         <td>${row.phone}</td>
         <td>${row.status}</td>
       </tr>`
-      , '');
+        }
+          , '');
       })
       .catch(error => {
         console.error('Có lỗi xảy ra:', error);
@@ -111,10 +116,31 @@ const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC';
 let room;
 let myLocation
 let driverLocation
-const imgMarker = document.querySelector("#avatar").cloneNode(true);
-imgMarker.style.width = '30px';  // Điều chỉnh kích thước
-imgMarker.style.height = '30px';
-imgMarker.style.borderRadius = '50%'
+let imgMarker = document.querySelector("#avatar");
+if (!imgMarker) {
+  imgMarker = document.createElement('img')
+  imgMarker.src = 'img/taxi.jpg'
+}
+else{
+  imgMarker = imgMarker.cloneNode(true)
+  imgMarker.style.width = '30px';  // Điều chỉnh kích thước
+  imgMarker.style.height = '30px';
+  imgMarker.style.borderRadius = '50%'
+
+}
+
+let imgDriverMarker = document.querySelector("#driverAvatar");
+if (!imgDriverMarker) {
+  imgDriverMarker = document.createElement('img')
+  imgDriverMarker.src = 'img/taxi.jpg'
+}
+else{
+  imgDriverMarker = imgDriverMarker.cloneNode(true)
+  imgDriverMarker.style.width = '30px';  // Điều chỉnh kích thước
+  imgDriverMarker.style.height = '30px';
+  imgDriverMarker.style.borderRadius = '50%'
+
+}
 function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
@@ -190,10 +216,11 @@ window.onload = async () => {
 }
 
 socket.on('receiveLocation', (location) => {
-  console.log('đang nhận vị trí',clientImg);
-  
+  console.log('đang nhận vị trí');
+
   if (!driverLocation)
     driverLocation = new maplibregl.Marker({
+      element: imgDriverMarker,
       draggable: false,
     })
       .setLngLat(location)

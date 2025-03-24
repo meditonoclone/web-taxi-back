@@ -43,6 +43,8 @@ router.get('/reset-password/:token', siteController.createNewPassword);
 
 router.get('/get-trip', siteController.getTrip)
 
+router.put('/update-trip', siteController.setTripState)
+
 router.get('/', siteController.index);
 
 module.exports = router;

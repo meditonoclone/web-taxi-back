@@ -71,6 +71,13 @@ module.exports = (sequelize) => {
         },
         dropoff_longitude: {
             type: DataTypes.DECIMAL(10, 7)
+        },actual_dropoff_latitude: {
+            type: DataTypes.DECIMAL(10, 7),
+            allowNull: true,
+        },
+        actual_dropoff_longitude: {
+            type: DataTypes.DECIMAL(10, 7),
+            allowNull: true,
         },
     }, {
         sequelize,

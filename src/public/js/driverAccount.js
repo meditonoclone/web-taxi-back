@@ -5,6 +5,7 @@ const orderList = document.querySelector('#orderList');
 const historyTrips = document.querySelector('#historyTrips');
 let currentLocation;
 let mapDetailTrip;
+let routeCoords = [];
 let room;
 const statusMap = {
   "en route": "Đang đón",
@@ -264,6 +265,28 @@ function getRealtimePosition() {
             .setLngLat(currentLocation)
             .addTo(mapDetailTrip)
         }
+        // Lưu lại vị trí vào mảng để vẽ đường đi
+        routeCoords.push([currentLocation.lng, currentLocation.lat]);
+
+        // Cập nhật tuyến đường trên bản đồ
+        mapDetailTrip.getSource("route").setData({
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: routeCoords
+                },
+                properties: {}
+            }]
+        });
+
+        // Di chuyển camera theo tài xế
+        mapDetailTrip.flyTo({
+            center: [currentLocation.lng, currentLocation.lat],
+            speed: 0.5,
+            curve: 1
+        });
         socket.emit('sendLocation', room.toString(), currentLocation)
       },
       (error) => {
@@ -318,6 +341,27 @@ window.onload = async () => {
   if (room) {
     socket.emit('joinRoom', room.toString());
     mapDetailTrip = await initMapDetail();
+    mapDetailTrip.on("load", () => {
+      mapDetailTrip.addSource("route", {
+          type: "geojson",
+          data: {
+              type: "FeatureCollection",
+              features: []
+          }
+      });
+    
+      // Thêm layer vẽ đường
+      mapDetailTrip.addLayer({
+          id: "route-line",
+          type: "line",
+          source: "route",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: {
+              "line-color": "#ff6600",
+              "line-width": 5
+          }
+      });
+    });
   }
 
 }
@@ -374,7 +418,7 @@ function modifyBtnAndStatus(status) {
   document.getElementById("btnNextStatus").innerText = textBtn[status]
   document.getElementById("status").innerText = statusMap[status]
 }
-// Ví dụ gọi hàm khi tài xế bấm nút
+
 let btnNextStatus = document.getElementById("btnNextStatus")
 if (btnNextStatus) {
   btnNextStatus.addEventListener("click", () => {
@@ -384,4 +428,21 @@ if (btnNextStatus) {
   });
 }
 
-// xử lí
+// xử lí thực hiện chuyến: vẽ tuyễn đường, tính toán quãng đường, số tiền, gửi về client
+
+
+function haversine(prePossition, curentPosstion) {
+  const R = 6371; // Bán kính Trái Đất (km)
+  const toRad = (deg) => (deg * Math.PI) / 180; // Chuyển đổi độ sang radian
+
+  const dLat = toRad(curentPosstion.lat2 - prePossition.lat);
+  const dLng = toRad(curentPosstion.lng - prePossition.lng);
+  
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(prePossition.lat)) * Math.cos(toRad(curentPosstion.lat2)) * 
+            Math.sin(dLng / 2) ** 2;
+  
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  
+  return R * c; // Khoảng cách tính bằng km
+}

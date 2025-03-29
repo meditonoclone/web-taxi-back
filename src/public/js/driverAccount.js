@@ -249,6 +249,10 @@ function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
+        if (position.coords.accuracy > 10) {
+          console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
+          return;
+        }
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude
@@ -267,7 +271,7 @@ function getRealtimePosition() {
         }
         // Lưu lại vị trí vào mảng để vẽ đường đi
         routeCoords.push([currentLocation.lng, currentLocation.lat]);
-
+        document.querySelector('#distance').innerText = `${calculateTotalDistance(routeCoords)} km`
         // Cập nhật tuyến đường trên bản đồ
         mapDetailTrip.getSource("route").setData({
             type: "FeatureCollection",
@@ -432,17 +436,62 @@ if (btnNextStatus) {
 
 
 function haversine(prePossition, curentPosstion) {
-  const R = 6371; // Bán kính Trái Đất (km)
+  const R = 6371000; // Bán kính Trái Đất (m)
   const toRad = (deg) => (deg * Math.PI) / 180; // Chuyển đổi độ sang radian
 
-  const dLat = toRad(curentPosstion.lat2 - prePossition.lat);
-  const dLng = toRad(curentPosstion.lng - prePossition.lng);
+  const dLat = toRad(curentPosstion[1] - prePossition[1]);
+  const dLng = toRad(curentPosstion[0] - prePossition[0]);
   
   const a = Math.sin(dLat / 2) ** 2 +
-            Math.cos(toRad(prePossition.lat)) * Math.cos(toRad(curentPosstion.lat2)) * 
+            Math.cos(toRad(prePossition[1])) * Math.cos(toRad(curentPosstion[1])) * 
             Math.sin(dLng / 2) ** 2;
   
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   
-  return R * c; // Khoảng cách tính bằng km
+  return R * c; // Khoảng cách tính bằng m
+}
+
+
+
+
+
+function interpolatePolyline(polyline, interval = 5) {
+  
+
+  function interpolatePoints(coord1, coord2, numPoints) {
+      let [lng1, lat1] = coord1;
+      let [lng2, lat2] = coord2;
+      
+      let newPoints = [];
+      for (let i = 1; i < numPoints; i++) {
+          let t = i / numPoints;
+          let lat = lat1 + (lat2 - lat1) * t;
+          let lng = lng1 + (lng2 - lng1) * t;
+          newPoints.push([lng, lat]);
+      }
+      return newPoints;
+  }
+
+  let newPolyline = [polyline[0]]; // Bắt đầu từ điểm đầu tiên
+
+  for (let i = 0; i < polyline.length - 1; i++) {
+      let dist = haversine(polyline[i], polyline[i + 1]);
+      
+      if (dist > interval) {
+          let numPoints = Math.floor(dist / interval);
+          newPolyline.push(...interpolatePoints(polyline[i], polyline[i + 1], numPoints));
+      }
+
+      newPolyline.push(polyline[i + 1]);
+  }
+
+  return newPolyline;
+}
+function calculateTotalDistance(polyline) {
+  
+  let totalDistance = 0; // đơn vị m
+  for (let i = 0; i < polyline.length - 1; i++) {
+      totalDistance += haversine(polyline[i], polyline[i + 1]);
+  }
+  return parseFloat((totalDistance/1000).toFixed(3)) ;
 }

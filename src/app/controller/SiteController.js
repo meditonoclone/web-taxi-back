@@ -456,13 +456,23 @@ class SiteController {
 
         res.status(200).json({ message: 'Đặt lại mật khẩu thành công!', success: true });
     };
-    getTrip(req, res) {
-        console.log(req.session.tripId)
-        return res.json({ trip: req.session.tripId })
+    async getTrip(req, res) {
+        if (!req.session.tripId)
+            return res.status(400).json({ message: "Không lấy được chuyến" });
+
+        // Lấy thông tin chuyến đang ch��
+        const trip = await Trip(db).findOne({
+            where: {
+                trip_id: req.session.tripId
+            }
+        });
+        return res.json(trip)
     }
     async setTripState(req, res) {
         const statusFlow = ["booked", "en route", "in transit", "completed"];
-        const driverId = req.session.user.userId
+        let driverId
+        if(req.session.user)
+            driverId = req.session.user.userId
         try {
             const { tripId, status, detailCompletedTrip } = req.body;
 

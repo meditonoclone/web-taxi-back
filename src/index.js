@@ -88,7 +88,10 @@ app.engine('hbs', exphbs.engine({
       const statusMap = {
         "en route": "Đang đón",
         "in transit": "Đang di chuyển",
-        "waiting": "Đang chờ"
+        "waiting": "Đang chờ",
+        "completed": "Đã hoàn thành",
+        "booking": "Đang đặt",
+
       }
       return statusMap[status]
     }

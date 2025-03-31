@@ -7,6 +7,7 @@ let currentLocation;
 let mapDetailTrip;
 let routeCoords = [];
 let room;
+let trip;
 const statusMap = {
   "en route": "Đang đón",
   "in transit": "Đang di chuyển",
@@ -157,7 +158,7 @@ async function accept(data) {
     })
     .then(async result => {
 
-      console.log(result)
+      trip = result.currentTrip;
 
       updateHistoryTrips();
       document.querySelector('#acceptingTrip > div').innerHTML = 
@@ -219,6 +220,8 @@ table.querySelectorAll('row').forEach(((row) => {
 
 let myLocation
 let clientLocation
+let dropOffPoint
+let pickUpPoint
 let driverImg = document.querySelector("#infomation #avatar");
 if (!driverImg) {
   driverImg = document.createElement('img')
@@ -333,15 +336,15 @@ async function getTrip() {
   try {
     const response = await fetch("/get-trip");
     const data = await response.json();
-    return data.trip
+    return data
   } catch (error) {
     console.error("Lỗi:", error);
   }
 }
 window.onload = async () => {
   getRealtimePosition();
-  room = await getTrip();
-  console.log(room)
+  trip = await getTrip();
+  room = trip.trip_id;
   if (room) {
     socket.emit('joinRoom', room.toString());
     mapDetailTrip = await initMapDetail();
@@ -366,6 +369,16 @@ window.onload = async () => {
           }
       });
     });
+    pickUpPoint = new maplibregl.Marker({
+      draggable: false,
+    })
+      .setLngLat([trip.pickup_longitude, trip.pickup_latitude])
+      .addTo(mapDetailTrip)
+    dropOffPoint = new maplibregl.Marker({
+      draggable: false,
+    })
+      .setLngLat([trip.dropoff_longitude, trip.dropoff_latitude])
+      .addTo(mapDetailTrip)
   }
 
 }

@@ -10,6 +10,7 @@ let markers = [];
 let route;
 let currentLocation;
 let mapDetailTrip;
+let trip;
 let room;
 
 
@@ -404,7 +405,8 @@ socket.on('receiveLocation', (location) => {
 })
 
 document.addEventListener('DOMContentLoaded', async () => {
-    room = await getTrip(); // vào lại phòng nếu đẫ đặt chuyến trước đó
+    trip = await getTrip(); // vào lại phòng nếu đẫ đặt chuyến trước đó
+    room = trip.trip_id
     if (room) {
         socket.emit('joinRoom', room.toString())
         document.querySelector('button[data-target="#detailTrip"]').style.display = 'block'

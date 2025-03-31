@@ -9,9 +9,7 @@ function toggleHistoryTable() {
 }
 historyTripSwitch.addEventListener('click', toggleHistoryTable);
 
-function getTrip() {
-  socket.emit();
-}
+
 
 function loadTrips(table, data) {
   var tbody = '';
@@ -113,6 +111,7 @@ socket.on('update data', function (status) {
 
 //map
 const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC';
+let trip;
 let room;
 let myLocation
 let driverLocation
@@ -201,13 +200,15 @@ async function getTrip() {
   try {
     const response = await fetch("/get-trip");
     const data = await response.json();
-    return data.trip
+    return data
   } catch (error) {
     console.error("Lỗi:", error);
   }
 }
 window.onload = async () => {
-  room = await getTrip();
+  
+  trip = await getTrip();
+  room = trip.trip_id;
   getRealtimePosition();
   console.log(room)
   socket.emit('joinRoom', room.toString());

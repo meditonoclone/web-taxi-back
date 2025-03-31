@@ -4,7 +4,7 @@ async function getTrip() {
   try {
     const response = await fetch("/get-trip");
     const data = await response.json();
-    return data.trip
+    return data
   } catch (error) {
     console.error("Lỗi:", error);
   }
@@ -34,7 +34,8 @@ const bookTaxi = async (e) => {
 
   if (result.success) {
     alert("🚖 Đặt chuyến thành công!")
-    room = await getTrip();
+    trip = await getTrip();
+    room = trip.trip_id;
     socket.emit('joinRoom', room.toString())
     document.querySelector('button[data-target="#detailTrip"]').style.display = 'block'
 

@@ -6,6 +6,7 @@ const historyTrips = document.querySelector('#historyTrips');
 let currentLocation;
 let mapDetailTrip;
 let routeCoords = [];
+let recommendRoute = [];
 let room;
 let trip;
 const statusMap = {
@@ -161,12 +162,12 @@ async function accept(data) {
       trip = result.currentTrip;
 
       updateHistoryTrips();
-      document.querySelector('#acceptingTrip > div').innerHTML = 
-      `
+      document.querySelector('#acceptingTrip > div').innerHTML =
+        `
       <div class="client-info">
-            <img src="${result.currentTrip.profile_picture?result.currentTrip.profile_picture:''}" alt="" id="avatar">
+            <img src="${result.currentTrip.profile_picture ? result.currentTrip.profile_picture : ''}" alt="" id="avatar">
             <div>
-                <h1 id="name">${result.currentTrip.name?result.currentTrip.name:''}</h1>
+                <h1 id="name">${result.currentTrip.name ? result.currentTrip.name : ''}</h1>
                 <a href="tel:${result.currentTrip.contact}" id="phone">${result.currentTrip.contact}</a>
             </div>
         </div>
@@ -175,18 +176,18 @@ async function accept(data) {
         <div class="trip-info row">
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>${result.currentTrip.from_location}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>${result.currentTrip.to_location}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">${result.currentTrip.distance?result.currentTrip.distance:''}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">${result.currentTrip.distance ? result.currentTrip.distance : ''}</span></p>
             <div class="col-sm-6 col-xs-12">
                 <button><i class="fas fa-pen"></i></button>
                 <input type="text" name="waitingTime" placeholder="Thời gian chờ">
             </div>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span id="cost">${result.currentTrip.cost?result.currentTrip.cost:''}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span id="cost">${result.currentTrip.cost ? result.currentTrip.cost : ''}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span id="status">${statusMap[result.currentTrip.status]}</span></p>
 
         </div>
         <button id="btnNextStatus" class="btn btn-success">Xác nhận đón</button>`
       let btnNextStatus = document.getElementById("btnNextStatus")
-      
+
       room = result.currentTrip.trip_id.toString();
       if (btnNextStatus) {
         btnNextStatus.addEventListener("click", () => {
@@ -197,7 +198,9 @@ async function accept(data) {
       }
       document.querySelector('.tab-bar li:last-child').click();
       socket.emit('joinRoom', room, 'Chuyến đã được nhận');
+      trip = await getTrip();
       mapDetailTrip = await initMapDetail();
+      myMarker.addTo(mapDetailTrip)
       console.log(mapDetailTrip)
       return;
     })
@@ -218,8 +221,8 @@ table.querySelectorAll('row').forEach(((row) => {
 //map
 
 
-let myLocation
-let clientLocation
+let myMarker
+let clientMarker
 let dropOffPoint
 let pickUpPoint
 let driverImg = document.querySelector("#infomation #avatar");
@@ -252,48 +255,31 @@ function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
-        if (position.coords.accuracy > 10) {
-          console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
-          return;
-        }
+        // if (position.coords.accuracy > 10) {
+        //   console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
+        //   return;
+        // }
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude
         };
         if (!mapDetailTrip)
           return
-        if (myLocation)
-          myLocation.setLngLat(currentLocation)
+        if (myMarker)
+          myMarker.setLngLat(currentLocation)
         else {
-          myLocation = new maplibregl.Marker({
+          myMarker = new maplibregl.Marker({
             element: driverImg,
             draggable: false,
           })
             .setLngLat(currentLocation)
             .addTo(mapDetailTrip)
         }
-        // Lưu lại vị trí vào mảng để vẽ đường đi
-        routeCoords.push([currentLocation.lng, currentLocation.lat]);
-        document.querySelector('#distance').innerText = `${calculateTotalDistance(routeCoords)} km`
-        // Cập nhật tuyến đường trên bản đồ
-        mapDetailTrip.getSource("route").setData({
-            type: "FeatureCollection",
-            features: [{
-                type: "Feature",
-                geometry: {
-                    type: "LineString",
-                    coordinates: routeCoords
-                },
-                properties: {}
-            }]
-        });
+        // vẽ đường đi khi đón khách
+        handlePickupRoute(trip.status, [currentLocation.lng, currentLocation.lat], [pickUpPoint._lngLat.lng, pickUpPoint._lngLat.lat])
 
-        // Di chuyển camera theo tài xế
-        mapDetailTrip.flyTo({
-            center: [currentLocation.lng, currentLocation.lat],
-            speed: 0.5,
-            curve: 1
-        });
+        handleDropoffRoute(trip.status, [currentLocation.lng, currentLocation.lat], [pickUpPoint._lngLat.lng, pickUpPoint._lngLat.lat], [dropOffPoint._lngLat.lng, dropOffPoint._lngLat.lat])
+
         socket.emit('sendLocation', room.toString(), currentLocation)
       },
       (error) => {
@@ -330,6 +316,58 @@ async function initMapDetail() {
     zoom: 13, // starting zoom
     maplibreLogo: false,
   });
+  map.on("load", () => {
+    map.addSource("route", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: []
+      }
+    });
+
+    // Thêm layer vẽ đường
+    map.addLayer({
+      id: "route-line",
+      type: "line",
+      source: "route",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": "#ff6600",
+        "line-width": 5
+      }
+    });
+
+
+    map.addSource("recommendRoute", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: []
+      }
+    });
+
+    // Thêm layer vẽ đường
+    map.addLayer({
+      id: "recommend-route-line",
+      type: "line",
+      source: "recommendRoute",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: {
+        "line-color": "#ff6600",
+        "line-width": 5
+      }
+    });
+  });
+  pickUpPoint = new maplibregl.Marker({
+    draggable: false,
+  })
+    .setLngLat([trip.pickup_longitude, trip.pickup_latitude])
+    .addTo(map)
+  dropOffPoint = new maplibregl.Marker({
+    draggable: false,
+  })
+    .setLngLat([trip.dropoff_longitude, trip.dropoff_latitude])
+    .addTo(map)
   return map;
 }
 async function getTrip() {
@@ -342,43 +380,13 @@ async function getTrip() {
   }
 }
 window.onload = async () => {
-  getRealtimePosition();
   trip = await getTrip();
+  getRealtimePosition();
   room = trip.trip_id;
   if (room) {
     socket.emit('joinRoom', room.toString());
     mapDetailTrip = await initMapDetail();
-    mapDetailTrip.on("load", () => {
-      mapDetailTrip.addSource("route", {
-          type: "geojson",
-          data: {
-              type: "FeatureCollection",
-              features: []
-          }
-      });
-    
-      // Thêm layer vẽ đường
-      mapDetailTrip.addLayer({
-          id: "route-line",
-          type: "line",
-          source: "route",
-          layout: { "line-join": "round", "line-cap": "round" },
-          paint: {
-              "line-color": "#ff6600",
-              "line-width": 5
-          }
-      });
-    });
-    pickUpPoint = new maplibregl.Marker({
-      draggable: false,
-    })
-      .setLngLat([trip.pickup_longitude, trip.pickup_latitude])
-      .addTo(mapDetailTrip)
-    dropOffPoint = new maplibregl.Marker({
-      draggable: false,
-    })
-      .setLngLat([trip.dropoff_longitude, trip.dropoff_latitude])
-      .addTo(mapDetailTrip)
+    myMarker.addTo(mapDetailTrip);
   }
 
 }
@@ -386,13 +394,17 @@ window.onload = async () => {
 socket.on('receiveLocation', (location) => {
   console.log('đang nhận vị trí', clientImg);
 
-  if (!clientLocation)
-    clientLocation = new maplibregl.Marker({
-      draggable: false,
-    })
-      .setLngLat(location)
-      .addTo(mapDetailTrip)
-  clientLocation.setLngLat(location)
+  if (!clientMarker
+
+  )
+    clientMarker
+      = new maplibregl.Marker({
+        draggable: false,
+      })
+        .setLngLat(location)
+        .addTo(mapDetailTrip)
+  clientMarker
+    .setLngLat(location)
 })
 
 // progress trip
@@ -418,6 +430,8 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
         document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"
       else
         modifyBtnAndStatus(result.newStatus);
+      trip = await getTrip();
+      routeCoords = [];
       alert(result.message);
     } else {
       console.error("Lỗi cập nhật:", result);
@@ -427,6 +441,7 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
     console.error("Lỗi kết nối API:", error);
     alert("Lỗi kết nối đến server!");
   }
+
 }
 
 function modifyBtnAndStatus(status) {
@@ -454,13 +469,13 @@ function haversine(prePossition, curentPosstion) {
 
   const dLat = toRad(curentPosstion[1] - prePossition[1]);
   const dLng = toRad(curentPosstion[0] - prePossition[0]);
-  
+
   const a = Math.sin(dLat / 2) ** 2 +
-            Math.cos(toRad(prePossition[1])) * Math.cos(toRad(curentPosstion[1])) * 
-            Math.sin(dLng / 2) ** 2;
-  
+    Math.cos(toRad(prePossition[1])) * Math.cos(toRad(curentPosstion[1])) *
+    Math.sin(dLng / 2) ** 2;
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  
+
   return R * c; // Khoảng cách tính bằng m
 }
 
@@ -469,42 +484,134 @@ function haversine(prePossition, curentPosstion) {
 
 
 function interpolatePolyline(polyline, interval = 5) {
-  
+
 
   function interpolatePoints(coord1, coord2, numPoints) {
-      let [lng1, lat1] = coord1;
-      let [lng2, lat2] = coord2;
-      
-      let newPoints = [];
-      for (let i = 1; i < numPoints; i++) {
-          let t = i / numPoints;
-          let lat = lat1 + (lat2 - lat1) * t;
-          let lng = lng1 + (lng2 - lng1) * t;
-          newPoints.push([lng, lat]);
-      }
-      return newPoints;
+    let [lng1, lat1] = coord1;
+    let [lng2, lat2] = coord2;
+
+    let newPoints = [];
+    for (let i = 1; i < numPoints; i++) {
+      let t = i / numPoints;
+      let lat = lat1 + (lat2 - lat1) * t;
+      let lng = lng1 + (lng2 - lng1) * t;
+      newPoints.push([lng, lat]);
+    }
+    return newPoints;
   }
 
   let newPolyline = [polyline[0]]; // Bắt đầu từ điểm đầu tiên
 
   for (let i = 0; i < polyline.length - 1; i++) {
-      let dist = haversine(polyline[i], polyline[i + 1]);
-      
-      if (dist > interval) {
-          let numPoints = Math.floor(dist / interval);
-          newPolyline.push(...interpolatePoints(polyline[i], polyline[i + 1], numPoints));
-      }
+    let dist = haversine(polyline[i], polyline[i + 1]);
 
-      newPolyline.push(polyline[i + 1]);
+    if (dist > interval) {
+      let numPoints = Math.floor(dist / interval);
+      newPolyline.push(...interpolatePoints(polyline[i], polyline[i + 1], numPoints));
+    }
+
+    newPolyline.push(polyline[i + 1]);
   }
 
   return newPolyline;
 }
 function calculateTotalDistance(polyline) {
-  
+
   let totalDistance = 0; // đơn vị m
   for (let i = 0; i < polyline.length - 1; i++) {
-      totalDistance += haversine(polyline[i], polyline[i + 1]);
+    totalDistance += haversine(polyline[i], polyline[i + 1]);
   }
-  return parseFloat((totalDistance/1000).toFixed(3)) ;
+  return parseFloat((totalDistance / 1000).toFixed(3));
 }
+
+
+async function handlePickupRoute(status, driverLocation, pickupLocation) {
+  if (status !== "en route") return;
+  if (routeCoords.length === 0) {
+    routeCoords = await getRoute(driverLocation, pickupLocation);
+  }
+
+  updateRoute(driverLocation);
+  drawRoute('route', routeCoords);
+}
+async function handleDropoffRoute(status, currentLocation, pickupLocation, dropoffLocation) {
+  if (status !== "in transit") return;
+  // vẽ tuyến đường gợi ý
+  if (recommendRoute.length === 0) {
+    recommendRoute = await getRoute(pickupLocation, dropoffLocation);
+    drawRoute('recommendRoute', recommendRoute);
+  }
+  //vẽ đoạn đường đi thực tế
+  routeCoords.push(currentLocation);
+  drawRoute('route', routeCoords);
+  document.querySelector('#distance').innerText = `${calculateTotalDistance(routeCoords)} km`;
+  socket.emit('sendDistance', room.toString(), calculateTotalDistance(routeCoords));// gửi quãng đường đi được cho khách hàng
+
+}
+
+async function getRoute(driverLocation, pickupLocation) {
+  const origin = `${driverLocation[1]},${driverLocation[0]}`;
+  const destination = `${pickupLocation[1]},${pickupLocation[0]}`;
+
+  const url = `https://mapapis.openmap.vn/v1/direction?origin=${origin}&destination=${destination}&vehicle=car&apikey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const ppl = data.routes[0].overview_polyline.points;
+    return polyline.decode(ppl).map(coord => [coord[1], coord[0]]);
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu tuyến đường:", error);
+    return [];
+  }
+}
+
+function updateRoute(driverLocation) {
+  let closestIndex = -1;
+  let minDistance = Infinity;
+
+  // Tìm điểm gần nhất trên tuyến đường
+  for (let i = 0; i < routeCoords.length; i++) {
+    const [lng, lat] = routeCoords[i];
+    const distance = haversine([lng, lat], driverLocation);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestIndex = i;
+    }
+  }
+
+  // Nếu điểm gần nhất cách tài xế dưới 20m, xóa toàn bộ đoạn trước đó
+  if (closestIndex !== -1 && minDistance < 20) {
+    routeCoords = routeCoords.slice(closestIndex); // Cập nhật routeCoords
+  }
+}
+
+
+function drawRoute(sourceId, route) {
+  if (mapDetailTrip.getSource(sourceId)) {
+    mapDetailTrip.getSource(sourceId).setData({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: route }
+    });
+  } else {
+    mapDetailTrip.addSource(sourceId, {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        geometry: { type: 'LineString', coordinates: route }
+      }
+    });
+
+    mapDetailTrip.addLayer({
+      id: sourceId,
+      type: 'line',
+      source: sourceId,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#FF5733', 'line-width': 4 }
+    });
+  }
+}
+
+
+////// sửa bug reset biến khi hoàn thành chuyến

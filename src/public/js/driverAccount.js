@@ -426,8 +426,15 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
 
     if (response.ok) {
       console.log("Cập nhật thành công:", result);
-      if (result.newStatus == "completed")
+      if (result.newStatus == "completed") {
+
         document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"
+        mapDetailTrip;
+        routeCoords = [];
+        recommendRoute = [];
+        room = null;
+        trip = null;
+      }
       else
         modifyBtnAndStatus(result.newStatus);
       trip = await getTrip();
@@ -614,4 +621,3 @@ function drawRoute(sourceId, route) {
 }
 
 
-////// sửa bug reset biến khi hoàn thành chuyến

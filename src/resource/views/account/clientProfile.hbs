@@ -25,11 +25,16 @@
         <h2>Chuyến đang thực hiện</h2>
         {{#if currentTrip}}
         <div class="client-info">
+            {{#if currentTrip.name}}
+
             <img src="{{currentTrip.profile_picture}}" alt="" id="driverAvatar">
             <div>
                 <h4 id="name">Tài xế: {{currentTrip.name}}</h4>
                 <a href="tel:{{currentTrip.phone}}" id="phone">{{currentTrip.phone}}</a>
             </div>
+            {{else}}
+                <h4>Chuyến chưa được nhận</h4>
+            {{/if}}
         </div>
         <div id="map">
         </div>

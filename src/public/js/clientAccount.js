@@ -2,6 +2,14 @@ const historyTripSwitch = document.querySelector('.trip_history>h4');
 const historyTable = document.querySelector('.trip_history>table');
 const chevronUp = document.querySelector('.trip_history i.fa-chevron-up');
 const chevronDown = document.querySelector('.trip_history i.fa-chevron-down');
+const statusMap = {
+  "en route": "Đang đón",
+  "in transit": "Đang di chuyển",
+  "waiting": "Đang chờ",
+  "booking": "Đang đặt",
+  "completed": "Hoàn thành"
+};
+
 function toggleHistoryTable() {
   historyTable.classList.toggle('hide');
   chevronUp.classList.toggle('hide');
@@ -56,12 +64,7 @@ function cancel(e) {
 
 var data = historyTable.querySelectorAll('tbody tr');
 
-data.forEach(((row) => {
-  var status = row.querySelector('td:last-child');
-  if (status.innerText === 'booked') {
-    status.addEventListener('click', () => cancel(row.querySelector('td:first-child').innerText));
-  }
-}))
+
 
 const socket = io();
 const table = document.querySelector('.trip_history table');
@@ -98,7 +101,7 @@ socket.on('update data', function (status) {
         <td>${row.to_location}</td>
         <td>${row.name}</td>
         <td>${row.phone}</td>
-        <td>${row.status}</td>
+        <td>${statusMap[row.status]}</td>
       </tr>`
         }
           , '');
@@ -111,10 +114,14 @@ socket.on('update data', function (status) {
 
 //map
 const apiKey = 'UL1tI5GPwmeSZwTvU1sUg39AHw4nD7xC';
+let map;
 let trip;
 let room;
-let myLocation
-let driverLocation
+let myMarker
+let driverMarker
+let clientMarker
+let dropOffPoint
+let pickUpPoint
 let imgMarker = document.querySelector("#avatar");
 if (!imgMarker) {
   imgMarker = document.createElement('img')
@@ -144,19 +151,20 @@ function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
+        if(!map) return;
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude
         };
-        if (myLocation)
-          myLocation.setLngLat(currentLocation)
+        if (myMarker)
+          myMarker.setLngLat(currentLocation)
         else {
-          myLocation = new maplibregl.Marker({
+          myMarker = new maplibregl.Marker({
             element: imgMarker,
             draggable: false,
           })
             .setLngLat(currentLocation)
-            .addTo(mapDetailTrip)
+            .addTo(map)
         }
         socket.emit('sendLocation', room.toString(), currentLocation)
       },
@@ -206,25 +214,116 @@ async function getTrip() {
   }
 }
 window.onload = async () => {
-  
   trip = await getTrip();
-  room = trip.trip_id;
-  getRealtimePosition();
-  console.log(room)
-  socket.emit('joinRoom', room.toString());
-  mapDetailTrip = await initMapDetail();
+  if(trip)
+  {
+    room = trip.trip_id;
+    map = await initMapDetail();
+    getRealtimePosition();
+    socket.emit('joinRoom', room.toString());
+    pickUpPoint = new maplibregl.Marker({
+      draggable: false,
+    })
+      .setLngLat([trip.pickup_longitude, trip.pickup_latitude])
+      .addTo(map)
+    dropOffPoint = new maplibregl.Marker({
+      draggable: false,
+    })
+      .setLngLat([trip.dropoff_longitude, trip.dropoff_latitude])
+      .addTo(map)
+
+  }
 
 }
 
 socket.on('receiveLocation', (location) => {
   console.log('đang nhận vị trí');
 
-  if (!driverLocation)
-    driverLocation = new maplibregl.Marker({
+  if (!driverMarker)
+    driverMarker = new maplibregl.Marker({
       element: imgDriverMarker,
       draggable: false,
     })
       .setLngLat(location)
-      .addTo(mapDetailTrip)
-  driverLocation.setLngLat(location)
+      .addTo(map)
+  driverMarker.setLngLat(location)
+})
+
+
+function haversine(prePossition, curentPosstion) {
+  const R = 6371000; // Bán kính Trái Đất (m)
+  const toRad = (deg) => (deg * Math.PI) / 180; // Chuyển đổi độ sang radian
+
+  const dLat = toRad(curentPosstion[1] - prePossition[1]);
+  const dLng = toRad(curentPosstion[0] - prePossition[0]);
+
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(prePossition[1])) * Math.cos(toRad(curentPosstion[1])) *
+    Math.sin(dLng / 2) ** 2;
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c; // Khoảng cách tính bằng m
+}
+
+function calculateTotalDistance(polyline) {
+
+  let totalDistance = 0; // đơn vị m
+  for (let i = 0; i < polyline.length - 1; i++) {
+    totalDistance += haversine(polyline[i], polyline[i + 1]);
+  }
+  return parseFloat((totalDistance / 1000).toFixed(3));
+}
+
+
+async function getRoute(startLocation, endLocation) {
+  const origin = `${startLocation[1]},${startLocation[0]}`;
+  const destination = `${endLocation[1]},${endLocation[0]}`;
+
+  const url = `https://mapapis.openmap.vn/v1/direction?origin=${origin}&destination=${destination}&vehicle=car&apikey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const ppl = data.routes[0].overview_polyline.points;
+    return polyline.decode(ppl).map(coord => [coord[1], coord[0]]);
+  } catch (error) {
+    console.error("Lỗi khi lấy dữ liệu tuyến đường:", error);
+    return [];
+  }
+}
+function drawRoute(sourceId, route) {
+  if (map.getSource(sourceId)) {
+    map.getSource(sourceId).setData({
+      type: 'Feature',
+      geometry: { type: 'LineString', coordinates: route }
+    });
+  } else {
+    map.addSource(sourceId, {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        geometry: { type: 'LineString', coordinates: route }
+      }
+    });
+
+    map.addLayer({
+      id: sourceId,
+      type: 'line',
+      source: sourceId,
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: { 'line-color': '#FF5733', 'line-width': 4 }
+    });
+  }
+}
+socket.on('message', message => {
+  alert(message);
+})
+
+socket.on('accept', async status => {
+  if(status){
+    trip = await getTrip()
+    /// render thông tin tài xế
+    
+  }
 })

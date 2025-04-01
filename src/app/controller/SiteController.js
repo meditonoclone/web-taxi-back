@@ -280,6 +280,7 @@ class SiteController {
             if (trip.client_id)
                 if (clients.has(trip.client_id.toString()))
                     io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
+                    
             io.to('driver').emit('update data', true);
             console.log(currentTrip)
             res.status(200).json({currentTrip: currentTrip[0] });

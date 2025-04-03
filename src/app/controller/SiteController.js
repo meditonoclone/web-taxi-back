@@ -3,6 +3,7 @@ const session = require('express-session');
 const db = require('../../config/db');
 const News = require('../model/News');
 const Trip = require('../model/Trip');
+const Rating = require('../model/Rating');
 const setLocals = require('../../middleware');
 const cookieSignature = require('cookie-signature');
 const { Op } = require('sequelize');
@@ -539,6 +540,7 @@ class SiteController {
     }
 
     async  rate(req, res){
+        console.log(req.body);
         try {
             const { driverId, tripId, rating, comment } = req.body;
     
@@ -553,19 +555,19 @@ class SiteController {
                 return res.status(404).json({ message: "Chuyến đi không tồn tại!" });
             }
             if(req.session.user && trip.client_id != req.session.user.userId)
-            {
+                {
                 return res.status(404).json({ message: "Không thể đánh giá" });
  
             }
             // Tạo đánh giá
-            const newRating = await Rating.create({
+            const newRating = await Rating(db).create({
                 trip_id: tripId,
                 driver_id: driverId,
                 user_id: trip.client_id, // Lấy id khách hàng từ trip
                 rating,
                 comment
             });
-    
+            
             res.status(201).json({ message: "Đánh giá thành công!", rating: newRating });
     
         } catch (error) {

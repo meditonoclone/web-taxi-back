@@ -344,7 +344,7 @@ socket.on("updateStatus", async result => {
     trip = await getTrip()
   if(trip.status === 'completed')
   {
-    driverName = document.querySelector('#acceptingTrip #name');
+    driverName = document.querySelector('#acceptingTrip #name').innerText;
     openModal(driverName, trip.driver_id, trip.trip_id)
   }
 })

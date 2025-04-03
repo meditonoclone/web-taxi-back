@@ -3,9 +3,9 @@ const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
   class Rating extends Model {
     static associate(models) {
-      Rating.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+      Rating.belongsTo(models.User, { foreignKey: 'user_id', as: 'client' });
       Rating.belongsTo(models.User, { foreignKey: 'driver_id', as: 'driver' });
-      Rating.belongsTo(models.TripHistory, { foreignKey: 'trip_id', as: 'trip' });
+      Rating.belongsTo(models.Trip, { foreignKey: 'trip_id', as: 'trip' });
     }
   }
 
@@ -47,9 +47,9 @@ module.exports = (sequelize) => {
       },
     },
     {
-      sequelize, // Cần truyền `sequelize` vào đây
+      sequelize, // 
       tableName: 'ratings',
-      timestamps: false, // Nếu muốn tự động có `created_at` và `updated_at`, hãy đặt `timestamps: true`
+      timestamps: false, 
     }
   );
 

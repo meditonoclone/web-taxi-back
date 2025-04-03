@@ -41,7 +41,7 @@
         <div class="trip-info row">
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>{{currentTrip.from_location}}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span>{{currentTrip.distance}}</span></p>
+            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">{{currentTrip.distance}}</span></p>
             <div class="col-sm-6 col-xs-12">
                 <button><i class="fas fa-pen"></i></button>
                 <input type="text" name="waitingTime" placeholder="Thời gian chờ">
@@ -56,6 +56,36 @@
         {{/if}}
     </div>
 
+<!-- Modal -->
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Đánh giá tài xế</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+      <div class="modal-body">
+        <p>Tài xế: <span id="driverName">Nguyễn Văn A</span></p>
+        
+        <!-- Chọn số sao -->
+        <div class="mb-3">
+          <span class="star text-warning fs-4" onclick="setRating(1)"><i class="fas fa-star"></i></span>
+          <span class="star text-warning fs-4" onclick="setRating(2)"><i class="fas fa-star"></i></span>
+          <span class="star text-warning fs-4" onclick="setRating(3)"><i class="fas fa-star"></i></span>
+          <span class="star text-warning fs-4" onclick="setRating(4)"><i class="fas fa-star"></i></span>
+          <span class="star text-warning fs-4" onclick="setRating(5)"><i class="fas fa-star"></i></span>
+        </div>
+
+        <!-- Ô nhập nhận xét -->
+        <textarea id="reviewText" class="form-control" placeholder="Nhập nhận xét của bạn..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="submitRating()">Gửi</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </section>
 <section class="trip_history layout_padding">

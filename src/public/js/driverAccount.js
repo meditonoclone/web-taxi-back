@@ -426,6 +426,7 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
 
     if (response.ok) {
       console.log("Cập nhật thành công:", result);
+      socket.to(room).emit("updateStatus", true);
       if (result.newStatus == "completed") {
 
         document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"

@@ -47,4 +47,6 @@ router.put('/update-trip', siteController.setTripState)
 
 router.get('/', siteController.index);
 
+router.post('rate-driver', siteController.rate)
+
 module.exports = router;

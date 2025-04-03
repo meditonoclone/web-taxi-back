@@ -271,19 +271,28 @@ class SiteController {
             trip.driver_id = req.session.user.userId;
             await trip.save();
             let [currentTrip] = await db.query(`
-                SELECT trip_id, order_time, distance, waiting_minutes, cost, from_location,
-                    to_location, user.name, contact, trip_history.finished_time, trip_history.status,
-                    user.profile_picture
+                SELECT trip_history.trip_id, trip_history.order_time, trip_history.distance, 
+                    trip_history.waiting_minutes, trip_history.cost, trip_history.from_location, 
+                        trip_history.to_location, 
+                        client.name AS name, 
+                        trip_history.contact AS contact, 
+                        client.profile_picture AS client_profile_picture, 
+                        trip_history.finished_time, trip_history.status, 
+                        driver.name AS driver_name, driver.phone AS driver_contact, 
+                        driver.profile_picture AS driver_profile_picture
                 FROM trip_history
-                LEFT JOIN user ON trip_history.client_id = user.user_id
+                LEFT JOIN user AS client ON trip_history.client_id = client.user_id
+                LEFT JOIN user AS driver ON trip_history.driver_id = driver.user_id
                 WHERE trip_history.trip_id = ${parseInt(tripId)}`);
             if (trip.client_id)
-                if (clients.has(trip.client_id.toString()))
+                if (clients.has(trip.client_id.toString())) {
                     io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
-                    
+                    io.to(currentTrip[0].trip_id.toString()).emit('getDriverInfo', {name: currentTrip[0].driver_name, phone: currentTrip[0].driver_contact, img: currentTrip[0].driver_profile_picture});
+                }
+
             io.to('driver').emit('update data', true);
             console.log(currentTrip)
-            res.status(200).json({currentTrip: currentTrip[0] });
+            res.status(200).json({ currentTrip: currentTrip[0] });
         } catch (err) {
             console.log(err);
             res.status(400).json('Có lỗi xảy ra');
@@ -472,7 +481,7 @@ class SiteController {
     async setTripState(req, res) {
         const statusFlow = ["booked", "en route", "in transit", "completed"];
         let driverId
-        if(req.session.user)
+        if (req.session.user)
             driverId = req.session.user.userId
         try {
             const { tripId, status, detailCompletedTrip } = req.body;
@@ -500,13 +509,13 @@ class SiteController {
             }
             if (status == 'stop waiting') {
                 await trip.update({ status: "in transit" })
-                return res.status(200).json({ message: "Cập nhật trạng thái thành công", newStatus:  "in transit"});
+                return res.status(200).json({ message: "Cập nhật trạng thái thành công", newStatus: "in transit" });
             }
             // Cập nhật trạng thái tiếp theo
             let currentStatusIndex = statusFlow.indexOf(trip.status);
             if (currentStatusIndex < statusFlow.length - 1) {
                 await trip.update({ status: statusFlow[currentStatusIndex + 1] })
-                return res.status(200).json({ message: "Cập nhật trạng thái thành công", newStatus: statusFlow[currentStatusIndex + 1]});
+                return res.status(200).json({ message: "Cập nhật trạng thái thành công", newStatus: statusFlow[currentStatusIndex + 1] });
 
             }
             if (currentStatusIndex == statusFlow.length - 2 && detailCompletedTrip) // xác nhận hoàn thành chuyến
@@ -518,7 +527,7 @@ class SiteController {
                     actual_dropoff_latitude: detailCompletedTrip.location.lat,
                     actual_dropoff_longitude: detailCompletedTrip.location.lng,
                 });
-                return res.status(200).json({ message: "Chuyến đã hoàn tất", newStatus: 'completed'});
+                return res.status(200).json({ message: "Chuyến đã hoàn tất", newStatus: 'completed' });
 
             }
             res.status(400).json('Không thể cập nhật trạng thái');
@@ -526,6 +535,42 @@ class SiteController {
         } catch (error) {
             console.error("Lỗi cập nhật trạng thái:", error);
             return res.status(500).json({ message: "Lỗi máy chủ" });
+        }
+    }
+
+    async  rate(req, res){
+        try {
+            const { driverId, tripId, rating, comment } = req.body;
+    
+            // Kiểm tra đầu vào
+            if (!driverId || !tripId || !rating || rating < 1 || rating > 5) {
+                return res.status(400).json({ message: "Dữ liệu không hợp lệ!" });
+            }
+    
+            // Kiểm tra xem chuyến đi có tồn tại không
+            const trip = await Trip(db).findByPk(tripId);
+            if (!trip) {
+                return res.status(404).json({ message: "Chuyến đi không tồn tại!" });
+            }
+            if(req.session.user && trip.client_id != req.session.user.userId)
+            {
+                return res.status(404).json({ message: "Không thể đánh giá" });
+ 
+            }
+            // Tạo đánh giá
+            const newRating = await Rating.create({
+                trip_id: tripId,
+                driver_id: driverId,
+                user_id: trip.client_id, // Lấy id khách hàng từ trip
+                rating,
+                comment
+            });
+    
+            res.status(201).json({ message: "Đánh giá thành công!", rating: newRating });
+    
+        } catch (error) {
+            console.error("Lỗi:", error);
+            res.status(500).json({ message: "Lỗi server!" });
         }
     }
 

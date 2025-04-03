@@ -139,6 +139,9 @@ let imgDriverMarker = document.querySelector("#driverAvatar");
 if (!imgDriverMarker) {
   imgDriverMarker = document.createElement('img')
   imgDriverMarker.src = 'img/taxi.jpg'
+  imgDriverMarker.style.width = '30px';  // Điều chỉnh kích thước
+  imgDriverMarker.style.height = '30px';
+  imgDriverMarker.style.borderRadius = '50%'  
 }
 else{
   imgDriverMarker = imgDriverMarker.cloneNode(true)
@@ -247,6 +250,7 @@ socket.on('receiveLocation', (location) => {
       .setLngLat(location)
       .addTo(map)
   driverMarker.setLngLat(location)
+  handleDropoffRoute(trip.status, [location.lng, location.lat])
 })
 
 
@@ -320,10 +324,94 @@ socket.on('message', message => {
   alert(message);
 })
 
-socket.on('accept', async status => {
-  if(status){
-    trip = await getTrip()
-    /// render thông tin tài xế
-    
+socket.on('getDriverInfo', async info => {
+  if(info){
+    console.log(info)
+    document.querySelector('.client-info').innerHTML = `
+    <img src=${info.img} alt="" id="driverAvatar">
+    <div>
+        <h4 id="name">${info.name}</h4>
+        <a href="tel:${info.phone}" id="phone">${info.phone}</a>
+    </div>
+    `
+   
+
   }
 })
+
+socket.on("updateStatus", async result => {
+  if(result)
+    trip = await getTrip()
+  if(trip.status === 'completed')
+  {
+    driverName = document.querySelector('#acceptingTrip #name');
+    openModal(driverName, trip.driver_id, trip.trip_id)
+  }
+})
+
+async function handleDropoffRoute(status, driverLocation) {
+  if (status !== "in transit") return;
+  
+  //vẽ đoạn đường đi thực tế
+  routeCoords.push(driverLocation);
+  drawRoute('route', routeCoords);
+  document.querySelector('#distance').innerText = `${calculateTotalDistance(routeCoords)} km`;
+}
+
+/// modal rating
+let selectedRating = 0;
+let ratingModal;
+
+// Khởi tạo modal Bootstrap
+document.addEventListener("DOMContentLoaded", () => {
+    ratingModal = new bootstrap.Modal(document.getElementById("ratingModal"));
+});
+
+// Hiển thị modal khi chuyến đi hoàn thành
+function openModal(driverName, driverId, tripId) {
+    document.getElementById("driverName").innerText = driverName;
+    document.getElementById("ratingModal").dataset.driverId = driverId;
+    document.getElementById("ratingModal").dataset.tripId = tripId;
+    resetStars();
+    ratingModal.show();
+}
+
+// Đặt số sao khi chọn
+function setRating(rating) {
+    selectedRating = rating;
+    let stars = document.querySelectorAll("#ratingModal .star i");
+    stars.forEach((star, index) => {
+        star.style.color = index < rating ? "gold" : "gray";
+    });
+}
+
+// Reset số sao khi mở lại modal
+function resetStars() {
+    selectedRating = 0;
+    let stars = document.querySelectorAll("#ratingModal .star i");
+    stars.forEach(star => star.style.color = "gray");
+}
+
+// Gửi đánh giá lên server
+function submitRating() {
+    let driverId = document.getElementById("ratingModal").dataset.driverId;
+    let tripId = document.getElementById("ratingModal").dataset.tripId;
+    let reviewText = document.getElementById("reviewText").value;
+
+    if (selectedRating === 0) {
+        alert("Vui lòng chọn số sao!");
+        return;
+    }
+
+    fetch("/rate-driver", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ driverId, tripId, rating: selectedRating, comment: reviewText })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Đánh giá thành công!");
+        ratingModal.hide();
+    })
+    .catch(error => console.error("Lỗi:", error));
+}

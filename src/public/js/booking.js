@@ -68,3 +68,5 @@ checkCost.addEventListener('click', () => validateAll(objectsToValidate))
 socket.on('message', message => {
   alert(message);
 })
+
+

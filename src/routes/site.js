@@ -45,7 +45,7 @@ router.get('/get-trip', siteController.getTrip)
 
 router.put('/update-trip', siteController.setTripState)
 router.post('/rate-driver', siteController.rate)
-
+router.get('/get-ratings', siteController.getRatings)
 router.get('/', siteController.index);
 
 

@@ -2,7 +2,9 @@ const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
     class Trip extends Model {
-        
+        static associate(models) {
+            Trip.hasMany(models.Rating, { foreignKey: 'trip_id', as: 'ratings' });
+        }
     }
 
     Trip.init({
@@ -71,7 +73,7 @@ module.exports = (sequelize) => {
         },
         dropoff_longitude: {
             type: DataTypes.DECIMAL(10, 7)
-        },actual_dropoff_latitude: {
+        }, actual_dropoff_latitude: {
             type: DataTypes.DECIMAL(10, 7),
             allowNull: true,
         },
@@ -86,7 +88,7 @@ module.exports = (sequelize) => {
         freezeTableName: true,
         timestamps: false,
         hooks: {
-            
+
         }
     });
 

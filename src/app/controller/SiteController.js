@@ -1,9 +1,10 @@
-const User = require('../model/User');
 const session = require('express-session');
 const db = require('../../config/db');
 const News = require('../model/News');
-const Trip = require('../model/Trip');
-const Rating = require('../model/Rating');
+// const Trip = require('../model/Trip');
+// const User = require('../model/User');
+// const Rating = require('../model/Rating');
+const { Rating, User, Trip } = require('../model');
 const setLocals = require('../../middleware');
 const cookieSignature = require('cookie-signature');
 const { Op } = require('sequelize');
@@ -14,6 +15,16 @@ const nodemailer = require('nodemailer');
 
 class SiteController {
     async index(req, res) {
+        const ratings = await Rating.findAll({
+            where: {rating: 5},
+            limit:10,
+            include: [
+              { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
+            ],
+            order: [['created_at', 'DESC']] // Sắp xếp theo thời gian mới nhất
+          });
+          const ratingsData = ratings.map(rating => rating.get({ plain: true }));
+        res.locals.ratings = ratingsData;
         const [vehicles] = await db.query(`SELECT vehicle_type_id, vehicle_type
                                              FROM taxi_pricing`);
         res.locals.vehicles = vehicles;
@@ -52,12 +63,12 @@ class SiteController {
     async login(req, res, next) {
         const { username, password, rememberMe } = req.body;
         try {
-            let user = await User(db).findOne({ where: { phone: username } });
+            let user = await User.findOne({ where: { phone: username } });
             if (!user)
                 return res.status(200).json({ phone: true })
             else {
 
-                user = await User(db).findOne({ where: { phone: username, password: password } });
+                user = await User.findOne({ where: { phone: username, password: password } });
 
                 if (!user)
                     return res.status(200).json({ pass: true })
@@ -110,7 +121,7 @@ class SiteController {
     async signup(req, res) {
         try {
             const validatedData = validateUserData(req.body);
-            const [user, created] = await User(db).findOrCreate({ where: validatedData });
+            const [user, created] = await User.findOrCreate({ where: validatedData });
             res.redirect('/login');
         } catch (error) {
             console.error('Error creating new user:', error);
@@ -135,7 +146,7 @@ class SiteController {
         if (!res.locals.user)
             return res.redirect('/login');
         try {
-            let info = await User(db).findByPk(res.locals.user.userId,
+            let info = await User.findByPk(res.locals.user.userId,
                 {
                     attributes: { exclude: ['password'] }
                 }
@@ -223,7 +234,7 @@ class SiteController {
         try {
 
             // const { tripId } = req.body;
-            const trip = await Trip(db).findOne({
+            const trip = await Trip.findOne({
                 where: {
                     trip_id: req.session.tripId,
                     client_id: req.session.user.userId
@@ -245,7 +256,7 @@ class SiteController {
     async acceptTrip(req, res) {
         try {
             const io = req.app.get('io');
-            const acceptedTrip = await Trip(db).findOne({
+            const acceptedTrip = await Trip.findOne({
                 where: {
                     driver_id: req.session.user.userId,
                     status: {
@@ -257,7 +268,7 @@ class SiteController {
                 return res.status(400).json("Chưa hoàn thành chuyến, không thể nhận thêm!");
             }
             const { tripId } = req.body;
-            const trip = await Trip(db).findOne({
+            const trip = await Trip.findOne({
                 where: {
                     trip_id: parseInt(tripId),
                     status: 'booked'
@@ -359,7 +370,7 @@ class SiteController {
         console.log(req.body)
         let message = 'Đặt chuyến thành công';
         try {
-            const trip = await Trip(db).create({
+            const trip = await Trip.create({
                 client_id: !res.locals.user ? null : res.locals.user.userId,
                 vehicle_type_id: req.body.vehicleType,
                 from_location: req.body.start,
@@ -390,7 +401,7 @@ class SiteController {
     async sendResetEmail(req, res) {
 
         const { email } = req.body;
-        const user = await User(db).findOne({ where: { email } });
+        const user = await User.findOne({ where: { email } });
 
         if (!user) {
             return res.status(404).json({ notExist: true });
@@ -448,7 +459,7 @@ class SiteController {
         const { password } = req.body;
 
         // Tìm người dùng có token hợp lệ và chưa hết hạn
-        const user = await User(db).findOne({
+        const user = await User.findOne({
             where: {
                 reset_password_token: token,
                 token_expires: { [Op.gt]: Date.now() }  // Kiểm tra thời gian hết hạn
@@ -472,7 +483,7 @@ class SiteController {
             return res.status(400).json({ message: "Không lấy được chuyến" });
 
         // Lấy thông tin chuyến đang ch��
-        const trip = await Trip(db).findOne({
+        const trip = await Trip.findOne({
             where: {
                 trip_id: req.session.tripId
             }
@@ -492,7 +503,7 @@ class SiteController {
                 return res.status(400).json({ message: "Thiếu dữ liệu đầu vào" });
             }
 
-            const trip = await Trip(db).findOne({
+            const trip = await Trip.findOne({
                 where: {
                     trip_id: parseInt(tripId),
                     driver_id: driverId,
@@ -550,7 +561,7 @@ class SiteController {
             }
     
             // Kiểm tra xem chuyến đi có tồn tại không
-            const trip = await Trip(db).findByPk(tripId);
+            const trip = await Trip.findByPk(tripId);
             if (!trip) {
                 return res.status(404).json({ message: "Chuyến đi không tồn tại!" });
             }
@@ -560,7 +571,7 @@ class SiteController {
  
             }
             // Tạo đánh giá
-            const newRating = await Rating(db).create({
+            const newRating = await Rating.create({
                 trip_id: tripId,
                 driver_id: driverId,
                 user_id: trip.client_id, // Lấy id khách hàng từ trip
@@ -575,8 +586,35 @@ class SiteController {
             res.status(500).json({ message: "Lỗi server!" });
         }
     }
-    
+
+    async getRatings(req, res){
+        try {
+          const { trip_id, user_id, driver_id, rating } = req.query;
       
+          const whereCondition = {};
+          if (trip_id) whereCondition.trip_id = trip_id;
+          if (user_id) whereCondition.user_id = user_id;
+          if (driver_id) whereCondition.driver_id = driver_id;
+          if (rating) whereCondition.rating = rating; // Lọc theo số sao
+      
+          const ratings = await Rating.findAll({
+            where: whereCondition,
+            include: [
+              { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
+              { model: User, as: 'driver', attributes: ['user_id', 'name'] }, // Lấy thông tin tài xế
+              { model: Trip, as: 'trip', attributes: ['trip_id', 'from_location', 'to_location'] } // Lấy thông tin chuyến đi
+            ],
+            order: [['created_at', 'DESC']] // Sắp xếp theo thời gian mới nhất
+          });
+      
+          res.status(200).json({ success: true, ratings });
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ success: false, message: 'Lỗi server' });
+        }
+      }
+
+>>>>>>> e5e3c53b04ce8cdd23d2c5d719de72c56a28c1df
 }
 
 module.exports = new SiteController();

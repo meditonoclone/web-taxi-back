@@ -15,6 +15,16 @@ const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
 const clients = require('./socket/clientsList');
 const fs = require('fs')
+const AWS = require('aws-sdk');
+require('dotenv').config();
+// Cấu hình vùng AWS (region) và thông tin xác thực (Access key, Secret key)
+AWS.config.update({
+  region: 'ap-northeast-1', // sydney
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+global.sns = new AWS.SNS();
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -94,7 +104,23 @@ app.engine('hbs', exphbs.engine({
 
       }
       return statusMap[status]
-    }
+    },
+    formatCurrencyVN: (amount) => {
+      // Kiểm tra nếu là số hợp lệ
+      if (isNaN(amount)) return 'Invalid amount';
+  
+      // Làm tròn số thập phân đến 2 chữ số
+      amount = parseFloat(amount).toFixed(2);
+  
+      // Tách phần nguyên và phần thập phân
+      const [integerPart, decimalPart] = amount.split('.');
+  
+      // Thêm dấu phân cách cho phần nguyên
+      const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  
+      // Trả về định dạng tiền với phần thập phân
+      return `${integerWithCommas},${decimalPart}`;
+  }
 
   },
   extname: 'hbs',

@@ -141,7 +141,7 @@
                 <button id="checkCost" type="button" onclick="calculateRoute()">Ước lượng giá cước</button>
               </div>
               <p id="estimated-result"><span id="result"></span><span id="cost"></span></p>
-              <button type="submit">Đặt xe</button>
+              <button type="submit" data-toggle="modal" data-target="#otpModal">Đặt xe</button>
             </form>
             <div id="bookingMessage" style="display: none; margin-top: 10px;"></div>
           </div>
@@ -183,7 +183,26 @@
     </div>
   </div>
 </div>
-
+<!-- Modal Nhập OTP -->
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="otpModalLabel">Xác thực OTP</h5>
+                <button type="button" class="btn-close btn-danger" data-dismiss="modal" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+                <form id="otpForm">
+                    <div class="mb-3">
+                        <label for="otpInput" class="form-label">Nhập mã OTP:</label>
+                        <input type="text" class="form-control" id="otpInput" placeholder="Nhập mã OTP" required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 m-0">Xác nhận</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {{else}}
 <div class="hero_area">
   <header class="header_section">

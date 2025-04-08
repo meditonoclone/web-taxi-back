@@ -46,6 +46,9 @@ router.get('/get-trip', siteController.getTrip)
 router.put('/update-trip', siteController.setTripState)
 router.post('/rate-driver', siteController.rate)
 router.get('/get-ratings', siteController.getRatings)
+router.post('/send-otp', siteController.sendOtp);
+router.post('/verify-otp', siteController.verifyOtp);
+
 router.get('/', siteController.index);
 
 

@@ -125,3 +125,37 @@
         </tbody>
     </table>
 </section>
+<!-- Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h4 class="modal-title" id="paymentModalLabel">Chọn phương thức thanh toán</h4>
+      </div>
+
+      <div class="modal-body">
+        <form id="paymentForm">
+          <div class="radio">
+            <label>
+              <input type="radio" name="paymentMethod" value="cod" checked>
+              💵 Thanh toán tiền mặt
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input type="radio" name="paymentMethod" value="online">
+              🌐 Thanh toán online (MoMo / ATM / thẻ ngân hàng)
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+        <button type="button" class="btn btn-primary" onclick="submitPayment()">Tiếp tục</button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,9 +1,6 @@
 const session = require('express-session');
 const db = require('../../config/db');
-const News = require('../model/News');
-// const Trip = require('../model/Trip');
-// const User = require('../model/User');
-// const Rating = require('../model/Rating');
+const News = require('../model/News');;
 const { Rating, User, Trip } = require('../model');
 const setLocals = require('../../middleware');
 const cookieSignature = require('cookie-signature');
@@ -12,18 +9,22 @@ const { resultToObject, validateUserData } = require('../../util/sequelize');
 const clients = require('../../socket/clientsList');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+require('dotenv').config(); // Load biến môi trường
+const { generateOTP, sendOTP } = require('../services/snsService');
+const { saveOTP, verifyOTP } = require('../services/otpStore');
+
 
 class SiteController {
     async index(req, res) {
         const ratings = await Rating.findAll({
-            where: {rating: 5},
-            limit:10,
+            where: { rating: 5 },
+            limit: 10,
             include: [
-              { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
+                { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
             ],
             order: [['created_at', 'DESC']] // Sắp xếp theo thời gian mới nhất
-          });
-          const ratingsData = ratings.map(rating => rating.get({ plain: true }));
+        });
+        const ratingsData = ratings.map(rating => rating.get({ plain: true }));
         res.locals.ratings = ratingsData;
         const [vehicles] = await db.query(`SELECT vehicle_type_id, vehicle_type
                                              FROM taxi_pricing`);
@@ -299,7 +300,7 @@ class SiteController {
             if (trip.client_id)
                 if (clients.has(trip.client_id.toString())) {
                     io.to(clients.get(trip.client_id.toString())).emit('update data', trip.trip_id);
-                    io.to(currentTrip[0].trip_id.toString()).emit('getDriverInfo', {name: currentTrip[0].driver_name, phone: currentTrip[0].driver_contact, img: currentTrip[0].driver_profile_picture});
+                    io.to(currentTrip[0].trip_id.toString()).emit('getDriverInfo', { name: currentTrip[0].driver_name, phone: currentTrip[0].driver_contact, img: currentTrip[0].driver_profile_picture });
                 }
 
             io.to('driver').emit('update data', true);
@@ -550,25 +551,24 @@ class SiteController {
         }
     }
 
-    async  rate(req, res){
+    async rate(req, res) {
         console.log(req.body);
         try {
             const { driverId, tripId, rating, comment } = req.body;
-    
+
             // Kiểm tra đầu vào
             if (!driverId || !tripId || !rating || rating < 1 || rating > 5) {
                 return res.status(400).json({ message: "Dữ liệu không hợp lệ!" });
             }
-    
+
             // Kiểm tra xem chuyến đi có tồn tại không
             const trip = await Trip.findByPk(tripId);
             if (!trip) {
                 return res.status(404).json({ message: "Chuyến đi không tồn tại!" });
             }
-            if(req.session.user && trip.client_id != req.session.user.userId)
-                {
+            if (req.session.user && trip.client_id != req.session.user.userId) {
                 return res.status(404).json({ message: "Không thể đánh giá" });
- 
+
             }
             // Tạo đánh giá
             const newRating = await Rating.create({
@@ -578,43 +578,73 @@ class SiteController {
                 rating,
                 comment
             });
-            
+
             res.status(201).json({ message: "Đánh giá thành công!", rating: newRating });
-    
+
         } catch (error) {
             console.error("Lỗi:", error);
             res.status(500).json({ message: "Lỗi server!" });
         }
     }
 
-    async getRatings(req, res){
+    async getRatings(req, res) {
         try {
-          const { trip_id, user_id, driver_id, rating } = req.query;
-      
-          const whereCondition = {};
-          if (trip_id) whereCondition.trip_id = trip_id;
-          if (user_id) whereCondition.user_id = user_id;
-          if (driver_id) whereCondition.driver_id = driver_id;
-          if (rating) whereCondition.rating = rating; // Lọc theo số sao
-      
-          const ratings = await Rating.findAll({
-            where: whereCondition,
-            include: [
-              { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
-              { model: User, as: 'driver', attributes: ['user_id', 'name'] }, // Lấy thông tin tài xế
-              { model: Trip, as: 'trip', attributes: ['trip_id', 'from_location', 'to_location'] } // Lấy thông tin chuyến đi
-            ],
-            order: [['created_at', 'DESC']] // Sắp xếp theo thời gian mới nhất
-          });
-      
-          res.status(200).json({ success: true, ratings });
-        } catch (error) {
-          console.error(error);
-          res.status(500).json({ success: false, message: 'Lỗi server' });
-        }
-      }
+            const { trip_id, user_id, driver_id, rating } = req.query;
 
->>>>>>> e5e3c53b04ce8cdd23d2c5d719de72c56a28c1df
+            const whereCondition = {};
+            if (trip_id) whereCondition.trip_id = trip_id;
+            if (user_id) whereCondition.user_id = user_id;
+            if (driver_id) whereCondition.driver_id = driver_id;
+            if (rating) whereCondition.rating = rating; // Lọc theo số sao
+
+            const ratings = await Rating.findAll({
+                where: whereCondition,
+                include: [
+                    { model: User, as: 'client', attributes: ['user_id', 'name', 'profile_picture'] }, // Lấy thông tin người đánh giá
+                    { model: User, as: 'driver', attributes: ['user_id', 'name'] }, // Lấy thông tin tài xế
+                    { model: Trip, as: 'trip', attributes: ['trip_id', 'from_location', 'to_location'] } // Lấy thông tin chuyến đi
+                ],
+                order: [['created_at', 'DESC']] // Sắp xếp theo thời gian mới nhất
+            });
+
+            res.status(200).json({ success: true, ratings });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ success: false, message: 'Lỗi server' });
+        }
+    }
+
+    async sendOtp(req, res) {
+        let { phone } = req.body;
+
+        if (!phone) return res.status(400).json({ error: 'Số điện thoại không hợp lệ' });
+        phone = '+84' + phone.slice(1);
+        const otp = generateOTP();
+        const result = await sendOTP(phone, otp);
+
+        if (result.success) {
+            saveOTP(phone, otp); // Lưu OTP sau khi gửi
+            res.json({ message: 'OTP sent' });
+        } else {
+            res.status(500).json({ error: 'Failed to send OTP' });
+        }
+    }
+
+    async verifyOtp(req, res) {
+        let { phone, otp } = req.body;
+        if (!phone || !otp) {
+            return res.status(400).json({ error: 'Phone number and OTP are required' });
+        }
+        phone = '+84' + phone.slice(1)
+        const result = verifyOTP(phone, otp);
+        
+        console.log(phone, otp, result)
+        if (result.success) {
+            res.json({ message: 'OTP verified successfully' });
+        } else {
+            res.status(400).json({ error: result.message });
+        }
+    };
 }
 
 module.exports = new SiteController();

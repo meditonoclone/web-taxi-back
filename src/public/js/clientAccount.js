@@ -415,3 +415,16 @@ function submitRating() {
     })
     .catch(error => console.error("Lỗi:", error));
 }
+
+
+//payment
+
+function submitPayment() {
+  var selected = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+  if (selected === 'cod') {
+    window.location.href = "/payment/cod";
+  } else if (selected === 'online') {
+    window.location.href = "/payment/online";
+  }
+}

@@ -9,10 +9,9 @@ async function getTrip() {
     console.error("Lỗi:", error);
   }
 }
-const bookTaxi = async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(e.target);
+const bookTaxi = async () => {
+  
+  const formData = new FormData(bookingForm);
   const pickupLatitude = markers[0].getLngLat().lat;
   const pickupLongitude = markers[0].getLngLat().lng;
   const dropoffLatitude = markers[1].getLngLat().lat;
@@ -58,7 +57,7 @@ const objectsToValidate = [
   }
 ]
 
-validate(bookingForm, objectsToValidate, 'error', bookTaxi)
+validate(bookingForm, objectsToValidate, 'error', sendOTP)
 
 
 
@@ -70,3 +69,44 @@ socket.on('message', message => {
 })
 
 
+async function sendOTP(e)
+{
+  e.preventDefault();
+  let phone = document.querySelector('#phone').value;
+  fetch('/send-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone }) 
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error(error));
+
+}
+
+
+
+document.getElementById('otpForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  
+  const otpCode = document.getElementById('otpInput').value;
+  const phoneNumber = document.getElementById('phone').value;
+
+  fetch('/verify-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: phoneNumber, otp: otpCode })
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.success) {
+          alert('✅ Xác thực thành công!');
+          var otpModal = $('#otpModal');
+          otpModal.modal('hide');
+          bookTaxi();
+      } else {
+          alert('❌ OTP không hợp lệ, vui lòng thử lại!');
+      }
+  })
+  .catch(error => console.error('Lỗi:', error));
+});

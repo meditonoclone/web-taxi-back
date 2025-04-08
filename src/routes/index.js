@@ -3,6 +3,7 @@ const aboutRoute = require('./about');
 const serviceRoute = require('./service');
 const newsRoute = require('./news');
 const adminRoute = require('./admin');
+const paymentRoute = require('./payment');
 function route(app){
     app.use('/news', newsRoute);
 
@@ -11,6 +12,8 @@ function route(app){
     app.use('/about', aboutRoute);
     
     app.use('/admin', adminRoute);
+
+    app.use('/payment', paymentRoute);
 
     app.use('/', siteRoute);
 

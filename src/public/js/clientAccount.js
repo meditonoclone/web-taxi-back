@@ -1,5 +1,5 @@
 const historyTripSwitch = document.querySelector('.trip_history>h4');
-const historyTable = document.querySelector('.trip_history>table');
+const historyTable = document.querySelector('.trip_history table');
 const chevronUp = document.querySelector('.trip_history i.fa-chevron-up');
 const chevronDown = document.querySelector('.trip_history i.fa-chevron-down');
 const statusMap = {
@@ -7,7 +7,8 @@ const statusMap = {
   "in transit": "Đang di chuyển",
   "waiting": "Đang chờ",
   "booking": "Đang đặt",
-  "completed": "Hoàn thành"
+  "completed": "Hoàn thành",
+  "pending payment": "Xử lí thanh toán"
 };
 
 function toggleHistoryTable() {
@@ -84,9 +85,8 @@ socket.on('update data', function (status) {
           table.querySelector('tbody').innerHTML = `<td colspan="11">Không có chuyến nào để hiển thị</td>`
           return;
         }
-        table.querySelector('tbody').innerHTML = data.reduce((html, row) =>
-        {
-          if(row.tripId = room){
+        table.querySelector('tbody').innerHTML = data.reduce((html, row) => {
+          if (row.tripId = room) {
 
           }
           return html + `
@@ -122,12 +122,13 @@ let driverMarker
 let clientMarker
 let dropOffPoint
 let pickUpPoint
+let routeCoords = []
 let imgMarker = document.querySelector("#avatar");
 if (!imgMarker) {
   imgMarker = document.createElement('img')
   imgMarker.src = 'img/taxi.jpg'
 }
-else{
+else {
   imgMarker = imgMarker.cloneNode(true)
   imgMarker.style.width = '30px';  // Điều chỉnh kích thước
   imgMarker.style.height = '30px';
@@ -141,9 +142,9 @@ if (!imgDriverMarker) {
   imgDriverMarker.src = 'img/taxi.jpg'
   imgDriverMarker.style.width = '30px';  // Điều chỉnh kích thước
   imgDriverMarker.style.height = '30px';
-  imgDriverMarker.style.borderRadius = '50%'  
+  imgDriverMarker.style.borderRadius = '50%'
 }
-else{
+else {
   imgDriverMarker = imgDriverMarker.cloneNode(true)
   imgDriverMarker.style.width = '30px';  // Điều chỉnh kích thước
   imgDriverMarker.style.height = '30px';
@@ -154,7 +155,7 @@ function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
-        if(!map) return;
+        if (!map) return;
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude
@@ -218,8 +219,7 @@ async function getTrip() {
 }
 window.onload = async () => {
   trip = await getTrip();
-  if(trip)
-  {
+  if (trip) {
     room = trip.trip_id;
     map = await initMapDetail();
     getRealtimePosition();
@@ -325,7 +325,7 @@ socket.on('message', message => {
 })
 
 socket.on('getDriverInfo', async info => {
-  if(info){
+  if (info) {
     console.log(info)
     document.querySelector('.client-info').innerHTML = `
     <img src=${info.img} alt="" id="driverAvatar">
@@ -334,24 +334,33 @@ socket.on('getDriverInfo', async info => {
         <a href="tel:${info.phone}" id="phone">${info.phone}</a>
     </div>
     `
-   
+
 
   }
 })
 
 socket.on("updateStatus", async result => {
-  if(result)
+  if (result) {
+
     trip = await getTrip()
-  if(trip.status === 'completed')
-  {
-    driverName = document.querySelector('#acceptingTrip #name').innerText;
-    openModal(driverName, trip.driver_id, trip.trip_id)
+    if(trip.cost)
+      $('#acceptingTrip #cost')[0].innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.cost)
+
+    if (trip.status === 'pending payment') {
+      $('#cancelBtn')[0].style.display = 'none'
+
+      $('#paymentBtn')[0].style.display = 'block'
+    }
+    if (trip.status === 'completed') {
+      driverName = document.querySelector('#acceptingTrip #name').innerText;
+      openModal(driverName, trip.driver_id, trip.trip_id)
+    }
   }
 })
 
 async function handleDropoffRoute(status, driverLocation) {
   if (status !== "in transit") return;
-  
+
   //vẽ đoạn đường đi thực tế
   routeCoords.push(driverLocation);
   drawRoute('route', routeCoords);
@@ -364,54 +373,56 @@ let ratingModal;
 
 // Khởi tạo modal Bootstrap
 document.addEventListener("DOMContentLoaded", () => {
-    ratingModal = new bootstrap.Modal(document.getElementById("ratingModal"));
+  ratingModal = new bootstrap.Modal(document.getElementById("ratingModal"));
 });
 
 // Hiển thị modal khi chuyến đi hoàn thành
 function openModal(driverName, driverId, tripId) {
-    document.getElementById("driverName").innerText = driverName;
-    document.getElementById("ratingModal").dataset.driverId = driverId;
-    document.getElementById("ratingModal").dataset.tripId = tripId;
-    resetStars();
-    ratingModal.show();
+  document.getElementById("driverName").innerText = driverName;
+  document.getElementById("ratingModal").dataset.driverId = driverId;
+  document.getElementById("ratingModal").dataset.tripId = tripId;
+  resetStars();
+  ratingModal.show();
 }
 
 // Đặt số sao khi chọn
 function setRating(rating) {
-    selectedRating = rating;
-    let stars = document.querySelectorAll("#ratingModal .star i");
-    stars.forEach((star, index) => {
-        star.style.color = index < rating ? "gold" : "gray";
-    });
+  selectedRating = rating;
+  let stars = document.querySelectorAll("#ratingModal .star i");
+  stars.forEach((star, index) => {
+    star.style.color = index < rating ? "gold" : "gray";
+  });
 }
 
 // Reset số sao khi mở lại modal
 function resetStars() {
-    selectedRating = 0;
-    let stars = document.querySelectorAll("#ratingModal .star i");
-    stars.forEach(star => star.style.color = "gray");
+  selectedRating = 0;
+  let stars = document.querySelectorAll("#ratingModal .star i");
+  stars.forEach(star => star.style.color = "gray");
 }
 
 // Gửi đánh giá lên server
 function submitRating() {
-    let driverId = document.getElementById("ratingModal").dataset.driverId;
-    let tripId = document.getElementById("ratingModal").dataset.tripId;
-    let reviewText = document.getElementById("reviewText").value;
+  let driverId = document.getElementById("ratingModal").dataset.driverId;
+  let tripId = document.getElementById("ratingModal").dataset.tripId;
+  let reviewText = document.getElementById("reviewText").value;
 
-    if (selectedRating === 0) {
-        alert("Vui lòng chọn số sao!");
-        return;
-    }
+  if (selectedRating === 0) {
+    alert("Vui lòng chọn số sao!");
+    return;
+  }
 
-    fetch("/rate-driver", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ driverId, tripId, rating: selectedRating, comment: reviewText })
-    })
+  fetch("/rate-driver", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ driverId, tripId, rating: selectedRating, comment: reviewText })
+  })
     .then(response => response.json())
     .then(data => {
-        alert("Đánh giá thành công!");
-        ratingModal.hide();
+      alert("Đánh giá thành công!");
+      ratingModal.hide();
+      window.location.reload();
+
     })
     .catch(error => console.error("Lỗi:", error));
 }
@@ -422,9 +433,20 @@ function submitRating() {
 function submitPayment() {
   var selected = document.querySelector('input[name="paymentMethod"]:checked').value;
 
-  if (selected === 'cod') {
-    window.location.href = "/payment/cod";
+  if (selected === 'cash') {
+    {
+      fetch("/payment/cash")
+        .then(response => response.json())
+        .then(data => alert(data.message))
+        .catch(error => console.error('Lỗi:', error));
+      $('#paymentModal').modal('hide');
+    }
   } else if (selected === 'online') {
     window.location.href = "/payment/online";
   }
 }
+
+socket.on('paid', result => {
+  if (result)
+    alert('Đã thanh toán!')
+})

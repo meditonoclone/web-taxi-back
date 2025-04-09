@@ -435,7 +435,11 @@ a:focus {
     height: 150px; }
   .client_section .img-box img {
     width: 100px;
-    height: 100px; } }
+    height: 100px; } 
+    .header_section .container-fluid {
+      padding: 0
+    }
+  }
 
 .client_section .carousel-wrap {
   margin-bottom: 45px; }
@@ -783,4 +787,11 @@ button[data-target = "#detailTrip"]{
   100% {
     transform: scale(1);
   }
+}
+
+.w-95{
+  width: 95%;
+}
+.m-c{
+  margin: auto
 }

@@ -101,9 +101,12 @@ app.engine('hbs', exphbs.engine({
         "waiting": "Đang chờ",
         "completed": "Đã hoàn thành",
         "booking": "Đang đặt",
-
+        "pending payment": "Xử lí thanh toán"
       }
       return statusMap[status]
+    },
+    eq: function (a, b) {
+      return a === b;
     },
     formatCurrencyVN: (amount) => {
       // Kiểm tra nếu là số hợp lệ

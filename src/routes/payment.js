@@ -4,7 +4,9 @@ const paymentController = require('../app/controller/PaymentController');
 
 
 
-router.get('/cast', paymentController.castMethod);
+router.get('/cash', paymentController.cashMethod);
 router.get('/online', paymentController.momoMethod);
+router.post('/callback', paymentController.updatePaymentStatus); //ipn
+router.post('/check-transaction-status', paymentController.transactionStatus);
 
 module.exports = router;

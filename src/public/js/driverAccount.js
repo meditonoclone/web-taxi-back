@@ -14,12 +14,14 @@ const statusMap = {
   "in transit": "Đang di chuyển",
   "waiting": "Đang chờ",
   "booking": "Đang đặt",
-  "completed": "Hoàn thành"
+  "completed": "Hoàn thành",
+  "pending payment": "Xử lí thanh toán"
 };
 const textBtn = {
   "en route": "Xác nhận đón",
   "in transit": "Hoàn thành",
-  "waiting": "Tiếp tục chuyến"
+  "waiting": "Tiếp tục chuyến",
+  "pending payment": "Đã thanh toán"
 }
 tabBar.classList.add('tab-bar');
 
@@ -238,27 +240,27 @@ else {
 
 }
 
-
-let clientImg = document.querySelector("#acceptingTrip #avatar");
+let clientImg = document.createElement('img');
 if (!clientImg) {
   clientImg = document.createElement('img')
   clientImg.src = 'img/taxi.jpg'
 }
 else {
   clientImg = clientImg.cloneNode(true)
-  clientImg.style.width = '30px';  // Điều chỉnh kích thước
-  clientImg.style.height = '30px';
-  clientImg.style.borderRadius = '50%'
-
+  
 }
+clientImg.style.width = '30px';  // Điều chỉnh kích thước
+clientImg.style.height = '30px';
+clientImg.style.borderRadius = '50%'
+
 function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
-        // if (position.coords.accuracy > 10) {
-        //   console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
-        //   return;
-        // }
+        if (position.coords.accuracy > 10) {
+          console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
+          return;
+        }
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude
@@ -392,24 +394,35 @@ window.onload = async () => {
 }
 
 socket.on('receiveLocation', (location) => {
-  console.log('đang nhận vị trí', clientImg);
+  console.log('đang nhận vị trí');
 
-  if (!clientMarker
-
-  )
+  if (!clientMarker)
+  {
+    let img = document.querySelector('#acceptingTrip #avatar')
+    if(img)
+      clientImg.src = img.src
     clientMarker
       = new maplibregl.Marker({
         draggable: false,
+        element: clientImg
       })
         .setLngLat(location)
         .addTo(mapDetailTrip)
+
+  }
   clientMarker
     .setLngLat(location)
 })
 
 // progress trip
 
-async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
+async function updateTripStatus(tripId, newStatus) {
+  let detailCompletedTrip
+  if (trip.status === 'in transit') {
+    detailCompletedTrip = {}
+    detailCompletedTrip.distance = calculateTotalDistance(routeCoords);
+    detailCompletedTrip.location = currentLocation;
+  }
   try {
     const response = await fetch("/update-trip", {
       method: "PUT",
@@ -418,7 +431,8 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
       },
       body: JSON.stringify({
         tripId: tripId,
-        status: newStatus
+        status: newStatus,
+        detailCompletedTrip
       })
     });
 
@@ -439,15 +453,16 @@ async function updateTripStatus(tripId, newStatus, detailCompletedTrip) {
       else
         modifyBtnAndStatus(result.newStatus);
       trip = await getTrip();
+      if (trip.cost)
+        $('#acceptingTrip #cost')[0].innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.cost)
       routeCoords = [];
       alert(result.message);
     } else {
-      console.error("Lỗi cập nhật:", result);
-      alert("Lỗi: " + result.message);
+      console.error("Chưa được thanh toán", result);
+      alert(result.message);
     }
   } catch (error) {
     console.error("Lỗi kết nối API:", error);
-    alert("Lỗi kết nối đến server!");
   }
 
 }
@@ -543,6 +558,12 @@ async function handlePickupRoute(status, driverLocation, pickupLocation) {
   drawRoute('route', routeCoords);
 }
 async function handleDropoffRoute(status, currentLocation, pickupLocation, dropoffLocation) {
+  if (routeCoords.length > 1)//nếu vị trí mới cách vị trí cũ dưới 5m thì không nhận
+  {
+    let dif = haversine(routeCoords.at(-1), currentLocation)
+    if (dif < 0.005)
+      return
+  }
   if (status !== "in transit") return;
   // vẽ tuyến đường gợi ý
   if (recommendRoute.length === 0) {
@@ -622,3 +643,10 @@ function drawRoute(sourceId, route) {
 }
 
 
+socket.on('paid', result => {
+  if (result) {
+    alert('Đã thanh toán!');
+    document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"
+
+  }
+})

@@ -4,6 +4,11 @@ module.exports = (sequelize) => {
     class Trip extends Model {
         static associate(models) {
             Trip.hasMany(models.Rating, { foreignKey: 'trip_id', as: 'ratings' });
+            Trip.hasOne(models.Payment, {
+                foreignKey: 'trip_id',
+                as: 'payment'
+              });
+              
         }
     }
 
@@ -50,7 +55,7 @@ module.exports = (sequelize) => {
             allowNull: true  // Cho phép giá trị null
         },
         cost: {
-            type: DataTypes.DECIMAL(10, 2),
+            type: DataTypes.DECIMAL(10, 0),
             allowNull: true  // Cho phép giá trị null
         },
         waiting_minutes: {
@@ -58,7 +63,7 @@ module.exports = (sequelize) => {
             defaultValue: 0
         },
         status: {
-            type: DataTypes.ENUM('cancel', 'waiting', 'booked', 'en route', 'in transit', 'completed'),
+            type: DataTypes.ENUM('cancel', 'waiting', 'booked', 'en route', 'in transit', 'completed', 'pending payment'),
             allowNull: false,
             defaultValue: 'booked'
         },

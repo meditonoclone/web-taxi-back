@@ -1,2 +1,2 @@
-link sample template: 
-	https://demo.templatemonster.com/demo/340361.html?_gl=1*eof9k4*_ga*MTA3MjU5MjQ1OC4xNzMzNzA3ODIz*_ga_FTPYEGT5LY*MTczMzcwNzgyMy4xLjEuMTczMzcwNzgyNC41OS4wLjA.
+link guide test momo:
+	https://developers.momo.vn/v3/vi/docs/payment/onboarding/test-instructions

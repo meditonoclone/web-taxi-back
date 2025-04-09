@@ -1,129 +1,144 @@
 <section class="container profile layout_padding">
+  <div class="w-95 m-c">
+
     <div class="head">
-        <img src="{{info.profile_picture}}" alt="" id="avatar">
-        <div>
-            <h1 id="name">{{info.name}}</h1>
-            <h2 id="phone">{{info.phone}}</h2>
-        </div>
+      <img src="{{info.profile_picture}}" alt="" id="avatar">
+      <div>
+        <h1 id="name">{{info.name}}</h1>
+        <h2 id="phone">{{info.phone}}</h2>
+      </div>
     </div>
     <div class="info">
-        <p>
-            Email: <span id="email">{{info.email}}</span>
-        </p>
-        <p>
+      <p>
+        Email: <span id="email">{{info.email}}</span>
+      </p>
+      <p>
 
-            Địa chỉ: <span id="address">{{info.address}}</span>
-        </p>
+        Địa chỉ: <span id="address">{{info.address}}</span>
+      </p>
     </div>
     <a href="/logout"><button type="button" class="btn btn-outline-danger">Đăng xuất</button></a>
+  </div>
 
 </section>
 <section id="acceptingTrip" class="price-table layout_padding">
 
 
-    <div class="trip-container content-wrapper">
-        <h2>Chuyến đang thực hiện</h2>
-        {{#if currentTrip}}
-        <div class="client-info">
-            {{#if currentTrip.name}}
+  <div class="trip-container content-wrapper">
+    <h2>Chuyến đang thực hiện</h2>
+    {{#if currentTrip}}
+    <div class="client-info">
+      {{#if currentTrip.name}}
 
-            <img src="{{currentTrip.profile_picture}}" alt="" id="driverAvatar">
-            <div>
-                <h4 id="name">Tài xế: {{currentTrip.name}}</h4>
-                <a href="tel:{{currentTrip.phone}}" id="phone">{{currentTrip.phone}}</a>
-            </div>
-            {{else}}
-                <h4>Chuyến chưa được nhận</h4>
-            {{/if}}
-        </div>
-        <div id="map">
-        </div>
-        <div class="trip-info row">
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón: <span>{{currentTrip.from_location}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">{{currentTrip.distance}}</span></p>
-            <div class="col-sm-6 col-xs-12">
-                <button><i class="fas fa-pen"></i></button>
-                <input type="text" name="waitingTime" placeholder="Thời gian chờ">
-            </div>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span>{{currentTrip.cost}}</span></p>
-            <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span>{{transStatus currentTrip.status}}</span></p>
-
-        </div>
-        <button id="cancelBtn" class="btn btn-danger" onclick="cancel()">Hủy chuyến</button>
-        {{else}}
-        <p>Chưa nhận chuyến xe nào</p>
-        {{/if}}
+      <img src="{{currentTrip.profile_picture}}" alt="" id="driverAvatar">
+      <div>
+        <h4 id="name">Tài xế: {{currentTrip.name}}</h4>
+        <a href="tel:{{currentTrip.phone}}" id="phone">{{currentTrip.phone}}</a>
+      </div>
+      {{else}}
+      <h4>Chuyến chưa được nhận</h4>
+      {{/if}}
     </div>
-
-<!-- Modal -->
-<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ratingModalLabel">Đánh giá tài xế</h5>
-        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+    <div id="map">
+    </div>
+    <div class="trip-info row">
+      <p class="col-sm-6 col-xs-12"><i class="fas fa-map-marker-alt"></i>Điểm đón:
+        <span>{{currentTrip.from_location}}</span>
+      </p>
+      <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>{{currentTrip.to_location}}</span></p>
+      <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span
+          id="distance">{{currentTrip.distance}}</span></p>
+      <div class="col-sm-6 col-xs-12">
+        <button><i class="fas fa-pen"></i></button>
+        <input type="text" name="waitingTime" placeholder="Thời gian chờ">
       </div>
-      <div class="modal-body">
-        <p>Tài xế: <span id="driverName">Nguyễn Văn A</span></p>
-        
-        <!-- Chọn số sao -->
-        <div class="mb-3">
-          <span class="star text-warning fs-4" onclick="setRating(1)"><i class="fas fa-star"></i></span>
-          <span class="star text-warning fs-4" onclick="setRating(2)"><i class="fas fa-star"></i></span>
-          <span class="star text-warning fs-4" onclick="setRating(3)"><i class="fas fa-star"></i></span>
-          <span class="star text-warning fs-4" onclick="setRating(4)"><i class="fas fa-star"></i></span>
-          <span class="star text-warning fs-4" onclick="setRating(5)"><i class="fas fa-star"></i></span>
+      <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span
+          id="cost">{{currentTrip.cost}}</span></p>
+      <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span id="status">{{transStatus
+          currentTrip.status}}</span></p>
+
+    </div>
+    {{#if (eq currentTrip.status 'pending payment')}}
+    <button id="paymentBtn" class="btn btn-success" data-toggle="modal" data-target="#paymentModal">Thanh toán</button>
+    {{else}}
+    <button id="cancelBtn" class="btn btn-danger" onclick="cancel()">Hủy chuyến</button>
+    {{/if}}
+    {{else}}
+    <p>Chưa nhận chuyến xe nào</p>
+    {{/if}}
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ratingModalLabel">Đánh giá tài xế</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
         </div>
+        <div class="modal-body">
+          <p>Tài xế: <span id="driverName">Nguyễn Văn A</span></p>
 
-        <!-- Ô nhập nhận xét -->
-        <textarea id="reviewText" class="form-control" placeholder="Nhập nhận xét của bạn..."></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
-        <button type="button" class="btn btn-primary" onclick="submitRating()">Gửi</button>
+          <!-- Chọn số sao -->
+          <div class="mb-3">
+            <span class="star text-warning fs-4" onclick="setRating(1)"><i class="fas fa-star"></i></span>
+            <span class="star text-warning fs-4" onclick="setRating(2)"><i class="fas fa-star"></i></span>
+            <span class="star text-warning fs-4" onclick="setRating(3)"><i class="fas fa-star"></i></span>
+            <span class="star text-warning fs-4" onclick="setRating(4)"><i class="fas fa-star"></i></span>
+            <span class="star text-warning fs-4" onclick="setRating(5)"><i class="fas fa-star"></i></span>
+          </div>
+
+          <!-- Ô nhập nhận xét -->
+          <textarea id="reviewText" class="form-control" placeholder="Nhập nhận xét của bạn..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="submitRating()">Gửi</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 </section>
 <section class="trip_history layout_padding">
-    <h4>Lịch sử chuyến xe <i class="fas fa-chevron-up"></i><i class="fas fa-chevron-down hide"></i> </h4>
+  <h4>Lịch sử chuyến xe <i class="fas fa-chevron-up"></i><i class="fas fa-chevron-down hide"></i> </h4>
+  <div class="table-responsive w-95 m-c">
+
     <table class="price-table hide">
-        <thead>
-            <tr>
-                <th>Mã chuyến</th>
-                <th>Thời gian đặt</th>
-                <th>Loại xe</th>
-                <th>Tổng số km</th>
-                <th>Thời gian chờ (giờ)</th>
-                <th>Số tiền</th>
-                <th>Điểm đi</th>
-                <th>Điểm đến</th>
-                <th>Tài xế</th>
-                <th>Số điện thoại tài xế</th>
-                <th>Trạng thái</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each historyTrips}}
-            <tr>
-                <td>{{this.trip_id}}</td>
-                <td>{{dateToDatetime this.order_time}}</td>
-                <td>{{this.vehicle_type}}</td>
-                <td>{{this.distance}}</td>
-                <td>{{minToHour this.waiting_minutes}}</td>
-                <td>{{this.cost}}</td>
-                <td>{{this.from_location}}</td>
-                <td>{{this.to_location}}</td>
-                <td>{{this.name}}</td>
-                <td>{{this.phone}}</td>
-                <td>{{this.status}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
+      <thead>
+        <tr>
+          <th>Mã chuyến</th>
+          <th>Thời gian đặt</th>
+          <th>Loại xe</th>
+          <th>Tổng số km</th>
+          <th>Thời gian chờ (giờ)</th>
+          <th>Số tiền</th>
+          <th>Điểm đi</th>
+          <th>Điểm đến</th>
+          <th>Tài xế</th>
+          <th>Số điện thoại tài xế</th>
+          <th>Trạng thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each historyTrips}}
+        <tr>
+          <td>{{this.trip_id}}</td>
+          <td>{{dateToDatetime this.order_time}}</td>
+          <td>{{this.vehicle_type}}</td>
+          <td>{{this.distance}}</td>
+          <td>{{minToHour this.waiting_minutes}}</td>
+          <td>{{this.cost}}</td>
+          <td>{{this.from_location}}</td>
+          <td>{{this.to_location}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.phone}}</td>
+          <td>{{transStatus this.status}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
     </table>
+  </div>
 </section>
 <!-- Modal -->
 <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel">
@@ -138,7 +153,7 @@
         <form id="paymentForm">
           <div class="radio">
             <label>
-              <input type="radio" name="paymentMethod" value="cod" checked>
+              <input type="radio" name="paymentMethod" value="cash" checked>
               💵 Thanh toán tiền mặt
             </label>
           </div>

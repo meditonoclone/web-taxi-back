@@ -10,7 +10,7 @@ function createMomoCollectionLink(amount, orderId, redirectUrl) {
     const orderInfo = `Thanh toán chuyến đi: #${orderId}`;
     const extraData = '';
     const requestType = "payWithMethod";
-    const ipnUrl = 'https://webhook.site/b3088a6a-2d17-4f8d-a383-71389a6c600b';
+    const ipnUrl = 'https://6b3d-115-76-48-204.ngrok-free.app/payment/callback';
     const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&ipnUrl=${ipnUrl}&orderId=${orderId}&orderInfo=${orderInfo}&partnerCode=${partnerCode}&redirectUrl=${redirectUrl}&requestId=${requestId}&requestType=payWithMethod`;
 
     const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex');
@@ -28,7 +28,7 @@ function createMomoCollectionLink(amount, orderId, redirectUrl) {
       requestType,
       ipnUrl
     });
-
+    console.log(requestBody);
     const options = {
       hostname: 'test-payment.momo.vn',
       path: '/v2/gateway/api/create',

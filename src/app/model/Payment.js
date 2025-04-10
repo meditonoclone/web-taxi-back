@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       method: {
-        type: DataTypes.ENUM('cash', 'momo'),
+        type: DataTypes.ENUM('cash', 'momo', 'vnpay'),
         allowNull: true,
         defaultValue: null
       },
@@ -31,15 +31,15 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM('pending', 'paid', 'failed'),
         defaultValue: 'pending',
       },
-      momo_order_id: {
+      order_id: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      momo_request_id: {
+      request_id: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      momo_trans_id: {
+      trans_id: {
         type: DataTypes.BIGINT,
         allowNull: true,
       },

@@ -334,7 +334,7 @@ socket.on('getDriverInfo', async info => {
         <a href="tel:${info.phone}" id="phone">${info.phone}</a>
     </div>
     `
-
+    imgDriverMarker.src = info.img
 
   }
 })
@@ -357,7 +357,7 @@ socket.on("updateStatus", async result => {
       paymentBtn.setAttribute('data-target', '#paymentModal');
       paymentBtn.textContent = 'Thanh toán';
 
-      
+
       const parent = btn.parentElement;
 
       parent.appendChild(paymentBtn);
@@ -442,7 +442,7 @@ function submitRating() {
 
 //payment
 
-function submitPayment() {
+async function submitPayment() {
   var selected = document.querySelector('input[name="paymentMethod"]:checked').value;
 
   if (selected === 'cash') {
@@ -453,9 +453,34 @@ function submitPayment() {
         .catch(error => console.error('Lỗi:', error));
       $('#paymentModal').modal('hide');
     }
-  } else if (selected === 'online') {
-    window.location.href = "/payment/online";
+  } else if (selected === 'momo')
+    window.location.href = "/payment/momo";
+  else {
+    
+
+    try {
+      const response = await fetch('/payment/vnpay', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      });
+
+      const result = await response.json();
+
+      if (result.paymentUrl) {
+        // Redirect đến VNPay
+        window.location.href = result.paymentUrl;
+      } else {
+        alert('Không tạo được URL thanh toán!');
+      }
+    } catch (error) {
+      console.error('Lỗi:', error);
+      alert('Có lỗi xảy ra!');
+    }
   }
+
 }
 
 socket.on('paid', result => {

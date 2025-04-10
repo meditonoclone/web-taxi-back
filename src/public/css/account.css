@@ -45,3 +45,11 @@
       font-size: 1.6rem
     }
 }
+#setWaitingBtn{
+  width: 60px;
+  text-align: center;
+}
+#waitingInput{
+  width: calc(100% - 70px);
+  float: right;
+}

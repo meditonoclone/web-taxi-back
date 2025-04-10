@@ -271,10 +271,7 @@ function getRealtimePosition() {
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(
       (position) => {
-        if (position.coords.accuracy > 10) {
-          console.warn("GPS kém, bỏ qua:", position.coords.accuracy);
-          return;
-        }
+        
         currentLocation = {
           lng: position.coords.longitude,
           lat: position.coords.latitude

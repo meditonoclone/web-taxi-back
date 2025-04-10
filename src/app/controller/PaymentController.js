@@ -43,7 +43,7 @@ class PaymentController {
             method: 'momo'
 
         })
-        const redirectUrl = "https://6b3d-115-76-48-204.ngrok-free.app/account";
+        const redirectUrl = "https://5ce0-115-76-48-204.ngrok-free.app/account";
 
         try {
             const momoRes = await createMomoCollectionLink(amount, orderId, redirectUrl);
@@ -99,8 +99,6 @@ class PaymentController {
                     
                 })
                 await payment.update({status: 'paid'})
-                const trip = await Trip.findByPk(payment.trip_id)
-                await trip.update({status: 'completed'})
                 const io = req.app.get('io');
                 io.to(payment.trip_id.toString()).emit('paid', true);
                 console.log('💰 Giao dịch thành công cho orderId:', data.orderId);

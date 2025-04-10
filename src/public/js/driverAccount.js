@@ -24,17 +24,29 @@ const textBtn = {
   "pending payment": "Đã thanh toán"
 }
 tabBar.classList.add('tab-bar');
+if (screen.width > 768)
+  tabBar.innerHTML =
+    `<div class="tab-bar">
+      <ul>
+          <li class="select">Thông tin cá nhân</li>
+          <li >Đơn chuyến</li>
+          <li>Lịch sử chuyến</li>
+          <li>Báo cáo</li>
+          <li>Trạng thái chuyến đi hiện tại</li>
+      </ul>
+  </div>`
 
-tabBar.innerHTML =
-  `<div class="tab-bar">
-    <ul>
-        <li class="select">Thông tin cá nhân</li>
-        <li >Đơn chuyến</li>
-        <li>Lịch sử chuyến</li>
-        <li>Báo cáo</li>
-        <li>Trạng thái chuyến đi hiện tại</li>
-    </ul>
-</div>`
+else
+  tabBar.innerHTML =
+    `<div class="tab-bar">
+      <ul>
+         <li class="select"><i class="fas fa-user"></i></li>
+          <li><i class="fas fa-car-side"></i></li>
+          <li><i class="fas fa-history"></i></li>
+          <li><i class="fas fa-chart-line"></i></li>
+          <li><i class="fas fa-map-marker-alt"></i></li>
+      </ul>
+    </div>`
 
 var table = document.querySelector('#orderList tbody');
 
@@ -56,7 +68,7 @@ document.body.appendChild(tabBar);
 tabBar.querySelectorAll('li').forEach((tab, index) => tab.addEventListener('click',
   (e) => {
     tabBar.querySelectorAll('li').forEach((tab) => tab.classList.remove('select'));
-    e.target.classList.add('select');
+    tab.classList.add('select');
 
     document.body.querySelector('section.show').classList.remove('show');
     document.body.querySelector(`section:nth-child(${index + 2})`).classList.add('show');
@@ -167,7 +179,7 @@ async function accept(data) {
       document.querySelector('#acceptingTrip > div').innerHTML =
         `
       <div class="client-info">
-            <img src="${result.currentTrip.profile_picture ? result.currentTrip.profile_picture : ''}" alt="" id="avatar">
+            <img src="${result.currentTrip.client_profile_picture ? result.currentTrip.client_profile_picture : ''}" alt="" id="avatar">
             <div>
                 <h1 id="name">${result.currentTrip.name ? result.currentTrip.name : ''}</h1>
                 <a href="tel:${result.currentTrip.contact}" id="phone">${result.currentTrip.contact}</a>
@@ -180,8 +192,8 @@ async function accept(data) {
             <p class="col-sm-6 col-xs-12"><i class="fas fa-map-pin"></i>Điểm đến: <span>${result.currentTrip.to_location}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-route"></i>Quảng đường: <span id="distance">${result.currentTrip.distance ? result.currentTrip.distance : ''}</span></p>
             <div class="col-sm-6 col-xs-12">
-                <button><i class="fas fa-pen"></i></button>
-                <input type="text" name="waitingTime" placeholder="Thời gian chờ">
+                <button id="setWaitingBtn"><i class="fas fa-pen"></i></button>
+                <input id="waitingInput" type="text" name="waitingTime" placeholder="Thời gian chờ">
             </div>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-money-bill-wave"></i>Số tiền: <span id="cost">${result.currentTrip.cost ? result.currentTrip.cost : ''}</span></p>
             <p class="col-sm-6 col-xs-12"><i class="fas fa-info-circle"></i>Trạng thái: <span id="status">${statusMap[result.currentTrip.status]}</span></p>
@@ -199,6 +211,8 @@ async function accept(data) {
         });
       }
       document.querySelector('.tab-bar li:last-child').click();
+      socket.emit("updateStatus", room);
+
       socket.emit('joinRoom', room, 'Chuyến đã được nhận');
       trip = await getTrip();
       mapDetailTrip = await initMapDetail();
@@ -247,7 +261,7 @@ if (!clientImg) {
 }
 else {
   clientImg = clientImg.cloneNode(true)
-  
+
 }
 clientImg.style.width = '30px';  // Điều chỉnh kích thước
 clientImg.style.height = '30px';
@@ -396,10 +410,9 @@ window.onload = async () => {
 socket.on('receiveLocation', (location) => {
   console.log('đang nhận vị trí');
 
-  if (!clientMarker)
-  {
+  if (!clientMarker) {
     let img = document.querySelector('#acceptingTrip #avatar')
-    if(img)
+    if (img)
       clientImg.src = img.src
     clientMarker
       = new maplibregl.Marker({

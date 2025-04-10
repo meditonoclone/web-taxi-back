@@ -108,3 +108,12 @@
     height: 100px;
   }
 }
+
+#setWaitingBtn{
+  width: 60px;
+  text-align: center;
+}
+#waitingInput{
+  width: calc(100% - 70px);
+  float: right;
+}

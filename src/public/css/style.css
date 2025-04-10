@@ -795,3 +795,7 @@ button[data-target = "#detailTrip"]{
 .m-c{
   margin: auto
 }
+
+.mw-0{
+  min-width: auto !important;
+}

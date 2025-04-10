@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1:3307
--- Thời gian đã tạo: Th9 27, 2024 lúc 03:38 PM
+-- Máy chủ: 127.0.0.1:3333
+-- Thời gian đã tạo: Th4 10, 2025 lúc 04:22 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -141,6 +141,43 @@ INSERT INTO `news` (`news_id`, `title`, `description`, `content`, `author_id`, `
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `payments`
+--
+
+CREATE TABLE `payments` (
+  `payment_id` int(11) NOT NULL,
+  `trip_id` int(11) NOT NULL,
+  `method` enum('cash','momo') DEFAULT NULL,
+  `amount` decimal(10,0) NOT NULL,
+  `status` enum('pending','paid','failed') DEFAULT 'pending',
+  `momo_order_id` varchar(255) DEFAULT NULL,
+  `momo_request_id` varchar(255) DEFAULT NULL,
+  `momo_trans_id` bigint(20) DEFAULT NULL,
+  `result_code` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `ratings`
+--
+
+CREATE TABLE `ratings` (
+  `rating_id` int(11) NOT NULL,
+  `trip_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `rating` tinyint(4) DEFAULT NULL CHECK (`rating` between 1 and 5),
+  `comment` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `taxi_pricing`
 --
 
@@ -180,53 +217,16 @@ CREATE TABLE `trip_history` (
   `order_time` datetime NOT NULL,
   `finished_time` datetime DEFAULT NULL,
   `distance` decimal(10,2) DEFAULT NULL,
-  `cost` decimal(10,2) DEFAULT NULL,
+  `cost` decimal(10,0) DEFAULT NULL,
   `waiting_minutes` int(11) DEFAULT 0,
-  `status` enum('cancel','waiting','booked','en route','in transit','completed') NOT NULL DEFAULT 'booked'
+  `status` enum('waiting','booked','en route','in transit','completed','canceled','pending payment') NOT NULL DEFAULT 'booked',
+  `pickup_latitude` decimal(10,7) NOT NULL,
+  `pickup_longitude` decimal(10,7) NOT NULL,
+  `dropoff_latitude` decimal(10,7) NOT NULL,
+  `dropoff_longitude` decimal(10,7) NOT NULL,
+  `actual_dropoff_latitude` decimal(10,7) DEFAULT NULL,
+  `actual_dropoff_longitude` decimal(10,7) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Đang đổ dữ liệu cho bảng `trip_history`
---
-
-INSERT INTO `trip_history` (`trip_id`, `client_id`, `driver_id`, `vehicle_type_id`, `from_location`, `to_location`, `contact`, `order_time`, `finished_time`, `distance`, `cost`, `waiting_minutes`, `status`) VALUES
-(1, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:48:51', NULL, NULL, NULL, 0, 'en route'),
-(2, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:52:21', NULL, NULL, NULL, 0, 'en route'),
-(3, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:15', NULL, NULL, NULL, 0, 'en route'),
-(4, NULL, 4, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:53:30', NULL, NULL, NULL, 0, 'en route'),
-(5, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:03', NULL, NULL, NULL, 0, 'en route'),
-(6, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-27 09:55:43', NULL, NULL, NULL, 0, 'en route'),
-(7, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:41:59', NULL, NULL, NULL, 0, 'en route'),
-(8, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:45:10', NULL, NULL, NULL, 0, 'en route'),
-(9, 1, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-29 02:47:23', NULL, NULL, NULL, 0, 'en route'),
-(12, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:10', NULL, NULL, NULL, 0, 'en route'),
-(13, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:03:40', NULL, NULL, NULL, 0, 'en route'),
-(14, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:04:49', NULL, NULL, NULL, 0, 'en route'),
-(15, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:16', NULL, NULL, NULL, 0, 'en route'),
-(16, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:06:21', NULL, NULL, NULL, 0, 'en route'),
-(17, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:07:44', NULL, NULL, NULL, 0, 'en route'),
-(18, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:10:22', NULL, NULL, NULL, 0, 'en route'),
-(19, NULL, 2, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:33', NULL, NULL, NULL, 0, 'en route'),
-(20, NULL, 3, 1, 'Biên Hòa', 'Buôn Ma Thuột', '0909090990', '2024-08-30 07:27:44', NULL, NULL, NULL, 0, 'en route'),
-(23, 5, 4, 1, 'biên hòa', 'sài gòn', '0901234567', '2024-09-12 03:08:07', NULL, NULL, NULL, 0, 'en route'),
-(24, 2, 2, 1, 'ádf', 'ádfsdf', '0866840075', '2024-09-18 06:44:35', NULL, NULL, NULL, 0, 'en route'),
-(25, 2, 2, 3, 'cc', 'cc', '0909090909', '2024-09-18 06:45:03', NULL, NULL, NULL, 0, 'en route'),
-(26, 2, 3, 2, 'cc', 'cc', '0901234567', '2024-09-18 06:45:46', NULL, NULL, NULL, 0, 'en route'),
-(27, 2, 2, 1, 'qqq', 'qqq', '0866840075', '2024-09-18 06:49:16', NULL, NULL, NULL, 0, 'en route'),
-(28, 2, 2, 1, 'xx', 'xx', '0909090909', '2024-09-18 06:51:25', NULL, NULL, NULL, 0, 'en route'),
-(29, 2, 2, 1, 'qq', 'qq', '0901234567', '2024-09-18 06:53:19', NULL, NULL, NULL, 0, 'en route'),
-(30, 2, 2, 1, 'hh', 'hh', '0909090909', '2024-09-18 06:57:43', NULL, NULL, NULL, 0, 'en route'),
-(31, 2, 2, 1, 'cc', 'cc', '0901234567', '2024-09-18 06:59:36', NULL, NULL, NULL, 0, 'en route'),
-(32, 2, 2, 1, 'cc', 'âmmamma', '0866840075', '2024-09-19 01:20:46', NULL, NULL, NULL, 0, 'en route'),
-(33, 5, 2, 1, '123', '123', '0866840075', '2024-09-19 03:38:57', NULL, NULL, NULL, 0, 'en route'),
-(34, 5, 2, 1, 'sss', 'ss', '0866840075', '2024-09-19 03:42:13', NULL, NULL, NULL, 0, 'en route'),
-(35, 5, 2, 1, 'cc', 'cc', 'adsfasdf', '2024-09-19 04:00:57', NULL, NULL, NULL, 0, 'en route'),
-(36, 5, 2, 1, 'ádfadsf', 'fasdf', '0866840075', '2024-09-19 04:03:29', NULL, NULL, NULL, 0, 'en route'),
-(37, NULL, NULL, 1, 'ADS', 'SDFGSD', '0901234567', '2024-09-19 04:24:40', NULL, NULL, NULL, 0, 'booked'),
-(38, 5, 2, 1, 'ÁDFA', 'ÁDF', '0', '2024-09-19 04:24:56', NULL, NULL, NULL, 0, 'en route'),
-(39, 5, 2, 1, 'w', 'w', '0909090909', '2024-09-19 04:27:19', NULL, NULL, NULL, 0, 'en route'),
-(40, 5, 2, 1, 'ádfas', 'ÁDFASF', '0901234567', '2024-09-19 04:30:16', NULL, NULL, NULL, 0, 'en route'),
-(41, 5, 2, 1, 'ádf', 'fdsf', '0909090909', '2024-09-19 04:31:34', NULL, NULL, NULL, 0, 'en route');
 
 -- --------------------------------------------------------
 
@@ -264,7 +264,8 @@ INSERT INTO `user` (`user_id`, `name`, `phone`, `email`, `account_type`, `addres
 (8, 'Bùi Thị Hoa', '0978901234', 'buithih@gmail.com', 'client', '505 Phan Xích Long, Phú Nhuận, TP.HCM', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2', 'clientabc', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
 (9, 'Lý Văn Inh', '0989012345', 'lyvani@gmail.com', 'client', '606 Cách Mạng Tháng 8, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d', 'clientdef', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
 (10, 'Trương Thị Kim', '0990123456', 'truongthik@gmail.com', 'client', '707 Nguyễn Đình Chiểu, Quận 3, TP.HCM', 'https://images.unsplash.com/photo-1554151228-14d9def656e4', 'clientxyz', NULL, NULL, '2024-07-26 03:43:45', '2024-07-26 03:43:45'),
-(11, 'Tiến Trần', '0866840075', 'meditonoclone@gmail.com', 'client', '', NULL, 'Admin123', NULL, NULL, '2024-08-08 09:45:03', '2024-09-27 10:03:21');
+(11, 'Tiến Trần', '0866840075', 'meditonoclone@gmail.com', 'client', '', NULL, '123Qwerty', NULL, NULL, '2024-08-08 09:45:03', '2024-09-27 14:44:43'),
+(12, 'Trần Tiến', '0988888333', '162001391@dntu.com', 'client', '', NULL, 'tien01072002', NULL, NULL, '2025-03-02 12:40:26', '2025-03-02 12:40:26');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -296,6 +297,22 @@ ALTER TABLE `news`
   ADD UNIQUE KEY `slug` (`slug`);
 
 --
+-- Chỉ mục cho bảng `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`payment_id`),
+  ADD KEY `trip_id` (`trip_id`);
+
+--
+-- Chỉ mục cho bảng `ratings`
+--
+ALTER TABLE `ratings`
+  ADD PRIMARY KEY (`rating_id`),
+  ADD KEY `trip_id` (`trip_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `driver_id` (`driver_id`);
+
+--
 -- Chỉ mục cho bảng `taxi_pricing`
 --
 ALTER TABLE `taxi_pricing`
@@ -308,8 +325,9 @@ ALTER TABLE `taxi_pricing`
 ALTER TABLE `trip_history`
   ADD PRIMARY KEY (`trip_id`),
   ADD KEY `client_id` (`client_id`),
-  ADD KEY `driver_id` (`driver_id`),
-  ADD KEY `vehicle_type_id` (`vehicle_type_id`);
+  ADD KEY `client_id_2` (`client_id`),
+  ADD KEY `client_id_3` (`client_id`),
+  ADD KEY `driver_id` (`driver_id`);
 
 --
 -- Chỉ mục cho bảng `user`
@@ -341,6 +359,18 @@ ALTER TABLE `news`
   MODIFY `news_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT cho bảng `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT cho bảng `ratings`
+--
+ALTER TABLE `ratings`
+  MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
 -- AUTO_INCREMENT cho bảng `taxi_pricing`
 --
 ALTER TABLE `taxi_pricing`
@@ -350,7 +380,7 @@ ALTER TABLE `taxi_pricing`
 -- AUTO_INCREMENT cho bảng `trip_history`
 --
 ALTER TABLE `trip_history`
-  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `trip_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT cho bảng `user`
@@ -378,12 +408,25 @@ ALTER TABLE `images`
   ADD CONSTRAINT `images_ibfk_3` FOREIGN KEY (`news_id`) REFERENCES `news` (`news_id`) ON DELETE SET NULL;
 
 --
+-- Các ràng buộc cho bảng `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `trip_history` (`trip_id`);
+
+--
+-- Các ràng buộc cho bảng `ratings`
+--
+ALTER TABLE `ratings`
+  ADD CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`trip_id`) REFERENCES `trip_history` (`trip_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ratings_ibfk_3` FOREIGN KEY (`driver_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `trip_history`
 --
 ALTER TABLE `trip_history`
   ADD CONSTRAINT `trip_history_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `trip_history_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `user` (`user_id`),
-  ADD CONSTRAINT `trip_history_ibfk_3` FOREIGN KEY (`vehicle_type_id`) REFERENCES `taxi_pricing` (`vehicle_type_id`);
+  ADD CONSTRAINT `trip_history_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `user` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

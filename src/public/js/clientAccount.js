@@ -341,15 +341,27 @@ socket.on('getDriverInfo', async info => {
 
 socket.on("updateStatus", async result => {
   if (result) {
-
+    console.log('updateStatus')
     trip = await getTrip()
-    if(trip.cost)
+    $('#acceptingTrip #status')[0].innerText = statusMap[trip.status]
+    if (trip.cost)
       $('#acceptingTrip #cost')[0].innerText = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.cost)
 
     if (trip.status === 'pending payment') {
-      $('#cancelBtn')[0].style.display = 'none'
+      btn = $('#cancelBtn')[0]
 
-      $('#paymentBtn')[0].style.display = 'block'
+      const paymentBtn = document.createElement('button');
+      paymentBtn.id = 'paymentBtn';
+      paymentBtn.className = 'btn btn-success';
+      paymentBtn.setAttribute('data-toggle', 'modal');
+      paymentBtn.setAttribute('data-target', '#paymentModal');
+      paymentBtn.textContent = 'Thanh toán';
+
+      
+      const parent = btn.parentElement;
+
+      parent.appendChild(paymentBtn);
+      btn.remove();
     }
     if (trip.status === 'completed') {
       driverName = document.querySelector('#acceptingTrip #name').innerText;

@@ -623,12 +623,12 @@ a:focus {
     text-align: center;
     margin-bottom: 1rem; }
   .price-table table {
-    width: 100%;
+    min-width: 1200px;
     border-collapse: collapse; }
   .price-table th,
   .price-table td {
     border: 1px solid #ddd;
-    padding: 0.5rem 0;
+    padding: 0.5rem;
     text-align: center; }
   .price-table th {
     background-color: #f2f2f2;

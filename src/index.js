@@ -10,7 +10,7 @@ const cookieParser = require('cookie-parser');
 const socketHandler = require('./socket')
 const csurf = require('csurf');
 const flash = require('connect-flash');
-const https = require('https');
+const http = require('http');
 const { Server } = require('socket.io');
 const cookieSignature = require('cookie-signature');
 const clients = require('./socket/clientsList');
@@ -29,12 +29,9 @@ global.sns = new AWS.SNS();
 // Khởi tạo ứng dụng Express
 const app = express();
 const port = 3000;
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "certs", "localhost.key")),
-  cert: fs.readFileSync(path.join(__dirname, "certs", "localhost.crt")),
-};
 
-const server = https.createServer(options, app);
+
+const server = http.createServer(app);
 const io = new Server(server);
 
 

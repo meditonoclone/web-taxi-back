@@ -154,5 +154,5 @@ app.use((req, res, next) => {
 router(app);
 
 server.listen(port, '0.0.0.0', () => {
-  console.log(`App listening at https://localhost:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });

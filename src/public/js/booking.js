@@ -34,9 +34,7 @@ const bookTaxi = async () => {
   if (result.success) {
     alert("🚖 Đặt chuyến thành công!")
     trip = await getTrip();
-    room = trip.trip_id;
-    socket.emit('joinRoom', room.toString())
-    document.querySelector('button[data-target="#detailTrip"]').style.display = 'block'
+    window.location.href = '/account'
 
   } else {
     alert("❌ Lỗi: " + result.message)

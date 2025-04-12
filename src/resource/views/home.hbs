@@ -1,407 +1,405 @@
+<!-- about section -->
 
-
-
-
-  <!-- about section -->
-
-  <section class="about_section layout_padding">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-4 col-md-5 offset-lg-2 offset-md-1">
-          <div class="detail-box">
-            <h2>
-              Về chúng tôi <br>
-              Công ty Taxi Biên Hòa
-            </h2>
-            <p>
-              Công ty Taxi Biên Hòa là một dịch vụ vận tải tại thành phố Biên Hòa, Đồng Nai, chuyên cung cấp dịch vụ
-              taxi chất lượng cao cho khách hàng. Với đội ngũ lái xe giàu kinh nghiệm và được đào tạo chuyên nghiệp,
-              công ty cam kết mang đến sự an toàn và tiện lợi cho mọi chuyến đi.
-            </p>
-            <a class="" href="docthemvechungtoi"> Đọc thêm</a>
-          </div>
+<section class="about_section layout_padding">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-4 col-md-5 offset-lg-2 offset-md-1">
+        <div class="detail-box">
+          <h2>
+            Về chúng tôi <br>
+            Công ty Taxi Biên Hòa
+          </h2>
+          <p>
+            Công ty Taxi Biên Hòa là một dịch vụ vận tải tại thành phố Biên Hòa, Đồng Nai, chuyên cung cấp dịch vụ
+            taxi chất lượng cao cho khách hàng. Với đội ngũ lái xe giàu kinh nghiệm và được đào tạo chuyên nghiệp,
+            công ty cam kết mang đến sự an toàn và tiện lợi cho mọi chuyến đi.
+          </p>
+          <a class="" href="docthemvechungtoi"> Đọc thêm</a>
         </div>
-        <div class="col-md-6">
-          <div class="img-box">
-            <img src="img/slider2.png" alt="">
-          </div>
+      </div>
+      <div class="col-md-6">
+        <div class="img-box">
+          <img src="img/slider2.png" alt="">
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- end about section -->
-  <!--price-table-->
-  <section price-data="{{prices}}" class="price-table layout_padding">
+<!-- end about section -->
+<!--price-table-->
+<section price-data="{{prices}}" class="price-table layout_padding">
   <h2 style="text-align: center; color: #161a18; margin-bottom: 10px;">BẢNG BÁO GIÁ TAXI KHU
     VỰC
     BIÊN HÒA - ĐỒNG NAI - GIÁ CHỈ TỪ 10.000/KM</h2>
+  <div class="table-responsive">
 
-  <table class="w-100 mw-0">
-    <thead>
-      <tr>
-        <th>Các loại xe</th>
-        <th>Giá mở cửa</th>
-        <th>Giá cước 10km đầu</th>
-        <th>Giá cước từ Km thứ 11 đến 30</th>
-        <th>Giá cước từ Km thứ 31</th>
-        <th>Thời gian chờ</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each prices}}
-      <tr>
-        <td>{{this.vehicle_type}}</td>
-        <td>{{this.base_fare}}</td>
-        <td>{{this.fare_first_10km}}</td>
-        <td>{{this.fare_10_to_30km}}</td>
-        <td>{{this.fare_above_30km}}</td>
-        <td>{{this.waiting_time_fare}}</td>
-      </tr>
-      {{/each}}
-
-    </tbody>
-  </table>
-  </section>
-  <!-- service section -->
-
-  <section class="service_section layout_padding">
-    <div class="container">
-      <div class="heading_container">
-        <h2>
-          Dịch vụ <br>
-          Dịch vụ Taxi
-        </h2>
-      </div>
-      <div class="service_container">
-        <div class="box">
-          <div class="img-box">
-            <img src="img/delivery-man.png" alt="">
-          </div>
-          <div class="detail-box">
-            <h5>
-              Tài xế
-            </h5>
-            <p>
-              Tài xế thân thiện,dễ mến
-            </p>
-            <a class="" href="doc-them-taxi"> Đọc thêm</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="img/airplane.png" alt="">
-          </div>
-          <div class="detail-box">
-            <h5>
-              Đưa đón tại sân bay
-            </h5>
-            <p>
-              Chúng tôi đưa đón tại sân bay
-            </p>
-            <a class="" href="doc-them-maybay"> Đọc thêm</a>
-          </div>
-        </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="img/backpack.png" alt="">
-          </div>
-          <div class="detail-box">
-            <h5>
-              Chuyển đồ
-            </h5>
-            <p>
-              Có các dịch vụ chuyển đồ cho khách hàng
-            </p>
-            <a class="" href="doc-them-chuyendo"> Đọc thêm</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- end service section -->
-
-  <!-- news section -->
-
-  <section class="news_section layout_padding">
-    <div class="container">
-      <div class="heading_container">
-        <h2>
-          Tin tức <br>
-          của chúng tôi
-        </h2>
-      </div>
-      <div class="news_container row">
-        {{#each news}}
-        <div class="box col-lg-4 col-md-6 col-sm-12">
-          <a href="news/{{this.slug}}" class="news-link" target="_blank">
-            <div class="date-box">
-              <h6>{{formatDate this.published_date}}</h6>
-            </div>
-            <div class="img-box">
-              <img src="{{this.image_url}}" alt={{this.slug}}>
-            </div>
-            <div class="detail-box">
-              <h6>{{this.title}}</h6>
-              <p>
-                {{this.description}}
-              </p>
-            </div>
-          </a>
-        </div>
+    <table class="w-100 mw-0">
+      <thead>
+        <tr>
+          <th>Các loại xe</th>
+          <th>Giá mở cửa</th>
+          <th>Giá cước 10km đầu</th>
+          <th>Giá cước từ Km thứ 11 đến 30</th>
+          <th>Giá cước từ Km thứ 31</th>
+          <th>Thời gian chờ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each prices}}
+        <tr>
+          <td>{{this.vehicle_type}}</td>
+          <td>{{this.base_fare}}</td>
+          <td>{{this.fare_first_10km}}</td>
+          <td>{{this.fare_10_to_30km}}</td>
+          <td>{{this.fare_above_30km}}</td>
+          <td>{{this.waiting_time_fare}}</td>
+        </tr>
         {{/each}}
+
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- service section -->
+
+<section class="service_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>
+        Dịch vụ <br>
+        Dịch vụ Taxi
+      </h2>
+    </div>
+    <div class="service_container">
+      <div class="box">
+        <div class="img-box">
+          <img src="img/delivery-man.png" alt="">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Tài xế
+          </h5>
+          <p>
+            Tài xế thân thiện,dễ mến
+          </p>
+          <a class="" href="doc-them-taxi"> Đọc thêm</a>
+        </div>
+      </div>
+      <div class="box">
+        <div class="img-box">
+          <img src="img/airplane.png" alt="">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Đưa đón tại sân bay
+          </h5>
+          <p>
+            Chúng tôi đưa đón tại sân bay
+          </p>
+          <a class="" href="doc-them-maybay"> Đọc thêm</a>
+        </div>
+      </div>
+      <div class="box">
+        <div class="img-box">
+          <img src="img/backpack.png" alt="">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Chuyển đồ
+          </h5>
+          <p>
+            Có các dịch vụ chuyển đồ cho khách hàng
+          </p>
+          <a class="" href="doc-them-chuyendo"> Đọc thêm</a>
+        </div>
       </div>
     </div>
-  </section>
-  <!-- end news section -->
+  </div>
+</section>
 
-  <!-- client section -->
+<!-- end service section -->
 
-  <section class="client_section layout_padding-bottom">
-    <div class="container">
-      <div class="heading_container reverse">
-        <h2>
-          Khách<br>
-          hàng<br>
-          nói gì?
-        </h2>
+<!-- news section -->
+
+<section class="news_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>
+        Tin tức <br>
+        của chúng tôi
+      </h2>
+    </div>
+    <div class="news_container row">
+      {{#each news}}
+      <div class="box col-lg-4 col-md-6 col-sm-12">
+        <a href="news/{{this.slug}}" class="news-link" target="_blank">
+          <div class="date-box">
+            <h6>{{formatDate this.published_date}}</h6>
+          </div>
+          <div class="img-box">
+            <img src="{{this.image_url}}" alt={{this.slug}}>
+          </div>
+          <div class="detail-box">
+            <h6>{{this.title}}</h6>
+            <p>
+              {{this.description}}
+            </p>
+          </div>
+        </a>
       </div>
-      <div class="client_container">
-        <div class="carousel-wrap">
-          <div class="owl-carousel">
-            {{#each ratings}}
-            <div class="item">
-              <div class="box">
-                <div class="img-box">
-                  <img src={{this.client.profile_picture}} alt={{this.client.name}}>
-                </div>
-                <div class="detail-box">
-                  <h3>{{this.client.name}}</h3>
-                  <p>{{this.comment}}</p>
-                  <img src="img/quote.png" alt="Quote" class="quote-icon">
-                </div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+<!-- end news section -->
+
+<!-- client section -->
+
+<section class="client_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container reverse">
+      <h2>
+        Khách<br>
+        hàng<br>
+        nói gì?
+      </h2>
+    </div>
+    <div class="client_container">
+      <div class="carousel-wrap">
+        <div class="owl-carousel">
+          {{#each ratings}}
+          <div class="item">
+            <div class="box">
+              <div class="img-box">
+                <img src={{this.client.profile_picture}} alt={{this.client.name}}>
+              </div>
+              <div class="detail-box">
+                <h3>{{this.client.name}}</h3>
+                <p>{{this.comment}}</p>
+                <img src="img/quote.png" alt="Quote" class="quote-icon">
               </div>
             </div>
-            {{/each}}
           </div>
+          {{/each}}
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- end client section -->
+<!-- end client section -->
 
-  <!-- contact section -->
+<!-- contact section -->
 
-  <section class="contact_section layout_padding-bottom">
-    <div class="container">
-      <div class="heading_container">
-        <h2>
-          Có vấn đề <br>
-          Hãy liên hệ
-        </h2>
-      </div>
+<section class="contact_section layout_padding-bottom">
+  <div class="container">
+    <div class="heading_container">
+      <h2>
+        Có vấn đề <br>
+        Hãy liên hệ
+      </h2>
     </div>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-5  offset-md-1">
-          <div class="contact_form">
-            <h4>
-              Nhắn với chúng tôi
-            </h4>
-            <form action="">
-              <input type="text" placeholder="Họ và tên">
-              <input type="text" placeholder="Số điện thoại">
-              <input type="text" placeholder="Tin nhắn" class="message_input">
-              <button>Gửi</button>
-            </form>
-          </div>
-        </div>
-        <div class="col-md-6 px-0">
-          <div class="img-box">
-            <img src="img/slider2.png" alt="">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- end contact section -->
-
-  <!-- app section -->
-
-  <section class="app_section layout_padding2">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="detail-box">
-            <h2>
-              Tải app của chúng tôi
-            </h2>
-            <div class="text-box">
-              <h5>
-                Thông tin
-              </h5>
-              <p>
-                Để nâng cao trải nghiệm khách hàng và mang đến sự tiện lợi tối đa, công ty Taxi Biên Hòa đã phát triển
-                ứng dụng di động dành cho các thiết bị iOS và Android.
-              </p>
-            </div>
-            <div class="text-box">
-              <h5>
-                Hoạt động thế nào
-              </h5>
-              <p>
-                Người dùng tải ứng dụng Taxi Biên Hòa từ App Store (cho iOS) hoặc Google Play (cho Android) và cài đặt
-                lên điện thoại di động của mình.
-              </p>
-            </div>
-            <div class="btn-box">
-              <a href="">
-                <img src="img/playstore.png" alt="">
-              </a>
-              <a href="">
-                <img src="img/appstore.png" alt="">
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="img-box">
-            <img src="img/mobile.png" alt="">
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- end app section -->
-
-  <!-- why section -->
-
-  <section class="why_section layout_padding">
-    <div class="container">
-      <div class="heading_container">
-        <h2>
-          Tại sao <br>
-          Lại chọn chúng tôi?
-        </h2>
-      </div>
-      <div class="why_container">
-        <div class="box">
-          <div class="img-box">
-            <img src="img/delivery-man-white.png" alt="" class="img-1">
-            <img src="img/delivery-man-black.png" alt="" class="img-2">
-          </div>
-          <div class="detail-box">
-            <h5>
-              Tài xế thân thiện
-            </h5>
-            <p>
-              Các tài xế của công ty Taxi Biên Hòa được biết đến với tính cách thân thiện và thái độ phục vụ chuyên
-              nghiệp. Với sự đào tạo kỹ lưỡng và cam kết mang lại trải nghiệm tốt nhất cho khách hàng, các tài xế luôn
-              tỏ ra lịch sự, nhiệt tình và sẵn sàng hỗ trợ hành khách trong mọi tình huống. Họ không chỉ giỏi lái xe an
-              toàn mà còn thông thạo các tuyến đường, giúp khách hàng đến nơi một cách nhanh chóng và hiệu quả.
-            </p>
-          </div>
-        </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="img/shield-white.png" alt="" class="img-1">
-            <img src="img/shield-black.png" alt="" class="img-2">
-          </div>
-          <div class="detail-box">
-            <h5>
-              An toàn và bảo mật
-            </h5>
-            <p>
-              Công ty Taxi Biên Hòa luôn đặt tiêu chí an toàn và bảo mật lên hàng đầu nhằm mang lại sự yên tâm tuyệt đối
-              cho khách hàng.
-            </p>
-          </div>
-        </div>
-        <div class="box">
-          <div class="img-box">
-            <img src="img/repairing-service-white.png" alt="" class="img-1">
-            <img src="img/repairing-service-black.png" alt="" class="img-2">
-          </div>
-          <div class="detail-box">
-            <h5>
-              Hỗ trợ 24/7
-            </h5>
-            <p>
-              It is a long established fact that a reader will be distracted by the readable content of a page when
-              looking at its
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- end why section -->
-
-  <!-- info section -->
-
-  <section class="info_section layout_padding-top layout_padding2-bottom">
-    <div class="container">
-      <div class="box">
-        <div class="info_form">
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5  offset-md-1">
+        <div class="contact_form">
           <h4>
-            Đăng ký nhận bản tin của chúng tôi
+            Nhắn với chúng tôi
           </h4>
-          <form id="newsletterForm" action="">
-            <input type="text" placeholder="Gửi email với chúng tôi">
-            <div class="d-flex justify-content-end">
-              <button class="submit-button"></button>
-            </div>
+          <form action="">
+            <input type="text" placeholder="Họ và tên">
+            <input type="text" placeholder="Số điện thoại">
+            <input type="text" placeholder="Tin nhắn" class="message_input">
+            <button>Gửi</button>
           </form>
         </div>
-        <div class="info_links">
-          <ul>
-            <li class=" ">
-              <a class="" href="/">Trang chủ <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="">
-              <a class="" href="about"> Chúng tôi</a>
-            </li>
-            <li class="">
-              <a class="" href="service"> Dịch vụ </a>
-            </li>
-            <li class="">
-              <a class="" href="news"> Tin tức</a>
-            </li>
-            <li class="">
-              <a class="" href="contact">Liên hệ </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="login">Đăng Nhập</a>
-            </li>
-          </ul>
+      </div>
+      <div class="col-md-6 px-0">
+        <div class="img-box">
+          <img src="img/slider2.png" alt="">
         </div>
-        <div class="info_social">
-          <div>
-            <a href="">
-              <img src="img/fb.png" alt="">
-            </a>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end contact section -->
+
+<!-- app section -->
+
+<section class="app_section layout_padding2">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="detail-box">
+          <h2>
+            Tải app của chúng tôi
+          </h2>
+          <div class="text-box">
+            <h5>
+              Thông tin
+            </h5>
+            <p>
+              Để nâng cao trải nghiệm khách hàng và mang đến sự tiện lợi tối đa, công ty Taxi Biên Hòa đã phát triển
+              ứng dụng di động dành cho các thiết bị iOS và Android.
+            </p>
           </div>
-          <div>
-            <a href="">
-              <img src="img/twitter.png" alt="">
-            </a>
+          <div class="text-box">
+            <h5>
+              Hoạt động thế nào
+            </h5>
+            <p>
+              Người dùng tải ứng dụng Taxi Biên Hòa từ App Store (cho iOS) hoặc Google Play (cho Android) và cài đặt
+              lên điện thoại di động của mình.
+            </p>
           </div>
-          <div>
+          <div class="btn-box">
             <a href="">
-              <img src="img/linkedin.png" alt="">
+              <img src="img/playstore.png" alt="">
             </a>
-          </div>
-          <div>
             <a href="">
-              <img src="img/instagram.png" alt="">
+              <img src="img/appstore.png" alt="">
             </a>
           </div>
         </div>
       </div>
+      <div class="col-md-6">
+        <div class="img-box">
+          <img src="img/mobile.png" alt="">
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-  </section>
+<!-- end app section -->
+
+<!-- why section -->
+
+<section class="why_section layout_padding">
+  <div class="container">
+    <div class="heading_container">
+      <h2>
+        Tại sao <br>
+        Lại chọn chúng tôi?
+      </h2>
+    </div>
+    <div class="why_container">
+      <div class="box">
+        <div class="img-box">
+          <img src="img/delivery-man-white.png" alt="" class="img-1">
+          <img src="img/delivery-man-black.png" alt="" class="img-2">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Tài xế thân thiện
+          </h5>
+          <p>
+            Các tài xế của công ty Taxi Biên Hòa được biết đến với tính cách thân thiện và thái độ phục vụ chuyên
+            nghiệp. Với sự đào tạo kỹ lưỡng và cam kết mang lại trải nghiệm tốt nhất cho khách hàng, các tài xế luôn
+            tỏ ra lịch sự, nhiệt tình và sẵn sàng hỗ trợ hành khách trong mọi tình huống. Họ không chỉ giỏi lái xe an
+            toàn mà còn thông thạo các tuyến đường, giúp khách hàng đến nơi một cách nhanh chóng và hiệu quả.
+          </p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="img-box">
+          <img src="img/shield-white.png" alt="" class="img-1">
+          <img src="img/shield-black.png" alt="" class="img-2">
+        </div>
+        <div class="detail-box">
+          <h5>
+            An toàn và bảo mật
+          </h5>
+          <p>
+            Công ty Taxi Biên Hòa luôn đặt tiêu chí an toàn và bảo mật lên hàng đầu nhằm mang lại sự yên tâm tuyệt đối
+            cho khách hàng.
+          </p>
+        </div>
+      </div>
+      <div class="box">
+        <div class="img-box">
+          <img src="img/repairing-service-white.png" alt="" class="img-1">
+          <img src="img/repairing-service-black.png" alt="" class="img-2">
+        </div>
+        <div class="detail-box">
+          <h5>
+            Hỗ trợ 24/7
+          </h5>
+          <p>
+            It is a long established fact that a reader will be distracted by the readable content of a page when
+            looking at its
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- end why section -->
+
+<!-- info section -->
+
+<section class="info_section layout_padding-top layout_padding2-bottom">
+  <div class="container">
+    <div class="box">
+      <div class="info_form">
+        <h4>
+          Đăng ký nhận bản tin của chúng tôi
+        </h4>
+        <form id="newsletterForm" action="">
+          <input type="text" placeholder="Gửi email với chúng tôi">
+          <div class="d-flex justify-content-end">
+            <button class="submit-button"></button>
+          </div>
+        </form>
+      </div>
+      <div class="info_links">
+        <ul>
+          <li class=" ">
+            <a class="" href="/">Trang chủ <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="">
+            <a class="" href="about"> Chúng tôi</a>
+          </li>
+          <li class="">
+            <a class="" href="service"> Dịch vụ </a>
+          </li>
+          <li class="">
+            <a class="" href="news"> Tin tức</a>
+          </li>
+          <li class="">
+            <a class="" href="contact">Liên hệ </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="login">Đăng Nhập</a>
+          </li>
+        </ul>
+      </div>
+      <div class="info_social">
+        <div>
+          <a href="">
+            <img src="img/fb.png" alt="">
+          </a>
+        </div>
+        <div>
+          <a href="">
+            <img src="img/twitter.png" alt="">
+          </a>
+        </div>
+        <div>
+          <a href="">
+            <img src="img/linkedin.png" alt="">
+          </a>
+        </div>
+        <div>
+          <a href="">
+            <img src="img/instagram.png" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

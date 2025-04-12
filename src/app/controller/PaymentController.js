@@ -2,7 +2,7 @@ const express = require('express');
 const { createMomoCollectionLink } = require('../services/momo');
 const https = require('https');
 const crypto = require('crypto');
-const querystring = require('querystring');
+const querystring = require('qs');
 const { User, Trip, Payment } = require('../model');
 const moment = require('moment')
 class PaymentController {
@@ -210,6 +210,7 @@ class PaymentController {
         const orderInfo = `Thanh toan chuyen ${orderId}`;
         const orderType = 'other';
         const locale = 'vn';
+        const expireDate = moment(date).add(15, 'minutes').format('YYYYMMDDHHmmss');
 
         let vnp_Params = {
             vnp_Version: '2.1.0',
@@ -224,15 +225,16 @@ class PaymentController {
             vnp_ReturnUrl: returnUrl,
             vnp_IpAddr: ipAddr,
             vnp_CreateDate: createDate,
+            vnp_expireDate: expireDate
         };
 
         if (bankCode !== '') {
             vnp_Params['vnp_BankCode'] = bankCode;
         }
-        console.log('trc: ',vnp_Params)
+        console.log('trc: ', vnp_Params)
         // Sort parameters
         vnp_Params = PaymentController.sortObject(vnp_Params);
-        console.log('sau: ',vnp_Params)
+        console.log('sau: ', vnp_Params)
 
         // Create hash
         const signData = querystring.stringify(vnp_Params, { encode: false });
@@ -241,7 +243,7 @@ class PaymentController {
         vnp_Params['vnp_SecureHash'] = signed;
 
         const paymentUrl = `${vnpUrl}?${querystring.stringify(vnp_Params, { encode: false })}`;
-
+      
         res.json({ paymentUrl });
     }
 
@@ -254,31 +256,40 @@ class PaymentController {
 
         const secretKey = process.env.VNPAY_SECRET_KEY;
         const signData = querystring.stringify(PaymentController.sortObject(vnp_Params), { encode: false });
+
         const hmac = crypto.createHmac('sha512', secretKey);
         const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
 
         if (secureHash === signed) {
             const payment = await Payment.findOne({
                 where: {
-                    order_id: data.orderId
+                    order_id: vnp_Params['vnp_TxnRef']
                 }
 
             })
             await payment.update({ status: 'paid' })
             const io = req.app.get('io');
             io.to(payment.trip_id.toString()).emit('paid', true);
+            res.status(200).json({RspCode: '00', Message: 'success'})
         } else {
-            console.log('Chữ ký không hợp lệ!');
+            res.status(200).json({RspCode: '97', Message: 'Fail checksum'})
         }
     }
     static sortObject(obj) {
-        const sorted = {};
-        const keys = Object.keys(obj).sort();
-        for (let key of keys) {
-          sorted[key] = obj[key];
+        var sorted = {};
+        var str = [];
+        var key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                str.push(encodeURIComponent(key));
+            }
+        }
+        str.sort();
+        for (key = 0; key < str.length; key++) {
+            sorted[str[key]] = encodeURIComponent(obj[str[key]]).replace(/%20/g, "+");
         }
         return sorted;
-      }
+    }
 }
 
 module.exports = new PaymentController();

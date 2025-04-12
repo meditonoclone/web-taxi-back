@@ -22,14 +22,14 @@ class AdminController {
 
         const ratingTotal = await Rating.sum('rating',{
             where: {
-                createdAt: {
+                created_at: {
                     [Op.between]: [startOfMonth, endOfMonth]
                 }
             }
         });
         const ratingNum = await Rating.count({
             where: {
-                createdAt: {
+                created_at: {
                     [Op.between]: [startOfMonth, endOfMonth]
                 }
             }
@@ -77,7 +77,7 @@ class AdminController {
         }})
         signupsLastMonth = await User.count({
             where: {
-                create_at: {
+                created_at: {
                     [Op.between]: [startOfLastMonth, endOfLastMonth]
                 }
             }

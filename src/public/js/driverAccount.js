@@ -656,7 +656,7 @@ function drawRoute(sourceId, route) {
 socket.on('paid', result => {
   if (result) {
     alert('Đã thanh toán!');
-    document.querySelector("#acceptingTrip > div").innerHTML = "<h2>Chuyến đang thực hiện</h2><p>Chưa nhận chuyến xe nào</p>"
+    $('#btnNextStatus').click()
 
   }
 })
